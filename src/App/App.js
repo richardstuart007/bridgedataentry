@@ -141,9 +141,10 @@ export default function App() {
     //
     update_serverdatabase()
     //
-    //  Store Client, Server, Database, URL
+    //  Store Server, Database, URL
     //
-    sessionStorage.setItem('App_Settings_Client', JSON.stringify(w_Client))
+    sessionStorage.setItem('App_Settings_Server_Database', JSON.stringify(w_server_database))
+    sessionStorage.setItem('App_Settings_Node_Env', JSON.stringify(w_node_env))
     sessionStorage.setItem('App_Settings_Server', JSON.stringify(w_Server))
     sessionStorage.setItem('App_Settings_Database', JSON.stringify(w_Database))
     sessionStorage.setItem('App_Settings_URL', JSON.stringify(w_URL))

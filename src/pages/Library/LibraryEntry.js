@@ -171,8 +171,7 @@ export default function LibraryEntry(props) {
       <MyForm onSubmit={handleSubmit}>
         <Grid container>
           {/*------------------------------------------------------------------------------ */}
-
-          <Grid item xs={8}>
+          <Grid item xs={6}>
             <MyInput
               name='lrref'
               label='Reference'
@@ -182,14 +181,15 @@ export default function LibraryEntry(props) {
               disabled={actionUpdate}
             />
           </Grid>
-          {/*------------------------------------------------------------------------------ */}
+
           {actionUpdate ? (
             <Grid item xs={4}>
               <MyInput name='lrid' label='ID' value={values.lrid} disabled={true} />
             </Grid>
           ) : null}
+          <Grid item xs={2}></Grid>
           {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <MySelect
               key={OptionsOwner.id}
               name='lrowner'
@@ -200,8 +200,8 @@ export default function LibraryEntry(props) {
               options={OptionsOwner}
             />
           </Grid>
-          {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={12}>
+
+          <Grid item xs={6}>
             <MySelect
               key={OptionsOwnerGroup.id}
               name='lrgroup'
@@ -212,6 +212,7 @@ export default function LibraryEntry(props) {
               options={OptionsOwnerGroup}
             />
           </Grid>
+
           {/*------------------------------------------------------------------------------ */}
           <Grid item xs={12}>
             <MyInput
@@ -233,7 +234,7 @@ export default function LibraryEntry(props) {
             />
           </Grid>
           {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <MySelect
               key={OptionsWho.id}
               name='lrwho'
@@ -244,8 +245,8 @@ export default function LibraryEntry(props) {
               options={OptionsWho}
             />
           </Grid>
-          {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={12}>
+
+          <Grid item xs={4}>
             <MySelect
               key={OptionsType.id}
               name='lrtype'
@@ -256,6 +257,7 @@ export default function LibraryEntry(props) {
               options={OptionsType}
             />
           </Grid>
+          <Grid item xs={2}></Grid>
           {/*.................................................................................................*/}
           <Grid item xs={12}>
             <Typography style={{ color: 'red' }}>{serverMessage}</Typography>

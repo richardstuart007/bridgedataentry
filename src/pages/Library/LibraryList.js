@@ -83,7 +83,7 @@ const headCells = [
   { id: 'lrgroup', label: 'Group' },
   { id: 'lrlink', label: 'Link' },
   { id: 'lrwho', label: 'Who' },
-  { id: 'rtype', label: 'Type' },
+  { id: 'lrtype', label: 'Type' },
   { id: 'actions', label: 'Actions', disableSorting: true }
 ]
 const searchTypeOptions = [
@@ -94,7 +94,7 @@ const searchTypeOptions = [
   { id: 'lrdesc', title: 'Description' },
   { id: 'lrlink', title: 'Link' },
   { id: 'lrwho', title: 'Who' },
-  { id: 'rtype', title: 'Type' }
+  { id: 'lrtype', title: 'Type' }
 ]
 //
 // Debug Settings
@@ -406,9 +406,9 @@ export default function LibraryList() {
               x.lrwho.toLowerCase().includes(searchValue.toLowerCase())
             )
             break
-          case 'rtype':
+          case 'lrtype':
             itemsFilter = items.filter(x =>
-              x.rtype.toLowerCase().includes(searchValue.toLowerCase())
+              x.lrtype.toLowerCase().includes(searchValue.toLowerCase())
             )
             break
 
@@ -532,7 +532,7 @@ export default function LibraryList() {
                 <TableCell>{row.lrgroup}</TableCell>
                 <TableCell>{row.lrlink}</TableCell>
                 <TableCell>{row.lrwho}</TableCell>
-                <TableCell>{row.rtype}</TableCell>
+                <TableCell>{row.lrtype}</TableCell>
 
                 <TableCell>
                   <MyActionButton
@@ -563,7 +563,7 @@ export default function LibraryList() {
         </TblContainer>
         <TblPagination />
       </Paper>
-      <Popup title='Reflink Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>
+      <Popup title='Library Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>
         <LibraryEntry
           recordForEdit={recordForEdit}
           addOrEdit={addOrEdit}

@@ -18,7 +18,6 @@ import BiddingEntry from './BiddingEntry'
 import MyButton from '../../components/controls/MyButton'
 import MyInput from '../../components/controls/MyInput'
 import MySelect from '../../components/controls/MySelect'
-import MyAutocomplete from '../../components/controls/MyAutocomplete'
 import { useMyForm, MyForm } from '../../components/useMyForm'
 //
 //  Components
@@ -79,7 +78,6 @@ export default function QuestionEntry(props) {
   const Data_Options_OwnerGroup = JSON.parse(sessionStorage.getItem('Data_Options_OwnerGroup'))
   const Data_Options_Group2 = JSON.parse(sessionStorage.getItem('Data_Options_Group2'))
   const Data_Options_Group3 = JSON.parse(sessionStorage.getItem('Data_Options_Group3'))
-  const Data_Options_Library = JSON.parse(sessionStorage.getItem('Data_Options_Library'))
   //
   //  On change of record, set State
   //
@@ -303,30 +301,13 @@ export default function QuestionEntry(props) {
     })
   }
   //...................................................................................
-  //.  Update form values with selected
-  //...................................................................................
-  function handleAutoSelect(code, fieldname) {
-    if (debugLog) console.log('handleAutoSelect')
-    if (debugLog) console.log('CountryCode ', code)
-    //
-    //  Populate Country Object & change country code
-    //
-    const updValues = { ...values }
-    updValues[fieldname] = code
-    if (debugLog) console.log('updValues ', updValues)
-    //
-    //  Update values
-    //
-    setValues(updValues)
-  }
-  //...................................................................................
   //.  Render the form
   //...................................................................................
   return (
     <>
       <MyForm onSubmit={handleSubmit}>
         <Grid container>
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <MySelect
               key={Data_Options_Owner.id}
               name='qowner'
@@ -338,115 +319,7 @@ export default function QuestionEntry(props) {
               options={Data_Options_Owner}
             />
           </Grid>
-          {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={4}>
-            <MyInput
-              name='qkey'
-              label='Key'
-              value={values.qkey}
-              onChange={handleInputChange}
-              error={errors.qkey}
-              disabled={actionUpdate}
-            />
-          </Grid>
-          {/*------------------------------------------------------------------------------ */}
-          {actionUpdate ? (
-            <Grid item xs={2}>
-              <MyInput name='qid' label='ID' value={values.qid} disabled={true} />
-            </Grid>
-          ) : null}
-          {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={12}>
-            <MyInput
-              name='qdetail'
-              label='Question'
-              value={values.qdetail}
-              onChange={handleInputChange}
-              error={errors.qdetail}
-            />
-          </Grid>
-          {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={11}>
-            <MyInput
-              name='qans1'
-              label='Top Answer'
-              value={values.qans1}
-              onChange={handleInputChange}
-              error={errors.qans1}
-            />
-          </Grid>
-
-          <Grid item xs={1}>
-            <MyInput
-              name='qpoints1'
-              label='Points'
-              value={values.qpoints1}
-              onChange={handleInputChange}
-              error={errors.qpoints1}
-            />
-          </Grid>
-          {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={11}>
-            <MyInput
-              name='qans2'
-              label='Answer 2'
-              value={values.qans2}
-              onChange={handleInputChange}
-              error={errors.qans2}
-            />
-          </Grid>
-
-          <Grid item xs={1}>
-            <MyInput
-              name='qpoints2'
-              label='Points'
-              value={values.qpoints2}
-              onChange={handleInputChange}
-              error={errors.qpoints2}
-            />
-          </Grid>
-          {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={11}>
-            <MyInput
-              name='qans3'
-              label='Answer 3'
-              value={values.qans3}
-              onChange={handleInputChange}
-              error={errors.qans3}
-            />
-          </Grid>
-
-          <Grid item xs={1}>
-            <MyInput
-              name='qpoints3'
-              label='Points'
-              value={values.qpoints3}
-              onChange={handleInputChange}
-              error={errors.qpoints3}
-            />
-          </Grid>
-          {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={11}>
-            <MyInput
-              name='qans4'
-              label='Answer 4'
-              value={values.qans4}
-              onChange={handleInputChange}
-              error={errors.qans4}
-            />
-          </Grid>
-
-          <Grid item xs={1}>
-            <MyInput
-              name='qpoints4'
-              label='Points'
-              value={values.qpoints4}
-              onChange={handleInputChange}
-              error={errors.qpoints4}
-            />
-          </Grid>
-          {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <MySelect
               key={Data_Options_OwnerGroup.id}
               name='qgroup'
@@ -458,7 +331,117 @@ export default function QuestionEntry(props) {
             />
           </Grid>
           {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={4}>
+          <Grid item xs={6}>
+            <MyInput
+              name='qkey'
+              label='Key'
+              value={values.qkey}
+              onChange={handleInputChange}
+              error={errors.qkey}
+              disabled={actionUpdate}
+            />
+          </Grid>
+
+          {actionUpdate ? (
+            <Grid item xs={2}>
+              <MyInput name='qid' label='ID' value={values.qid} disabled={true} />
+            </Grid>
+          ) : null}
+          <Grid item xs={4}></Grid>
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={10}>
+            <MyInput
+              name='qdetail'
+              label='Question'
+              value={values.qdetail}
+              onChange={handleInputChange}
+              error={errors.qdetail}
+            />
+          </Grid>
+          <Grid item xs={2}></Grid>
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={10}>
+            <MyInput
+              name='qans1'
+              label='Top Answer'
+              value={values.qans1}
+              onChange={handleInputChange}
+              error={errors.qans1}
+            />
+          </Grid>
+
+          <Grid item xs={2}>
+            <MyInput
+              name='qpoints1'
+              label='Points'
+              value={values.qpoints1}
+              onChange={handleInputChange}
+              error={errors.qpoints1}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={10}>
+            <MyInput
+              name='qans2'
+              label='Answer 2'
+              value={values.qans2}
+              onChange={handleInputChange}
+              error={errors.qans2}
+            />
+          </Grid>
+
+          <Grid item xs={2}>
+            <MyInput
+              name='qpoints2'
+              label='Points'
+              value={values.qpoints2}
+              onChange={handleInputChange}
+              error={errors.qpoints2}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={10}>
+            <MyInput
+              name='qans3'
+              label='Answer 3'
+              value={values.qans3}
+              onChange={handleInputChange}
+              error={errors.qans3}
+            />
+          </Grid>
+
+          <Grid item xs={2}>
+            <MyInput
+              name='qpoints3'
+              label='Points'
+              value={values.qpoints3}
+              onChange={handleInputChange}
+              error={errors.qpoints3}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={10}>
+            <MyInput
+              name='qans4'
+              label='Answer 4'
+              value={values.qans4}
+              onChange={handleInputChange}
+              error={errors.qans4}
+            />
+          </Grid>
+
+          <Grid item xs={2}>
+            <MyInput
+              name='qpoints4'
+              label='Points'
+              value={values.qpoints4}
+              onChange={handleInputChange}
+              error={errors.qpoints4}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
+
+          <Grid item xs={6}>
             <MySelect
               key={Data_Options_Group2.id}
               name='qgroup2'
@@ -469,8 +452,8 @@ export default function QuestionEntry(props) {
               options={Data_Options_Group2}
             />
           </Grid>
-          {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={4}>
+
+          <Grid item xs={6}>
             <MySelect
               key={Data_Options_Group3.id}
               name='qgroup3'

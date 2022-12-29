@@ -23,12 +23,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start01": "set PORT=3901 && set REACT_APP_SERVER_DATABASE=01 && react-scripts start",
-    "start02": "set PORT=3902 && set REACT_APP_SERVER_DATABASE=02 && react-scripts start",
-    "start11": "set PORT=3911 && set REACT_APP_SERVER_DATABASE=11 && react-scripts start",
-    "start12": "set PORT=3912 && set REACT_APP_SERVER_DATABASE=12 && react-scripts start",
-    "start16": "set PORT=3916 && set REACT_APP_SERVER_DATABASE=16 && react-scripts start",
-    "start17": "set PORT=3917 && set REACT_APP_SERVER_DATABASE=17 && react-scripts start",
+    "start01": "set PORT=3701 && set REACT_APP_SERVER_DATABASE=01 && react-scripts start",
+    "start02": "set PORT=3702 && set REACT_APP_SERVER_DATABASE=02 && react-scripts start",
+    "start11": "set PORT=3711 && set REACT_APP_SERVER_DATABASE=11 && react-scripts start",
+    "start12": "set PORT=3712 && set REACT_APP_SERVER_DATABASE=12 && react-scripts start",
+    "start16": "set PORT=3716 && set REACT_APP_SERVER_DATABASE=16 && react-scripts start",
+    "start17": "set PORT=3717 && set REACT_APP_SERVER_DATABASE=17 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
