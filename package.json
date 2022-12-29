@@ -1,0 +1,67 @@
+{
+  "name": "bridgedataentry",
+  "version": "1.22.0",
+  "description": "Bridge School Data Entry",
+  "homepage": "http://.",
+  "private": true,
+  "dependencies": {
+    "@date-io/date-fns": "^2.15.0",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/icons-material": "^5.10.3",
+    "@mui/lab": "^5.0.0-alpha.97",
+    "@mui/material": "^5.10.3",
+    "@mui/styles": "^5.10.3",
+    "axios": "^1.1.3",
+    "date-fns": "^2.29.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "5.0.1"
+  },
+  "optionalDependencies": {
+    "@types/react": "^17.0.50"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "start01": "set PORT=3901 && set REACT_APP_SERVER_DATABASE=01 && react-scripts start",
+    "start02": "set PORT=3902 && set REACT_APP_SERVER_DATABASE=02 && react-scripts start",
+    "start11": "set PORT=3911 && set REACT_APP_SERVER_DATABASE=11 && react-scripts start",
+    "start12": "set PORT=3912 && set REACT_APP_SERVER_DATABASE=12 && react-scripts start",
+    "start16": "set PORT=3916 && set REACT_APP_SERVER_DATABASE=16 && react-scripts start",
+    "start17": "set PORT=3917 && set REACT_APP_SERVER_DATABASE=17 && react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "main": "index.js",
+  "author": "Richard",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint-plugin-react-hooks": "^4.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/richardstuart007/bridgedataentry.git"
+  },
+  "bugs": {
+    "url": "https://github.com/richardstuart007/bridgedataentry/issues"
+  }
+}
