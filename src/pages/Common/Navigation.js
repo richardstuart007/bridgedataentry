@@ -60,18 +60,7 @@ export default function Navigation({ handlePage }) {
         ) : null}
 
         {/* .......................................................................................... */}
-        {CurrentPage !== 'QuestionList' ? (
-          <MyActionButton
-            startIcon={<QuizIcon fontSize='medium' />}
-            variant='contained'
-            color='warning'
-            text='Questions'
-            onClick={() => {
-              handlePage('QuestionList')
-            }}
-          ></MyActionButton>
-        ) : null}
-        {/* .......................................................................................... */}
+
         {CurrentPage !== 'OwnerGroupList' ? (
           <MyActionButton
             startIcon={<GroupIcon fontSize='medium' />}
@@ -84,30 +73,6 @@ export default function Navigation({ handlePage }) {
           ></MyActionButton>
         ) : null}
         {/* .......................................................................................... */}
-        {CurrentPage !== 'Group2List' ? (
-          <MyActionButton
-            startIcon={<GroupIcon fontSize='medium' />}
-            variant='contained'
-            color='warning'
-            text='Group2'
-            onClick={() => {
-              handlePage('Group2List')
-            }}
-          ></MyActionButton>
-        ) : null}
-        {/* .......................................................................................... */}
-        {CurrentPage !== 'Group3List' ? (
-          <MyActionButton
-            startIcon={<GroupIcon fontSize='medium' />}
-            variant='contained'
-            color='warning'
-            text='Group3'
-            onClick={() => {
-              handlePage('Group3List')
-            }}
-          ></MyActionButton>
-        ) : null}
-        {/* .......................................................................................... */}
         {CurrentPage !== 'LibraryList' ? (
           <MyActionButton
             startIcon={<QuizIcon fontSize='medium' />}
@@ -116,6 +81,18 @@ export default function Navigation({ handlePage }) {
             text='Library'
             onClick={() => {
               handlePage('LibraryList')
+            }}
+          ></MyActionButton>
+        ) : null}
+        {/* .......................................................................................... */}
+        {CurrentPage !== 'QuestionList' ? (
+          <MyActionButton
+            startIcon={<QuizIcon fontSize='medium' />}
+            variant='contained'
+            color='warning'
+            text='Questions'
+            onClick={() => {
+              handlePage('QuestionList')
             }}
           ></MyActionButton>
         ) : null}

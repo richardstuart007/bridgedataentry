@@ -29,7 +29,7 @@ import Popup from '../../components/Popup'
 const initialFValues = {
   qid: 0,
   qowner: '',
-  qkey: '',
+  qseq: 0,
   qdetail: '',
   qans1: '',
   qans2: '',
@@ -39,23 +39,27 @@ const initialFValues = {
   qpoints2: 0,
   qpoints3: 0,
   qpoints4: 0,
-  qgroup: '',
-  qgroup2: '',
-  qgroup3: ''
+  qgroup: ''
 }
+//
+//  Global Variable
+//
+let actionUpdate = false
+let disableOwner
+let disableGroup
 let Data_Options_OwnerGroup_Subset = []
 let ownerPrevious
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
+const debugLog = debugSettings(true)
 const debugFunStart = false
 const debugModule = 'QuestionEntry'
 //...................................................................................
 //.  Main Line
 //...................................................................................
 export default function QuestionEntry(props) {
-  const { addOrEdit, recordForEdit, serverMessage } = props
+  const { addOrEdit, recordForEdit, serverMessage, s_owner, s_group } = props
   if (debugFunStart) console.log(debugModule)
   if (debugLog) console.log('props ', props)
   //
@@ -76,8 +80,6 @@ export default function QuestionEntry(props) {
   //
   const Data_Options_Owner = JSON.parse(sessionStorage.getItem('Data_Options_Owner'))
   const Data_Options_OwnerGroup = JSON.parse(sessionStorage.getItem('Data_Options_OwnerGroup'))
-  const Data_Options_Group2 = JSON.parse(sessionStorage.getItem('Data_Options_Group2'))
-  const Data_Options_Group3 = JSON.parse(sessionStorage.getItem('Data_Options_Group3'))
   //
   //  On change of record, set State
   //
@@ -87,17 +89,29 @@ export default function QuestionEntry(props) {
     //
     //  Split arrays into fields
     //
-    if (recordForEdit) recordForEdit_unpack()
+    if (recordForEdit) {
+      recordForEdit_unpack()
+    } else if (s_owner || s_group) {
+      setValues({
+        ...values,
+        qowner: s_owner,
+        qgroup: s_group
+      })
+    }
+
     // eslint-disable-next-line
   }, [recordForEdit])
   if (debugLog) console.log('recordForEdit ', recordForEdit)
   //
-  //  Disable entry of Owner/Key on update, allow for Entry
+  //  Disable/Allow entry
   //
-  let actionUpdate = false
+  actionUpdate = false
   if (values && values.qid !== 0) actionUpdate = true
-  if (debugLog) console.log('values ', values)
-  if (debugLog) console.log('actionUpdate input ', actionUpdate)
+  if (debugLog) console.log('actionUpdate', actionUpdate)
+  disableOwner = actionUpdate
+  if (s_owner) disableOwner = true
+  disableGroup = actionUpdate
+  if (s_group) disableGroup = true
   //
   //  Button Text
   //
@@ -106,15 +120,11 @@ export default function QuestionEntry(props) {
   //
   //  Set Group Options
   //
-  if (actionUpdate) {
-    if (ownerPrevious !== recordForEdit.qowner) {
-      ownerPrevious = recordForEdit.qowner
+  if (s_owner) {
+    if (ownerPrevious !== s_owner) {
+      ownerPrevious = s_owner
       if (debugLog) console.log('Data_Options_OwnerGroup_Subset ', Data_Options_OwnerGroup_Subset)
-      Data_Options_OwnerGroup_Subset = loadOwnerGroupSubset(
-        true,
-        recordForEdit.qowner,
-        recordForEdit.qgroup
-      )
+      Data_Options_OwnerGroup_Subset = loadOwnerGroupSubset(true, s_owner, s_group)
     }
   }
   //.............................................................................
@@ -215,8 +225,6 @@ export default function QuestionEntry(props) {
       )
     }
 
-    if ('qkey' in fieldValues) errorsUpd.qkey = fieldValues.qkey ? '' : 'This field is required.'
-
     if ('qdetail' in fieldValues)
       errorsUpd.qdetail = fieldValues.qdetail ? '' : 'This field is required.'
 
@@ -294,6 +302,7 @@ export default function QuestionEntry(props) {
     //
     //  Reset the form in Add mode
     //
+
     let valuesUpd = { ...values }
     valuesUpd.qid = 0
     setValues({
@@ -315,7 +324,7 @@ export default function QuestionEntry(props) {
               value={values.qowner}
               onChange={handleInputChange}
               error={errors.qowner}
-              disabled={actionUpdate}
+              disabled={disableOwner}
               options={Data_Options_Owner}
             />
           </Grid>
@@ -328,16 +337,17 @@ export default function QuestionEntry(props) {
               onChange={handleInputChange}
               error={errors.qgroup}
               options={Data_Options_OwnerGroup_Subset}
+              disabled={disableGroup}
             />
           </Grid>
           {/*------------------------------------------------------------------------------ */}
           <Grid item xs={6}>
             <MyInput
-              name='qkey'
-              label='Key'
-              value={values.qkey}
+              name='qseq'
+              label='Seq'
+              value={values.qseq}
               onChange={handleInputChange}
-              error={errors.qkey}
+              error={errors.qseq}
               disabled={actionUpdate}
             />
           </Grid>
@@ -437,31 +447,6 @@ export default function QuestionEntry(props) {
               value={values.qpoints4}
               onChange={handleInputChange}
               error={errors.qpoints4}
-            />
-          </Grid>
-          {/*------------------------------------------------------------------------------ */}
-
-          <Grid item xs={6}>
-            <MySelect
-              key={Data_Options_Group2.id}
-              name='qgroup2'
-              label='Group 2'
-              value={values.qgroup2}
-              onChange={handleInputChange}
-              error={errors.qgroup2}
-              options={Data_Options_Group2}
-            />
-          </Grid>
-
-          <Grid item xs={6}>
-            <MySelect
-              key={Data_Options_Group3.id}
-              name='qgroup3'
-              label='Group 3'
-              value={values.qgroup3}
-              onChange={handleInputChange}
-              error={errors.qgroup3}
-              options={Data_Options_Group3}
             />
           </Grid>
           {/*.................................................................................................*/}

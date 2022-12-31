@@ -109,7 +109,10 @@ let w_URL
 //----------------------------------------------------------------------------
 export default function App() {
   if (debugLog) console.log(`Start APP`)
-  const [currentPage, setCurrentPage] = useState('QuestionList')
+  //
+  //  Start page
+  //
+  const [currentPage, setCurrentPage] = useState('')
   //
   //  Screen Width
   //
@@ -159,7 +162,13 @@ export default function App() {
     //
     //  Navigation
     //
+    sessionStorage.setItem('Nav_Page_Current', JSON.stringify('OwnerList'))
     sessionStorage.setItem('Nav_Page_Previous', JSON.stringify(''))
+    //
+    //  Selection
+    //
+    sessionStorage.setItem('Selection_Owner', false)
+    sessionStorage.setItem('Selection_OwnerGroup', false)
     //
     //  Initial Data Load
     //
@@ -179,20 +188,6 @@ export default function App() {
       cop_store: 'Data_Options_OwnerGroup',
       cop_received: 'Data_Options_OwnerGroup_Received'
     })
-    const Promise_Group2 = createOptions({
-      cop_sqlTable: 'group2',
-      cop_id: 'g2id',
-      cop_title: 'g2title',
-      cop_store: 'Data_Options_Group2',
-      cop_received: 'Data_Options_Group2_Received'
-    })
-    const Promise_Group3 = createOptions({
-      cop_sqlTable: 'group3',
-      cop_id: 'g3id',
-      cop_title: 'g3title',
-      cop_store: 'Data_Options_Group3',
-      cop_received: 'Data_Options_Group3_Received'
-    })
     const Promise_Library = createOptions({
       cop_sqlTable: 'library',
       cop_id: 'lrref',
@@ -210,14 +205,7 @@ export default function App() {
     //
     //   Wait for all promises
     //
-    Promise.all([
-      Promise_Owner,
-      Promise_OwnerGroup,
-      Promise_Group2,
-      Promise_Group3,
-      Promise_Library,
-      Promise_Who
-    ]).then(values => {
+    Promise.all([Promise_Owner, Promise_OwnerGroup, Promise_Library, Promise_Who]).then(values => {
       if (debugLog) console.log(`Promise values ALL`, values)
       sessionStorage.setItem('Data_Options_ALL_Received', true)
     })
@@ -292,6 +280,8 @@ export default function App() {
     //
     //  If no change of Page, return
     //
+    console.log('NextPage ', nextPage)
+    console.log('currentPage ', currentPage)
     if (nextPage === currentPage) return
     //
     //  Change of Page
@@ -322,7 +312,7 @@ export default function App() {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <Layout handlePage={handlePage}>
-          <Control />
+          <Control handlePage={handlePage} />
         </Layout>
         <CssBaseline />
       </ThemeProvider>

@@ -26,10 +26,11 @@ const initialFValues = {
 //  Global Variable
 //
 let actionUpdate
+let disableOwner
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
+const debugLog = debugSettings(true)
 const debugFunStart = false
 const debugModule = 'OwnerGroupEntry'
 //...................................................................................
@@ -37,10 +38,9 @@ const debugModule = 'OwnerGroupEntry'
 //...................................................................................
 export default function OwnerGroupEntry(props) {
   if (debugFunStart) console.log(debugModule)
-  if (debugFunStart) console.log(debugModule)
   if (debugLog) console.log('props ', props)
 
-  const { addOrEdit, recordForEdit, serverMessage } = props
+  const { addOrEdit, recordForEdit, serverMessage, s_owner } = props
   //
   //  UseMyForm
   //
@@ -66,6 +66,11 @@ export default function OwnerGroupEntry(props) {
       setValues({
         ...recordForEdit
       })
+    } else if (s_owner) {
+      setValues({
+        ...values,
+        ogowner: s_owner
+      })
     }
     // eslint-disable-next-line
   }, [recordForEdit])
@@ -74,6 +79,11 @@ export default function OwnerGroupEntry(props) {
   //
   recordForEdit === null ? (actionUpdate = false) : (actionUpdate = true)
   if (debugLog) console.log('actionUpdate', actionUpdate)
+  //
+  //  Owner entry allowed ?
+  //
+  disableOwner = actionUpdate
+  if (s_owner) disableOwner = true
   //
   //  Button Text
   //
@@ -147,7 +157,7 @@ export default function OwnerGroupEntry(props) {
               value={values.ogowner}
               onChange={handleInputChange}
               error={errors.ogowner}
-              disabled={actionUpdate}
+              disabled={disableOwner}
               options={Data_Options_Owner}
             />
           </Grid>

@@ -11,18 +11,16 @@ import WhoList from './Who/WhoList'
 import UsersList from './Users/UsersList'
 import LibraryList from './Library/LibraryList'
 import OwnerGroupList from './OwnerGroup/OwnerGroupList'
-import Group2List from './Group2/Group2List'
-import Group3List from './Group3/Group3List'
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
+const debugLog = debugSettings(true)
 //
 //  Global
 //
 let g_Page
 //===================================================================================
-function Control() {
+function Control({ handlePage }) {
   if (debugLog) console.log('Start Control')
   //.............................................................................
   //  Main Line
@@ -31,28 +29,25 @@ function Control() {
   //  Store
   //
   g_Page = JSON.parse(sessionStorage.getItem('Nav_Page_Current'))
+  if (debugLog) console.log('g_Page ', g_Page)
   //
   //  Present the selected component
   //
   switch (g_Page) {
+    case 'OwnerList':
+      return <OwnerList handlePage={handlePage} />
+    case 'OwnerGroupList':
+      return <OwnerGroupList handlePage={handlePage} />
+    case 'LibraryList':
+      return <LibraryList handlePage={handlePage} />
     case 'QuestionList':
       return <QuestionList />
-    case 'OwnerList':
-      return <OwnerList />
-    case 'LibraryList':
-      return <LibraryList />
     case 'WhoList':
       return <WhoList />
     case 'UsersList':
       return <UsersList />
-    case 'OwnerGroupList':
-      return <OwnerGroupList />
-    case 'Group2List':
-      return <Group2List />
-    case 'Group3List':
-      return <Group3List />
     default:
-      return <QuestionList />
+      return <OwnerList handlePage={handlePage} />
   }
 }
 

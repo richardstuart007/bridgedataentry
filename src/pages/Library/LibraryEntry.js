@@ -48,17 +48,19 @@ let OptionsType = [
 //  Global Variable
 //
 let actionUpdate = false
+let disableOwner
+let disableGroup
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
+const debugLog = debugSettings(true)
 const debugFunStart = false
 const debugModule = 'LibraryEntry'
 //...................................................................................
 //.  Main Line
 //...................................................................................
 export default function LibraryEntry(props) {
-  const { addOrEdit, recordForEdit, serverMessage } = props
+  const { addOrEdit, recordForEdit, serverMessage, s_owner, s_group } = props
   if (debugFunStart) console.log(debugModule)
   if (debugLog) console.log('props ', props)
   //
@@ -80,6 +82,12 @@ export default function LibraryEntry(props) {
       setValues({
         ...recordForEdit
       })
+    } else if (s_owner || s_group) {
+      setValues({
+        ...values,
+        lrowner: s_owner,
+        lrgroup: s_group
+      })
     }
     // eslint-disable-next-line
   }, [recordForEdit])
@@ -88,6 +96,10 @@ export default function LibraryEntry(props) {
   //
   recordForEdit === null ? (actionUpdate = false) : (actionUpdate = true)
   if (debugLog) console.log('actionUpdate', actionUpdate)
+  disableOwner = actionUpdate
+  if (s_owner) disableOwner = true
+  disableGroup = actionUpdate
+  if (s_group) disableGroup = true
   //
   //  Button Text
   //
@@ -171,6 +183,34 @@ export default function LibraryEntry(props) {
       <MyForm onSubmit={handleSubmit}>
         <Grid container>
           {/*------------------------------------------------------------------------------ */}
+
+          <Grid item xs={6}>
+            <MySelect
+              key={OptionsOwner.id}
+              name='lrowner'
+              label='Owner'
+              value={values.lrowner}
+              onChange={handleInputChange}
+              error={errors.lrowner}
+              options={OptionsOwner}
+              disabled={disableOwner}
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <MySelect
+              key={OptionsOwnerGroup.id}
+              name='lrgroup'
+              label='Group'
+              value={values.lrgroup}
+              onChange={handleInputChange}
+              error={errors.lrgroup}
+              options={OptionsOwnerGroup}
+              disabled={disableGroup}
+            />
+          </Grid>
+
+          {/*------------------------------------------------------------------------------ */}
           <Grid item xs={6}>
             <MyInput
               name='lrref'
@@ -188,31 +228,6 @@ export default function LibraryEntry(props) {
             </Grid>
           ) : null}
           <Grid item xs={2}></Grid>
-          {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={6}>
-            <MySelect
-              key={OptionsOwner.id}
-              name='lrowner'
-              label='Owner'
-              value={values.lrowner}
-              onChange={handleInputChange}
-              error={errors.lrowner}
-              options={OptionsOwner}
-            />
-          </Grid>
-
-          <Grid item xs={6}>
-            <MySelect
-              key={OptionsOwnerGroup.id}
-              name='lrgroup'
-              label='Group'
-              value={values.lrgroup}
-              onChange={handleInputChange}
-              error={errors.lrgroup}
-              options={OptionsOwnerGroup}
-            />
-          </Grid>
-
           {/*------------------------------------------------------------------------------ */}
           <Grid item xs={12}>
             <MyInput

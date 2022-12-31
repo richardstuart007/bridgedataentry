@@ -11,6 +11,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import CloseIcon from '@mui/icons-material/Close'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import FilterListIcon from '@mui/icons-material/FilterList'
+import QuizIcon from '@mui/icons-material/Quiz'
 //
 //  Pages
 //
@@ -89,11 +90,68 @@ const searchTypeOptions = [
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
+const debugLog = debugSettings(true)
 const debugFunStart = false
 const debugModule = 'OwnerGroupList'
-//=====================================================================================
-export default function OwnerGroupList() {
+//...................................................................................
+//.  Main Line
+//...................................................................................
+export default function OwnerGroupList({ handlePage }) {
+  //
+  //  Styles
+  //
+  const classes = useStyles()
+  //
+  //  State
+  //
+  const [recordForEdit, setRecordForEdit] = useState(null)
+  const [records, setRecords] = useState([])
+  const [filterFn, setFilterFn] = useState({
+    fn: items => {
+      return items
+    }
+  })
+  const [openPopup, setOpenPopup] = useState(false)
+  const [searchType, setSearchType] = useState('oggroup')
+  const [searchValue, setSearchValue] = useState('')
+  const [serverMessage, setServerMessage] = useState('')
+  //
+  //  Notification
+  //
+  const [notify, setNotify] = useState({
+    isOpen: false,
+    message: '',
+    severity: 'info'
+  })
+  //
+  //  Confirm Delete dialog box
+  //
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    title: '',
+    subTitle: ''
+  })
+  //
+  //  Owner Selected ?
+  //
+  const s_owner = JSON.parse(sessionStorage.getItem('Selection_Owner'))
+  let subTitle
+  s_owner ? (subTitle = `Owner: ${s_owner}`) : (subTitle = `All owners`)
+  //
+  //  Initial Data Load
+  //
+  useEffect(() => {
+    getRowAllData()
+    // eslint-disable-next-line
+  }, [])
+  //
+  //  Populate the Table
+  //
+  const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } = useMyTable(
+    records,
+    headCells,
+    filterFn
+  )
   //.............................................................................
   //.  GET ALL
   //.............................................................................
@@ -102,7 +160,11 @@ export default function OwnerGroupList() {
     //
     //  Process promise
     //
-    let sqlString = `*, concat(ogowner,oggroup) as ogkey from ${sqlTable} order by ogowner, oggroup FETCH FIRST ${SQL_ROWS} ROWS ONLY`
+    let sqlString = `*, concat(ogowner,oggroup) as ogkey from ${sqlTable}`
+    if (s_owner) sqlString = sqlString + ` where ogowner = '${s_owner}'`
+    sqlString = sqlString + ` order by ogowner, oggroup FETCH FIRST ${SQL_ROWS} ROWS ONLY`
+    if (debugLog) console.log('sqlString ', sqlString)
+
     const rowCrudparams = {
       axiosMethod: 'post',
       sqlCaller: debugModule,
@@ -290,41 +352,6 @@ export default function OwnerGroupList() {
   }
   //.............................................................................
   //
-  //  Styles
-  //
-  const classes = useStyles()
-  //
-  //  State
-  //
-  const [recordForEdit, setRecordForEdit] = useState(null)
-  const [records, setRecords] = useState([])
-  const [filterFn, setFilterFn] = useState({
-    fn: items => {
-      return items
-    }
-  })
-  const [openPopup, setOpenPopup] = useState(false)
-  const [searchType, setSearchType] = useState('oggroup')
-  const [searchValue, setSearchValue] = useState('')
-  const [serverMessage, setServerMessage] = useState('')
-  //
-  //  Notification
-  //
-  const [notify, setNotify] = useState({
-    isOpen: false,
-    message: '',
-    severity: 'info'
-  })
-  //
-  //  Confirm Delete dialog box
-  //
-  const [confirmDialog, setConfirmDialog] = useState({
-    isOpen: false,
-    title: '',
-    subTitle: ''
-  })
-  //.............................................................................
-  //
   //  Search/Filter
   //
   const handleSearch = () => {
@@ -406,27 +433,24 @@ export default function OwnerGroupList() {
       severity: 'error'
     })
   }
-  //...................................................................................
-  //.  Main Line
-  //...................................................................................
-
-  if (debugFunStart) console.log(debugModule)
-  //
-  //  Initial Data Load
-  //
-  useEffect(() => {
-    getRowAllData()
-    // eslint-disable-next-line
-  }, [])
   //.............................................................................
   //
-  //  Populate the Table
+  //  Library
   //
-  const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } = useMyTable(
-    records,
-    headCells,
-    filterFn
-  )
+  const handleLibraryList = row => {
+    sessionStorage.setItem('Selection_Owner', JSON.stringify(row.ogowner))
+    sessionStorage.setItem('Selection_OwnerGroup', JSON.stringify(row.oggroup))
+    handlePage('LibraryList')
+  }
+  //.............................................................................
+  //
+  //  questions
+  //
+  const handleQuestionList = row => {
+    sessionStorage.setItem('Selection_Owner', JSON.stringify(row.ogowner))
+    sessionStorage.setItem('Selection_OwnerGroup', JSON.stringify(row.oggroup))
+    handlePage('QuestionList')
+  }
   //...................................................................................
   //.  Render the form
   //...................................................................................
@@ -434,7 +458,7 @@ export default function OwnerGroupList() {
     <>
       <PageHeader
         title='OwnerGroup'
-        subTitle='Data Entry and Maintenance'
+        subTitle={subTitle}
         icon={<PeopleOutlineTwoToneIcon fontSize='large' />}
       />
       <Paper className={classes.pageContent}>
@@ -501,6 +525,24 @@ export default function OwnerGroupList() {
 
                 <TableCell>
                   <MyActionButton
+                    startIcon={<QuizIcon fontSize='medium' />}
+                    variant='contained'
+                    color='warning'
+                    text='Library'
+                    onClick={() => {
+                      handleLibraryList(row)
+                    }}
+                  ></MyActionButton>
+                  <MyActionButton
+                    startIcon={<QuizIcon fontSize='medium' />}
+                    variant='contained'
+                    color='warning'
+                    text='Questions'
+                    onClick={() => {
+                      handleQuestionList(row)
+                    }}
+                  ></MyActionButton>
+                  <MyActionButton
                     startIcon={<EditOutlinedIcon />}
                     color='primary'
                     onClick={() => {
@@ -533,6 +575,7 @@ export default function OwnerGroupList() {
           recordForEdit={recordForEdit}
           addOrEdit={addOrEdit}
           serverMessage={serverMessage}
+          s_owner={s_owner}
         />
       </Popup>
       <Notification notify={notify} setNotify={setNotify} />

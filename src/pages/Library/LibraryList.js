@@ -77,10 +77,10 @@ const sqlTable = 'library'
 //
 const headCells = [
   { id: 'lrid', label: 'ID' },
-  { id: 'lrref', label: 'Reference' },
-  { id: 'lrdesc', label: 'Description' },
   { id: 'lrowner', label: 'Owner' },
   { id: 'lrgroup', label: 'Group' },
+  { id: 'lrref', label: 'Reference' },
+  { id: 'lrdesc', label: 'Description' },
   { id: 'lrlink', label: 'Link' },
   { id: 'lrwho', label: 'Who' },
   { id: 'lrtype', label: 'Type' },
@@ -99,13 +99,13 @@ const searchTypeOptions = [
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
+const debugLog = debugSettings(true)
 const debugFunStart = false
 const debugModule = 'LibraryList'
 //.............................................................................
 //.  Main Line
 //.............................................................................
-export default function LibraryList() {
+export default function LibraryList({ handlePage }) {
   if (debugFunStart) console.log(debugModule)
   //
   //  Styles
@@ -142,6 +142,14 @@ export default function LibraryList() {
     subTitle: ''
   })
   //
+  //  Selection
+  //
+  const s_owner = JSON.parse(sessionStorage.getItem('Selection_Owner'))
+  const s_group = JSON.parse(sessionStorage.getItem('Selection_OwnerGroup'))
+  let subTitle = 'Selection:'
+  s_owner ? (subTitle = subTitle + ` Owner(${s_owner})`) : (subTitle = subTitle + ` Owner(ALL)`)
+  s_group ? (subTitle = subTitle + ` Group(${s_group})`) : (subTitle = subTitle + ` Group(ALL)`)
+  //
   //  Initial Data Load
   //
   useEffect(() => {
@@ -162,9 +170,20 @@ export default function LibraryList() {
   const getRowAllData = () => {
     if (debugFunStart) console.log('getRowAllData')
     //
+    //  SQL String
+    //
+    let sqlString = `* from ${sqlTable}`
+    if (s_owner || s_group) {
+      sqlString = sqlString + ` where`
+      if (s_owner) sqlString = sqlString + ` lrowner = '${s_owner}'`
+      if (s_owner && s_group) sqlString = sqlString + ` and`
+      if (s_group) sqlString = sqlString + ` lrgroup = '${s_group}'`
+    }
+    sqlString = sqlString + ` order by lrowner, lrgroup, lrref FETCH FIRST ${SQL_ROWS} ROWS ONLY`
+    if (debugLog) console.log('sqlString ', sqlString)
+    //
     //  Process promise
     //
-    let sqlString = `* from ${sqlTable} order by lrid FETCH FIRST ${SQL_ROWS} ROWS ONLY`
     const rowCrudparams = {
       axiosMethod: 'post',
       sqlCaller: debugModule,
@@ -248,7 +267,7 @@ export default function LibraryList() {
       sqlCaller: debugModule,
       sqlTable: sqlTable,
       sqlAction: 'INSERT',
-      sqlKeyName: ['lrref'],
+      sqlKeyName: ['lrowner', 'lrgroup', 'lrref'],
       sqlRow: nokeyData
     }
     const myPromiseInsert = rowCrud(rowCrudparams)
@@ -295,8 +314,8 @@ export default function LibraryList() {
     //
     //  Strip out KEY as it is not updated
     //
-    let { lrid, ...nokeyData } = data
-    if (debugLog) console.log('Upsert Database nokeyData ', nokeyData)
+    let { lrid, lrowner, lrgroup, lrref, ...nokeyData } = data
+    if (debugLog) console.log('Update Database nokeyData ', nokeyData)
     //
     //  Process promise
     //
@@ -464,7 +483,7 @@ export default function LibraryList() {
     <>
       <PageHeader
         title='Library'
-        subTitle='Data Entry and Maintenance'
+        subTitle={subTitle}
         icon={<PeopleOutlineTwoToneIcon fontSize='large' />}
       />
       <Paper className={classes.pageContent}>
@@ -526,10 +545,10 @@ export default function LibraryList() {
             {recordsAfterPagingAndSorting().map(row => (
               <TableRow key={row.lrid}>
                 <TableCell>{row.lrid}</TableCell>
-                <TableCell>{row.lrref}</TableCell>
-                <TableCell>{row.lrdesc}</TableCell>
                 <TableCell>{row.lrowner}</TableCell>
                 <TableCell>{row.lrgroup}</TableCell>
+                <TableCell>{row.lrref}</TableCell>
+                <TableCell>{row.lrdesc}</TableCell>
                 <TableCell>{row.lrlink}</TableCell>
                 <TableCell>{row.lrwho}</TableCell>
                 <TableCell>{row.lrtype}</TableCell>
@@ -568,6 +587,8 @@ export default function LibraryList() {
           recordForEdit={recordForEdit}
           addOrEdit={addOrEdit}
           serverMessage={serverMessage}
+          s_owner={s_owner}
+          s_group={s_group}
         />
       </Popup>
       <Notification notify={notify} setNotify={setNotify} />

@@ -11,6 +11,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import CloseIcon from '@mui/icons-material/Close'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import FilterListIcon from '@mui/icons-material/FilterList'
+import GroupIcon from '@mui/icons-material/Group'
 //
 //  Pages
 //
@@ -87,11 +88,11 @@ const searchTypeOptions = [
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
+const debugLog = debugSettings(true)
 const debugFunStart = false
 const debugModule = 'OwnerList'
 //=====================================================================================
-export default function OwnerList() {
+export default function OwnerList({ handlePage }) {
   //.............................................................................
   //.  GET ALL
   //.............................................................................
@@ -383,6 +384,15 @@ export default function OwnerList() {
   }
   //.............................................................................
   //
+  //  Owner/Group
+  //
+  const handleOwnerGroupList = owner => {
+    sessionStorage.setItem('Selection_Owner', JSON.stringify(owner))
+    if (debugLog) console.log('Owner ', owner)
+    handlePage('OwnerGroupList')
+  }
+  //.............................................................................
+  //
   //  Delete Row
   //
   const onDelete = oowner => {
@@ -492,6 +502,15 @@ export default function OwnerList() {
                 <TableCell>{row.otitle}</TableCell>
 
                 <TableCell>
+                  <MyActionButton
+                    startIcon={<GroupIcon fontSize='medium' />}
+                    variant='contained'
+                    color='warning'
+                    text='OwnerGroup'
+                    onClick={() => {
+                      handleOwnerGroupList(row.oowner)
+                    }}
+                  ></MyActionButton>
                   <MyActionButton
                     startIcon={<EditOutlinedIcon fontSize='small' />}
                     color='primary'

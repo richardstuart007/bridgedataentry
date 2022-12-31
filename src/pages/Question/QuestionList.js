@@ -74,21 +74,16 @@ const sqlTable = 'questions'
 const headCells = [
   { id: 'qid', label: 'ID' },
   { id: 'qowner', label: 'Owner' },
-  { id: 'qkey', label: 'Key' },
-  { id: 'qdetail', label: 'Question' },
   { id: 'qgroup', label: 'Owner Group' },
-  { id: 'qgroup2', label: 'Group 2' },
-  { id: 'qgroup3', label: 'Group 3' },
+  { id: 'qseq', label: 'Seq' },
+  { id: 'qdetail', label: 'Question' },
   { id: 'actions', label: 'Actions', disableSorting: true }
 ]
 const searchTypeOptions = [
   { id: 'qid', title: 'ID' },
   { id: 'qowner', title: 'Owner' },
-  { id: 'qkey', title: 'Key' },
-  { id: 'qdetail', title: 'Question' },
   { id: 'qgroup', title: 'Owner Group' },
-  { id: 'qgroup2', title: 'Group 2' },
-  { id: 'qgroup3', title: 'Group 3' }
+  { id: 'qdetail', title: 'Question' }
 ]
 //
 // Debug Settings
@@ -99,7 +94,7 @@ const debugModule = 'QuestionList'
 //...................................................................................
 //.  Main Line
 //...................................................................................
-export default function QuestionList() {
+export default function QuestionList({ handlePage }) {
   if (debugFunStart) console.log(debugModule)
   //
   //  Styles
@@ -136,6 +131,14 @@ export default function QuestionList() {
     subTitle: ''
   })
   //
+  //  Selection
+  //
+  const s_owner = JSON.parse(sessionStorage.getItem('Selection_Owner'))
+  const s_group = JSON.parse(sessionStorage.getItem('Selection_OwnerGroup'))
+  let subTitle = 'Selection:'
+  s_owner ? (subTitle = subTitle + ` Owner(${s_owner})`) : (subTitle = subTitle + ` Owner(ALL)`)
+  s_group ? (subTitle = subTitle + ` Group(${s_group})`) : (subTitle = subTitle + ` Group(ALL)`)
+  //
   //  Initial Data Load
   //
   useEffect(() => {
@@ -156,9 +159,20 @@ export default function QuestionList() {
   function getRowAllData() {
     if (debugFunStart) console.log('getRowAllData')
     //
+    //  SQL String
+    //
+    let sqlString = `* from ${sqlTable}`
+    if (s_owner || s_group) {
+      sqlString = sqlString + ` where`
+      if (s_owner) sqlString = sqlString + ` qowner = '${s_owner}'`
+      if (s_owner && s_group) sqlString = sqlString + ` and`
+      if (s_group) sqlString = sqlString + ` qgroup = '${s_group}'`
+    }
+    sqlString = sqlString + ` order by qowner, qgroup, qseq FETCH FIRST ${SQL_ROWS} ROWS ONLY`
+    if (debugLog) console.log('sqlString ', sqlString)
+    //
     //  Process promise
     //
-    let sqlString = `* from ${sqlTable} order by qid FETCH FIRST ${SQL_ROWS} ROWS ONLY`
     const rowCrudparams = {
       axiosMethod: 'post',
       sqlCaller: debugModule,
@@ -238,7 +252,7 @@ export default function QuestionList() {
       sqlCaller: debugModule,
       sqlTable: sqlTable,
       sqlAction: 'INSERT',
-      sqlKeyName: ['qowner', 'qkey'],
+      sqlKeyName: ['qowner', 'qgroup', 'qseq'],
       sqlRow: nokeyData
     }
     const myPromiseInsert = rowCrud(rowCrudparams)
@@ -281,7 +295,7 @@ export default function QuestionList() {
     //
     //  Strip out KEY as it is not updated
     //
-    let { qid, ...nokeyData } = data
+    let { qid, qowner, qgroup, qseq, ...nokeyData } = data
     if (debugLog) console.log('Upsert Database nokeyData ', nokeyData)
     //
     //  Process promise
@@ -351,11 +365,6 @@ export default function QuestionList() {
               x.qowner.toLowerCase().includes(searchValue.toLowerCase())
             )
             break
-          case 'qkey':
-            itemsFilter = items.filter(x =>
-              x.qkey.toLowerCase().includes(searchValue.toLowerCase())
-            )
-            break
           case 'qdetail':
             itemsFilter = items.filter(x =>
               x.qdetail.toLowerCase().includes(searchValue.toLowerCase())
@@ -364,16 +373,6 @@ export default function QuestionList() {
           case 'qgroup':
             itemsFilter = items.filter(x =>
               x.qgroup.toLowerCase().includes(searchValue.toLowerCase())
-            )
-            break
-          case 'qgroup2':
-            itemsFilter = items.filter(x =>
-              x.qgroup2.toLowerCase().includes(searchValue.toLowerCase())
-            )
-            break
-          case 'qgroup3':
-            itemsFilter = items.filter(x =>
-              x.qgroup3.toLowerCase().includes(searchValue.toLowerCase())
             )
             break
           default:
@@ -427,7 +426,7 @@ export default function QuestionList() {
     <>
       <PageHeader
         title='Questions'
-        subTitle='Data Entry and Maintenance'
+        subTitle={subTitle}
         icon={<PeopleOutlineTwoToneIcon fontSize='large' />}
       />
       <Paper className={classes.pageContent}>
@@ -490,11 +489,10 @@ export default function QuestionList() {
               <TableRow key={row.qid}>
                 <TableCell>{row.qid}</TableCell>
                 <TableCell>{row.qowner}</TableCell>
-                <TableCell>{row.qkey}</TableCell>
-                <TableCell>{row.qdetail}</TableCell>
                 <TableCell>{row.qgroup}</TableCell>
-                <TableCell>{row.qgroup2}</TableCell>
-                <TableCell>{row.qgroup3}</TableCell>
+                <TableCell>{row.qseq}</TableCell>
+                <TableCell>{row.qdetail}</TableCell>
+
                 <TableCell>
                   <MyActionButton
                     startIcon={<EditOutlinedIcon fontSize='small' />}
@@ -529,6 +527,8 @@ export default function QuestionList() {
           recordForEdit={recordForEdit}
           addOrEdit={addOrEdit}
           serverMessage={serverMessage}
+          s_owner={s_owner}
+          s_group={s_group}
         />
       </Popup>
       <Notification notify={notify} setNotify={setNotify} />
