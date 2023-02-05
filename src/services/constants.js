@@ -5,13 +5,13 @@
 //  Remote Server 1 --> Remote Database 1
 //
 exports.SERVER01 = 'REMOTE:Render/3901'
-exports.DATABASE01 = 'REMOTE:Elephant'
+exports.DATABASE01 = 'REMOTE-1:Elephant'
 exports.SERVERURL01 = 'https://bridgeserver01.onrender.com'
 //
 //  Remote Server 2 --> Remote Database 2
 //
 exports.SERVER02 = 'REMOTE:Render/3902'
-exports.DATABASE02 = 'REMOTE:Railway'
+exports.DATABASE02 = 'REMOTE-2:Railway'
 exports.SERVERURL02 = 'https://bridgeserver02.onrender.com'
 //------------------------------------------------------------------------
 //  Local Server

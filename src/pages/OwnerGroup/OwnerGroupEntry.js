@@ -30,7 +30,7 @@ let disableOwner
 //
 // Debug Settings
 //
-const debugLog = debugSettings(true)
+const debugLog = debugSettings()
 const debugFunStart = false
 const debugModule = 'OwnerGroupEntry'
 //...................................................................................

@@ -53,7 +53,7 @@ let disableGroup
 //
 // Debug Settings
 //
-const debugLog = debugSettings(true)
+const debugLog = debugSettings()
 const debugFunStart = false
 const debugModule = 'LibraryEntry'
 //...................................................................................

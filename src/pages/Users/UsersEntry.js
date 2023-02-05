@@ -40,7 +40,7 @@ let actionUpdate = true
 // Debug Settings
 //
 const debugLog = debugSettings()
-const debugFunStart = false
+const debugFunStart = true
 const debugModule = 'UsersEntry'
 //...................................................................................
 //.  Main Line

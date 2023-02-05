@@ -13,6 +13,18 @@ import debugSettings from '../debug/debugSettings'
 // Debug Settings
 //
 const debugLog = debugSettings()
+//
+//  Returned values
+//
+const rtnObj = {
+  rtnValue: false,
+  rtnMessage: '',
+  rtnSqlFunction: '',
+  rtnCatchFunction: 'apiAxios',
+  rtnCatch: true,
+  rtnCatchMsg: '',
+  rtnRows: []
+}
 //===================================================================================
 //
 // methods - post(get), post(update), delete(delete), post(upsert)
@@ -39,22 +51,29 @@ export default async function apiAxios(method, url, data) {
     //  Catch Error
     //
   } catch (error) {
+    rtnObj.rtnCatchFunction = 'apiAxios'
+    rtnObj.rtnValue = false
+    rtnObj.rtnCatch = true
     if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
-      console.log(error.response.data)
-      console.log(error.response.status)
-      console.log(error.response.headers)
+      console.log('Error.message.data ', error.response.data)
+      console.log('Error.message.status ', error.response.status)
+      console.log('Error.message.headers ', error.response.headers)
+      rtnObj.rtnCatchMsg = 'Error returned by server'
     } else if (error.request) {
       // The request was made but no response was received
       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
       // http.ClientRequest in node.js
-      console.log(error.request)
+      console.log('Error.request ', error.request)
+      rtnObj.rtnCatchMsg = 'No response from Server'
     } else {
       // Something happened in setting up the request that triggered an Error
-      console.log('Error', error.message)
+      console.log('Error.message ', error.message)
+      rtnObj.rtnCatchMsg = 'Request setup error'
     }
-    console.log(error.config)
-    return null
+    console.log('Error.config ', error.config)
+
+    return rtnObj
   }
 }

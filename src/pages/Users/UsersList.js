@@ -74,6 +74,7 @@ const headCells = [
   { id: 'u_id', label: 'ID' },
   { id: 'u_user', label: 'User' },
   { id: 'u_name', label: 'Name' },
+  { id: 'u_admin', label: 'Admin' },
   { id: 'u_email', label: 'Email' },
   { id: 'u_fedid', label: 'Bridge ID' },
   { id: 'u_fedcountry', label: 'Country' },
@@ -488,6 +489,7 @@ export default function UsersList() {
                 <TableCell>{row.u_id}</TableCell>
                 <TableCell>{row.u_user}</TableCell>
                 <TableCell>{row.u_name}</TableCell>
+                <TableCell>{row.u_admin ? 'Y' : 'N'}</TableCell>
                 <TableCell>{row.u_email}</TableCell>
                 <TableCell>{row.u_fedid}</TableCell>
                 <TableCell>{row.u_fedcountry}</TableCell>

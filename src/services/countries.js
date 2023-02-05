@@ -134,7 +134,7 @@ exports.COUNTRIES = [
     suggested: true
   },
   { code: 'GA', label: 'Gabon', phone: '241' },
-  { code: 'GB', label: 'United Kingdom', phone: '44' },
+
   { code: 'GD', label: 'Grenada', phone: '1-473' },
   { code: 'GE', label: 'Georgia', phone: '995' },
   { code: 'GF', label: 'French Guiana', phone: '594' },
@@ -382,6 +382,7 @@ exports.COUNTRIES = [
   },
   { code: 'UA', label: 'Ukraine', phone: '380' },
   { code: 'UG', label: 'Uganda', phone: '256' },
+  { code: 'UK', label: 'United Kingdom', phone: '44' },
   {
     code: 'US',
     label: 'United States',
@@ -420,5 +421,6 @@ exports.COUNTRIES = [
   { code: 'YT', label: 'Mayotte', phone: '262' },
   { code: 'ZA', label: 'South Africa', phone: '27' },
   { code: 'ZM', label: 'Zambia', phone: '260' },
-  { code: 'ZW', label: 'Zimbabwe', phone: '263' }
+  { code: 'ZW', label: 'Zimbabwe', phone: '263' },
+  { code: 'ZZ', label: 'World', phone: '999' }
 ]

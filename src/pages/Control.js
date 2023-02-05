@@ -14,7 +14,7 @@ import OwnerGroupList from './OwnerGroup/OwnerGroupList'
 //
 // Debug Settings
 //
-const debugLog = debugSettings(true)
+const debugLog = debugSettings()
 //
 //  Global
 //
