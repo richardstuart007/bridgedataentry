@@ -104,15 +104,13 @@ let w_node_env
 let w_Database
 let w_Server
 let w_URL
+const PageStart = 'OwnerList'
 //----------------------------------------------------------------------------
 //- Main Line
 //----------------------------------------------------------------------------
 export default function App() {
   if (debugLog) console.log(`Start APP`)
-  //
-  //  Start page
-  //
-  const [currentPage, setCurrentPage] = useState('')
+  const [pageCurrent, setPageCurrent] = useState(PageStart)
   //
   //  Screen Width
   //
@@ -162,7 +160,8 @@ export default function App() {
     //
     //  Navigation
     //
-    sessionStorage.setItem('Nav_Page_Current', JSON.stringify('OwnerList'))
+    sessionStorage.setItem('Nav_Page_PageStart', JSON.stringify(PageStart))
+    sessionStorage.setItem('Nav_Page_Current', JSON.stringify(PageStart))
     sessionStorage.setItem('Nav_Page_Previous', JSON.stringify(''))
     //
     //  Selection
@@ -202,10 +201,23 @@ export default function App() {
       cop_store: 'Data_Options_Who',
       cop_received: 'Data_Options_Who_Received'
     })
+    const Promise_Reftype = createOptions({
+      cop_sqlTable: 'reftype',
+      cop_id: 'rttype',
+      cop_title: 'rttitle',
+      cop_store: 'Data_Options_Reftype',
+      cop_received: 'Data_Options_Reftype_Received'
+    })
     //
     //   Wait for all promises
     //
-    Promise.all([Promise_Owner, Promise_OwnerGroup, Promise_Library, Promise_Who]).then(values => {
+    Promise.all([
+      Promise_Owner,
+      Promise_OwnerGroup,
+      Promise_Library,
+      Promise_Who,
+      Promise_Reftype
+    ]).then(values => {
       if (debugLog) console.log(`Promise values ALL`, values)
       sessionStorage.setItem('Data_Options_ALL_Received', true)
     })
@@ -278,41 +290,50 @@ export default function App() {
   //.............................................................................
   function handlePage(nextPage) {
     //
+    //  Retrieve the state
+    //
+    const PageCurrent = JSON.parse(sessionStorage.getItem('Nav_Page_Current'))
+    const PagePrevious = JSON.parse(sessionStorage.getItem('Nav_Page_Previous'))
+    //
     //  If no change of Page, return
     //
-    console.log('NextPage ', nextPage)
-    console.log('currentPage ', currentPage)
-    if (nextPage === currentPage) return
+    if (nextPage === PageCurrent) return
+    //
+    //  Back/Start ?
+    //
+    const PageNext =
+      nextPage === 'PAGEBACK' ? PagePrevious : nextPage === 'PAGESTART' ? PageStart : nextPage
     //
     //  Change of Page
     //
-    const CurrentPage = currentPage
-    if (debugLog) console.log(`Current Page ${CurrentPage} ==> New Page ${nextPage}`)
+    if (debugLog) console.log(`Current Page ${PageCurrent} ==> New Page ${PageNext}`)
     //
     //  Update Previous Page
     //
-    sessionStorage.setItem('Nav_Page_Previous', JSON.stringify(CurrentPage))
+    sessionStorage.setItem('Nav_Page_Previous', JSON.stringify(PageCurrent))
     if (debugLog)
       console.log(
-        `UPDATED PREVIOUS_Page ${JSON.parse(sessionStorage.getItem('Nav_Page_Previous'))}`
+        `UPDATED Nav_Page_Previous ${JSON.parse(sessionStorage.getItem('Nav_Page_Previous'))}`
       )
     //
     //  Update NEW Page
     //
-    sessionStorage.setItem('Nav_Page_Current', JSON.stringify(nextPage))
+    sessionStorage.setItem('Nav_Page_Current', JSON.stringify(PageNext))
     if (debugLog)
-      console.log(`UPDATED CURRENT_PAGE ${JSON.parse(sessionStorage.getItem('Nav_Page_Current'))}`)
+      console.log(
+        `UPDATED Nav_Page_Current ${JSON.parse(sessionStorage.getItem('Nav_Page_Current'))}`
+      )
     //
     //  Update State
     //
-    setCurrentPage(nextPage)
+    setPageCurrent(PageNext)
   }
   //.............................................................................
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <Layout handlePage={handlePage}>
-          <Control handlePage={handlePage} />
+        <Layout handlePage={handlePage} pageCurrent={pageCurrent}>
+          <Control handlePage={handlePage} pageCurrent={pageCurrent} />
         </Layout>
         <CssBaseline />
       </ThemeProvider>

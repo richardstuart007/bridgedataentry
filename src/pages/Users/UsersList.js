@@ -10,6 +10,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import CloseIcon from '@mui/icons-material/Close'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import FilterListIcon from '@mui/icons-material/FilterList'
+import QuizIcon from '@mui/icons-material/Quiz'
 //
 //  Pages
 //
@@ -75,6 +76,7 @@ const headCells = [
   { id: 'u_user', label: 'User' },
   { id: 'u_name', label: 'Name' },
   { id: 'u_admin', label: 'Admin' },
+  { id: 'u_dev', label: 'Dev' },
   { id: 'u_email', label: 'Email' },
   { id: 'u_fedid', label: 'Bridge ID' },
   { id: 'u_fedcountry', label: 'Country' },
@@ -94,8 +96,61 @@ const searchTypeOptions = [
 const debugLog = debugSettings()
 const debugFunStart = false
 const debugModule = 'UsersList'
-//=====================================================================================
-export default function UsersList() {
+//...................................................................................
+//.  Main Line
+//...................................................................................
+export default function UsersList({ handlePage }) {
+  if (debugFunStart) console.log(debugModule)
+  //
+  //  Styles
+  //
+  const classes = useStyles()
+  //
+  //  State
+  //
+  const [recordForEdit, setRecordForEdit] = useState(null)
+  const [records, setRecords] = useState([])
+  const [filterFn, setFilterFn] = useState({
+    fn: items => {
+      return items
+    }
+  })
+  const [openPopup, setOpenPopup] = useState(false)
+  const [searchType, setSearchType] = useState('u_name')
+  const [searchValue, setSearchValue] = useState('')
+  const [serverMessage, setServerMessage] = useState('')
+  //
+  //  Notification
+  //
+  const [notify, setNotify] = useState({
+    isOpen: false,
+    message: '',
+    severity: 'info'
+  })
+  //
+  //  Confirm Delete dialog box
+  //
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    title: '',
+    subTitle: ''
+  })
+  //
+  //  Initial Data Load
+  //
+  useEffect(() => {
+    getRowAllData()
+    // eslint-disable-next-line
+  }, [])
+  //.............................................................................
+  //
+  //  Populate the Table
+  //
+  const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } = useMyTable(
+    records,
+    headCells,
+    filterFn
+  )
   //.............................................................................
   //.  GET ALL
   //.............................................................................
@@ -283,40 +338,7 @@ export default function UsersList() {
     return myPromiseUpdate
   }
   //.............................................................................
-  //
-  //  Styles
-  //
-  const classes = useStyles()
-  //
-  //  State
-  //
-  const [recordForEdit, setRecordForEdit] = useState(null)
-  const [records, setRecords] = useState([])
-  const [filterFn, setFilterFn] = useState({
-    fn: items => {
-      return items
-    }
-  })
-  const [openPopup, setOpenPopup] = useState(false)
-  const [searchType, setSearchType] = useState('u_name')
-  const [searchValue, setSearchValue] = useState('')
-  const [serverMessage, setServerMessage] = useState('')
-  //
-  //  Notification
-  //
-  const [notify, setNotify] = useState({
-    isOpen: false,
-    message: '',
-    severity: 'info'
-  })
-  //
-  //  Confirm Delete dialog box
-  //
-  const [confirmDialog, setConfirmDialog] = useState({
-    isOpen: false,
-    title: '',
-    subTitle: ''
-  })
+
   //.............................................................................
   //
   //  Search/Filter
@@ -406,28 +428,16 @@ export default function UsersList() {
       severity: 'error'
     })
   }
-
-  //...................................................................................
-  //.  Main Line
-  //...................................................................................
-
-  if (debugFunStart) console.log(debugModule)
-  //
-  //  Initial Data Load
-  //
-  useEffect(() => {
-    getRowAllData()
-    // eslint-disable-next-line
-  }, [])
   //.............................................................................
   //
-  //  Populate the Table
+  //  Usersowners
   //
-  const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } = useMyTable(
-    records,
-    headCells,
-    filterFn
-  )
+  const handleUsersownerList = row => {
+    sessionStorage.setItem('Selection_UserId', JSON.stringify(row.u_id))
+    sessionStorage.setItem('Selection_User', JSON.stringify(row.u_user))
+    handlePage('UsersownerList')
+  }
+
   //...................................................................................
   //.  Render the form
   //...................................................................................
@@ -490,12 +500,22 @@ export default function UsersList() {
                 <TableCell>{row.u_user}</TableCell>
                 <TableCell>{row.u_name}</TableCell>
                 <TableCell>{row.u_admin ? 'Y' : 'N'}</TableCell>
+                <TableCell>{row.u_dev ? 'Y' : 'N'}</TableCell>
                 <TableCell>{row.u_email}</TableCell>
                 <TableCell>{row.u_fedid}</TableCell>
                 <TableCell>{row.u_fedcountry}</TableCell>
                 <TableCell>{row.u_dftmaxquestions}</TableCell>
                 <TableCell>{row.u_dftowner}</TableCell>
                 <TableCell>
+                  <MyActionButton
+                    startIcon={<QuizIcon fontSize='medium' />}
+                    variant='contained'
+                    color='warning'
+                    text='Usersowners'
+                    onClick={() => {
+                      handleUsersownerList(row)
+                    }}
+                  ></MyActionButton>
                   <MyActionButton
                     startIcon={<EditOutlinedIcon fontSize='small' />}
                     color='primary'
@@ -524,6 +544,17 @@ export default function UsersList() {
         </TblContainer>
         <TblPagination />
       </Paper>
+      {/* .......................................................................................... */}
+      <MyButton
+        type='submit'
+        text='Back'
+        color='warning'
+        variant='contained'
+        onClick={() => {
+          handlePage('PAGEBACK')
+        }}
+      />
+      {/* .......................................................................................... */}
       <Popup title='Users Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>
         <UsersEntry
           recordForEdit={recordForEdit}

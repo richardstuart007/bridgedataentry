@@ -31,7 +31,6 @@ const useStyles = makeStyles(theme => {
 // Debug Settings
 //
 const debugLog = debugSettings()
-
 //===================================================================================
 export default function Navigation({ handlePage }) {
   const classes = useStyles()
@@ -80,6 +79,8 @@ export default function Navigation({ handlePage }) {
             color='warning'
             text='Library'
             onClick={() => {
+              sessionStorage.setItem('Selection_Owner', null)
+              sessionStorage.setItem('Selection_OwnerGroup', null)
               handlePage('LibraryList')
             }}
           ></MyActionButton>
@@ -92,6 +93,8 @@ export default function Navigation({ handlePage }) {
             color='warning'
             text='Questions'
             onClick={() => {
+              sessionStorage.setItem('Selection_Owner', null)
+              sessionStorage.setItem('Selection_OwnerGroup', null)
               handlePage('QuestionList')
             }}
           ></MyActionButton>
@@ -109,6 +112,18 @@ export default function Navigation({ handlePage }) {
           ></MyActionButton>
         ) : null}
         {/* .......................................................................................... */}
+        {CurrentPage !== 'ReftypeList' ? (
+          <MyActionButton
+            startIcon={<PersonIcon fontSize='medium' />}
+            variant='contained'
+            text='Reftype'
+            color='warning'
+            onClick={() => {
+              handlePage('ReftypeList')
+            }}
+          ></MyActionButton>
+        ) : null}
+        {/* .......................................................................................... */}
         {CurrentPage !== 'UsersList' ? (
           <MyActionButton
             startIcon={<PersonIcon fontSize='medium' />}
@@ -117,6 +132,20 @@ export default function Navigation({ handlePage }) {
             color='warning'
             onClick={() => {
               handlePage('UsersList')
+            }}
+          ></MyActionButton>
+        ) : null}
+        {/* .......................................................................................... */}
+        {CurrentPage !== 'UsersownerList' ? (
+          <MyActionButton
+            startIcon={<PersonIcon fontSize='medium' />}
+            variant='contained'
+            text='Usersowner'
+            color='warning'
+            onClick={() => {
+              sessionStorage.setItem('Selection_UserId', null)
+              sessionStorage.setItem('Selection_User', null)
+              handlePage('UsersownerList')
             }}
           ></MyActionButton>
         ) : null}

@@ -11,11 +11,10 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import CloseIcon from '@mui/icons-material/Close'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import FilterListIcon from '@mui/icons-material/FilterList'
-import GroupIcon from '@mui/icons-material/Group'
 //
 //  Pages
 //
-import OwnerEntry from './OwnerEntry'
+import ReftypeEntry from './ReftypeEntry'
 //
 //  Controls
 //
@@ -69,30 +68,30 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 //
-//  Owners Table
+//  Table
 //
 const { SQL_ROWS } = require('../../services/constants.js')
-const sqlTable = 'owner'
+const sqlTable = 'reftype'
 //
 //  Table Heading
 //
 const headCells = [
-  { id: 'oowner', label: 'Owner' },
-  { id: 'otitle', label: 'Title' },
+  { id: 'rttype', label: 'Type' },
+  { id: 'rttitle', label: 'Title' },
   { id: 'actions', label: 'Actions', disableSorting: true }
 ]
 const searchTypeOptions = [
-  { id: 'oowner', title: 'Owner' },
-  { id: 'otitle', title: 'Title' }
+  { id: 'rttype', title: 'Type' },
+  { id: 'rttitle', title: 'Title' }
 ]
 //
 // Debug Settings
 //
 const debugLog = debugSettings()
 const debugFunStart = false
-const debugModule = 'OwnerList'
+const debugModule = 'ReftypeList'
 //=====================================================================================
-export default function OwnerList({ handlePage }) {
+export default function ReftypeList({ handlePage }) {
   //.............................................................................
   //.  GET ALL
   //.............................................................................
@@ -101,7 +100,7 @@ export default function OwnerList({ handlePage }) {
     //
     //  Process promise
     //
-    let sqlString = `* from ${sqlTable} order by oowner FETCH FIRST ${SQL_ROWS} ROWS ONLY`
+    let sqlString = `* from ${sqlTable} order by rttype FETCH FIRST ${SQL_ROWS} ROWS ONLY`
     const rowCrudparams = {
       axiosMethod: 'post',
       sqlCaller: debugModule,
@@ -133,7 +132,7 @@ export default function OwnerList({ handlePage }) {
   //.............................................................................
   //.  DELETE
   //.............................................................................
-  const deleteRowData = oowner => {
+  const deleteRowData = rttype => {
     if (debugFunStart) console.log('deleteRowData')
     //
     //  Process promise
@@ -143,7 +142,7 @@ export default function OwnerList({ handlePage }) {
       sqlCaller: debugModule,
       sqlTable: sqlTable,
       sqlAction: 'DELETE',
-      sqlWhere: `oowner = '${oowner}'`
+      sqlWhere: `rttype = '${rttype}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -180,7 +179,7 @@ export default function OwnerList({ handlePage }) {
       sqlCaller: debugModule,
       sqlTable: sqlTable,
       sqlAction: 'INSERT',
-      sqlKeyName: ['oowner'],
+      sqlKeyName: ['rttype'],
       sqlRow: data
     }
     const myPromiseInsert = rowCrud(rowCrudparams)
@@ -227,7 +226,7 @@ export default function OwnerList({ handlePage }) {
     //
     //  Strip out KEY as it is not updated
     //
-    let { oowner, ...nokeyData } = data
+    let { rttype, ...nokeyData } = data
     if (debugLog) console.log('Upsert Database nokeyData ', nokeyData)
     //
     //  Process promise
@@ -237,7 +236,7 @@ export default function OwnerList({ handlePage }) {
       sqlCaller: debugModule,
       sqlTable: sqlTable,
       sqlAction: 'UPDATE',
-      sqlWhere: `oowner = '${oowner}'`,
+      sqlWhere: `rttype = '${rttype}'`,
       sqlRow: nokeyData
     }
     const myPromiseUpdate = rowCrud(rowCrudparams)
@@ -273,18 +272,18 @@ export default function OwnerList({ handlePage }) {
     return myPromiseUpdate
   }
   //.............................................................................
-  //  Update the  Options
+  //  Update the Options
   //.............................................................................
   function updateOptions() {
     //
     //  Create options
     //
     createOptions({
-      cop_sqlTable: 'owner',
-      cop_id: 'oowner',
-      cop_title: 'otitle',
-      cop_store: 'Data_Options_Owner',
-      cop_received: 'Data_Options_Owner_Received'
+      cop_sqlTable: 'Reftype',
+      cop_id: 'rttype',
+      cop_title: 'rttitle',
+      cop_store: 'Data_Options_Reftype',
+      cop_received: 'Data_Options_Reftype_Received'
     })
   }
   //.............................................................................
@@ -303,7 +302,7 @@ export default function OwnerList({ handlePage }) {
     }
   })
   const [openPopup, setOpenPopup] = useState(false)
-  const [searchType, setSearchType] = useState('oowner')
+  const [searchType, setSearchType] = useState('rttype')
   const [searchValue, setSearchValue] = useState('')
   const [serverMessage, setServerMessage] = useState('')
   //
@@ -341,15 +340,16 @@ export default function OwnerList({ handlePage }) {
         //
         let itemsFilter = items
         switch (searchType) {
-          case 'oowner':
-            itemsFilter = items.filter(x => x.oowner === parseInt(searchValue))
-            break
-          case 'otitle':
+          case 'rttype':
             itemsFilter = items.filter(x =>
-              x.otitle.toLowerCase().includes(searchValue.toLowerCase())
+              x.rttype.toLowerCase().includes(searchValue.toLowerCase())
             )
             break
-
+          case 'rttitle':
+            itemsFilter = items.filter(x =>
+              x.rttitle.toLowerCase().includes(searchValue.toLowerCase())
+            )
+            break
           default:
         }
         if (debugLog) console.log('itemsFilter ', itemsFilter)
@@ -384,24 +384,15 @@ export default function OwnerList({ handlePage }) {
   }
   //.............................................................................
   //
-  //  Owner/Group
-  //
-  const handleOwnerGroupList = owner => {
-    sessionStorage.setItem('Selection_Owner', JSON.stringify(owner))
-    if (debugLog) console.log('Owner ', owner)
-    handlePage('OwnerGroupList')
-  }
-  //.............................................................................
-  //
   //  Delete Row
   //
-  const onDelete = oowner => {
+  const onDelete = rttype => {
     if (debugFunStart) console.log('onDelete')
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false
     })
-    deleteRowData(oowner)
+    deleteRowData(rttype)
     setNotify({
       isOpen: true,
       message: 'Deleted Successfully',
@@ -412,7 +403,6 @@ export default function OwnerList({ handlePage }) {
   //...................................................................................
   //.  Main Line
   //...................................................................................
-
   if (debugFunStart) console.log(debugModule)
   //
   //  Initial Data Load
@@ -436,7 +426,7 @@ export default function OwnerList({ handlePage }) {
   return (
     <>
       <PageHeader
-        title='Owners'
+        title='Reftypes'
         subTitle='Data Entry and Maintenance'
         icon={<PeopleOutlineTwoToneIcon fontSize='large' />}
       />
@@ -485,32 +475,23 @@ export default function OwnerList({ handlePage }) {
             text='Add New'
             variant='outlined'
             startIcon={<AddIcon />}
-            className={classes.newButton}
             onClick={() => {
               setServerMessage('')
               setOpenPopup(true)
               setRecordForEdit(null)
             }}
+            className={classes.newButton}
           />
         </Toolbar>
         <TblContainer>
           <TblHead />
           <TableBody>
             {recordsAfterPagingAndSorting().map(row => (
-              <TableRow key={row.oowner}>
-                <TableCell>{row.oowner}</TableCell>
-                <TableCell>{row.otitle}</TableCell>
+              <TableRow key={row.rttype}>
+                <TableCell>{row.rttype}</TableCell>
+                <TableCell>{row.rttitle}</TableCell>
 
                 <TableCell>
-                  <MyActionButton
-                    startIcon={<GroupIcon fontSize='medium' />}
-                    variant='contained'
-                    color='warning'
-                    text='OwnerGroup'
-                    onClick={() => {
-                      handleOwnerGroupList(row.oowner)
-                    }}
-                  ></MyActionButton>
                   <MyActionButton
                     startIcon={<EditOutlinedIcon fontSize='small' />}
                     color='primary'
@@ -527,7 +508,7 @@ export default function OwnerList({ handlePage }) {
                         title: 'Are you sure to delete this record?',
                         subTitle: "You can't undo this operation",
                         onConfirm: () => {
-                          onDelete(row.oowner)
+                          onDelete(row.rttype)
                         }
                       })
                     }}
@@ -550,8 +531,8 @@ export default function OwnerList({ handlePage }) {
         }}
       />
       {/* .......................................................................................... */}
-      <Popup title='Owner Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>
-        <OwnerEntry
+      <Popup title='Reftype Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>
+        <ReftypeEntry
           recordForEdit={recordForEdit}
           addOrEdit={addOrEdit}
           serverMessage={serverMessage}

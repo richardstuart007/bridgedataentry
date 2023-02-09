@@ -28,23 +28,6 @@ const initialFValues = {
   lrtype: ''
 }
 //
-//  Options
-//
-let OptionsType = [
-  {
-    id: 'pdf',
-    title: 'PDF'
-  },
-  {
-    id: 'webdoc',
-    title: 'Web Document'
-  },
-  {
-    id: 'youtube',
-    title: 'YouTube Video'
-  }
-]
-//
 //  Global Variable
 //
 let actionUpdate = false
@@ -67,6 +50,7 @@ export default function LibraryEntry(props) {
   //  Define the Store
   //
   const OptionsWho = JSON.parse(sessionStorage.getItem('Data_Options_Who'))
+  const OptionsReftype = JSON.parse(sessionStorage.getItem('Data_Options_Reftype'))
   const OptionsOwner = JSON.parse(sessionStorage.getItem('Data_Options_Owner'))
   const OptionsOwnerGroup = JSON.parse(sessionStorage.getItem('Data_Options_OwnerGroup'))
   //
@@ -263,13 +247,13 @@ export default function LibraryEntry(props) {
 
           <Grid item xs={4}>
             <MySelect
-              key={OptionsType.id}
+              key={OptionsReftype.id}
               name='lrtype'
               label='Type'
               value={values.lrtype}
               onChange={handleInputChange}
               error={errors.lrtype}
-              options={OptionsType}
+              options={OptionsReftype}
             />
           </Grid>
           <Grid item xs={2}></Grid>

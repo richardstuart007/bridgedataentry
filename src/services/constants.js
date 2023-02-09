@@ -31,13 +31,13 @@ exports.SERVERURL12 = 'http://localhost:3912'
 //
 exports.SERVER16 = 'LOCAL:3916'
 exports.SERVERURL16 = 'http://localhost:3916'
-exports.DATABASE6 = 'LOCAL:6'
+exports.DATABASE6 = 'LOCAL:bridge6'
 //
 //  Local Server --> Local Database 7
 //
 exports.SERVER17 = 'LOCAL:3917'
 exports.SERVERURL17 = 'http://localhost:3917'
-exports.DATABASE7 = 'LOCAL:7'
+exports.DATABASE7 = 'LOCAL:bridge7'
 //------------------------------------------------------------------------
 //  Server details
 //------------------------------------------------------------------------

@@ -522,6 +522,17 @@ export default function QuestionList({ handlePage }) {
         </TblContainer>
         <TblPagination />
       </Paper>
+      {/* .......................................................................................... */}
+      <MyButton
+        type='submit'
+        text='Back'
+        color='warning'
+        variant='contained'
+        onClick={() => {
+          handlePage('PAGEBACK')
+        }}
+      />
+      {/* .......................................................................................... */}
       <Popup title='Question Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>
         <QuestionEntry
           recordForEdit={recordForEdit}

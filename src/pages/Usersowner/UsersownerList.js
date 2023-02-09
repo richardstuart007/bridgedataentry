@@ -7,15 +7,13 @@ import { Paper, TableBody, TableRow, TableCell, Toolbar, InputAdornment, Box } f
 import makeStyles from '@mui/styles/makeStyles'
 import SearchIcon from '@mui/icons-material/Search'
 import AddIcon from '@mui/icons-material/Add'
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import CloseIcon from '@mui/icons-material/Close'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import FilterListIcon from '@mui/icons-material/FilterList'
-import GroupIcon from '@mui/icons-material/Group'
 //
 //  Pages
 //
-import OwnerEntry from './OwnerEntry'
+import UsersownerEntry from './UsersownerEntry'
 //
 //  Controls
 //
@@ -35,10 +33,6 @@ import useMyTable from '../../components/useMyTable'
 //  Services
 //
 import rowCrud from '../../utilities/rowCrud'
-//
-//  Options
-//
-import createOptions from '../../utilities/createOptions'
 //
 //  Debug Settings
 //
@@ -69,30 +63,95 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 //
-//  Owners Table
+//  Table
 //
 const { SQL_ROWS } = require('../../services/constants.js')
-const sqlTable = 'owner'
+const sqlTable = 'usersowner'
 //
 //  Table Heading
 //
 const headCells = [
-  { id: 'oowner', label: 'Owner' },
-  { id: 'otitle', label: 'Title' },
+  { id: 'uoid', label: 'Id' },
+  { id: 'uouser', label: 'User' },
+  { id: 'uoowner', label: 'Owner' },
   { id: 'actions', label: 'Actions', disableSorting: true }
 ]
 const searchTypeOptions = [
-  { id: 'oowner', title: 'Owner' },
-  { id: 'otitle', title: 'Title' }
+  { id: 'uouser', title: 'User' },
+  { id: 'uoowner', title: 'Owner' }
 ]
 //
 // Debug Settings
 //
 const debugLog = debugSettings()
 const debugFunStart = false
-const debugModule = 'OwnerList'
-//=====================================================================================
-export default function OwnerList({ handlePage }) {
+const debugModule = 'UsersownerList'
+//...................................................................................
+//.  Main Line
+//...................................................................................
+export default function UsersownerList({ handlePage }) {
+  if (debugFunStart) console.log(debugModule)
+  //
+  //  Styles
+  //
+  const classes = useStyles()
+  //
+  //  State
+  //
+  const [recordForEdit, setRecordForEdit] = useState(null)
+  const [records, setRecords] = useState([])
+  const [filterFn, setFilterFn] = useState({
+    fn: items => {
+      return items
+    }
+  })
+  const [openPopup, setOpenPopup] = useState(false)
+  const [searchType, setSearchType] = useState('uouser')
+  const [searchValue, setSearchValue] = useState('')
+  const [serverMessage, setServerMessage] = useState('')
+  //
+  //  Notification
+  //
+  const [notify, setNotify] = useState({
+    isOpen: false,
+    message: '',
+    severity: 'info'
+  })
+  //
+  //  Confirm Delete dialog box
+  //
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    title: '',
+    subTitle: ''
+  })
+  //
+  //  Selection
+  //
+  const s_id = JSON.parse(sessionStorage.getItem('Selection_UserId'))
+  const s_user = JSON.parse(sessionStorage.getItem('Selection_User'))
+  let subTitle
+  if (s_id) subTitle = `Selection: Id(${s_id}) User(${s_user})`
+  //
+  //  No User - disable add button
+  //
+  let hasId = false
+  if (s_id) hasId = true
+  //
+  //  Initial Data Load
+  //
+  useEffect(() => {
+    getRowAllData()
+    // eslint-disable-next-line
+  }, [])
+  //
+  //  Populate the Table
+  //
+  const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } = useMyTable(
+    records,
+    headCells,
+    filterFn
+  )
   //.............................................................................
   //.  GET ALL
   //.............................................................................
@@ -101,7 +160,10 @@ export default function OwnerList({ handlePage }) {
     //
     //  Process promise
     //
-    let sqlString = `* from ${sqlTable} order by oowner FETCH FIRST ${SQL_ROWS} ROWS ONLY`
+    let sqlString = `* from ${sqlTable}`
+    if (s_id) sqlString = sqlString + ` where uoid = '${s_id}' `
+    sqlString = sqlString + ` order by uoid, uoowner FETCH FIRST ${SQL_ROWS} ROWS ONLY`
+    if (debugLog) console.log('sqlString ', sqlString)
     const rowCrudparams = {
       axiosMethod: 'post',
       sqlCaller: debugModule,
@@ -133,8 +195,10 @@ export default function OwnerList({ handlePage }) {
   //.............................................................................
   //.  DELETE
   //.............................................................................
-  const deleteRowData = oowner => {
+  const deleteRowData = row => {
     if (debugFunStart) console.log('deleteRowData')
+    const uoid = row.uoid
+    const uoowner = row.uoowner
     //
     //  Process promise
     //
@@ -143,7 +207,7 @@ export default function OwnerList({ handlePage }) {
       sqlCaller: debugModule,
       sqlTable: sqlTable,
       sqlAction: 'DELETE',
-      sqlWhere: `oowner = '${oowner}'`
+      sqlWhere: `uoid = '${uoid}' and uoowner = '${uoowner}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -155,7 +219,6 @@ export default function OwnerList({ handlePage }) {
       //  Update State - refetch data
       //
       getRowAllData()
-      updateOptions()
       return
     })
     //
@@ -180,7 +243,7 @@ export default function OwnerList({ handlePage }) {
       sqlCaller: debugModule,
       sqlTable: sqlTable,
       sqlAction: 'INSERT',
-      sqlKeyName: ['oowner'],
+      sqlKeyName: ['uoid', 'uoowner'],
       sqlRow: data
     }
     const myPromiseInsert = rowCrud(rowCrudparams)
@@ -207,7 +270,6 @@ export default function OwnerList({ handlePage }) {
       //  Update State - refetch data
       //
       getRowAllData()
-      updateOptions()
       return
     })
     //
@@ -216,116 +278,8 @@ export default function OwnerList({ handlePage }) {
     return myPromiseInsert
   }
   //.............................................................................
-  //.  UPDATE
-  //.............................................................................
-  const updateRowData = data => {
-    if (debugFunStart) console.log('updateRowData')
-    //
-    //  Data Received
-    //
-    if (debugLog) console.log('updateRowData Row ', data)
-    //
-    //  Strip out KEY as it is not updated
-    //
-    let { oowner, ...nokeyData } = data
-    if (debugLog) console.log('Upsert Database nokeyData ', nokeyData)
-    //
-    //  Process promise
-    //
-    const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'UPDATE',
-      sqlWhere: `oowner = '${oowner}'`,
-      sqlRow: nokeyData
-    }
-    const myPromiseUpdate = rowCrud(rowCrudparams)
-    //
-    //  Resolve Status
-    //
-    myPromiseUpdate.then(function (rtnObj) {
-      if (debugLog) console.log('rtnObj ', rtnObj)
-      //
-      //  Completion message
-      //
-      setServerMessage(rtnObj.rtnMessage)
-      //
-      //  No data returned
-      //
-      if (!rtnObj.rtnValue) return
-      //
-      //  Update record for edit with returned data
-      //
-      const rtnData = rtnObj.rtnRows
-      setRecordForEdit(rtnData[0])
-      if (debugLog) console.log(`recordForEdit `, recordForEdit)
-      //
-      //  Update State - refetch data
-      //
-      getRowAllData()
-      updateOptions()
-      return
-    })
-    //
-    //  Return Promise
-    //
-    return myPromiseUpdate
-  }
-  //.............................................................................
-  //  Update the  Options
-  //.............................................................................
-  function updateOptions() {
-    //
-    //  Create options
-    //
-    createOptions({
-      cop_sqlTable: 'owner',
-      cop_id: 'oowner',
-      cop_title: 'otitle',
-      cop_store: 'Data_Options_Owner',
-      cop_received: 'Data_Options_Owner_Received'
-    })
-  }
-  //.............................................................................
-  //
-  //  Styles
-  //
-  const classes = useStyles()
-  //
-  //  State
-  //
-  const [recordForEdit, setRecordForEdit] = useState(null)
-  const [records, setRecords] = useState([])
-  const [filterFn, setFilterFn] = useState({
-    fn: items => {
-      return items
-    }
-  })
-  const [openPopup, setOpenPopup] = useState(false)
-  const [searchType, setSearchType] = useState('oowner')
-  const [searchValue, setSearchValue] = useState('')
-  const [serverMessage, setServerMessage] = useState('')
-  //
-  //  Notification
-  //
-  const [notify, setNotify] = useState({
-    isOpen: false,
-    message: '',
-    severity: 'info'
-  })
-  //
-  //  Confirm Delete dialog box
-  //
-  const [confirmDialog, setConfirmDialog] = useState({
-    isOpen: false,
-    title: '',
-    subTitle: ''
-  })
-  //.............................................................................
-  //
   //  Search/Filter
-  //
+  //.............................................................................
   const handleSearch = () => {
     if (debugFunStart) console.log('handleSearch')
     setFilterFn({
@@ -341,15 +295,16 @@ export default function OwnerList({ handlePage }) {
         //
         let itemsFilter = items
         switch (searchType) {
-          case 'oowner':
-            itemsFilter = items.filter(x => x.oowner === parseInt(searchValue))
-            break
-          case 'otitle':
+          case 'uouser':
             itemsFilter = items.filter(x =>
-              x.otitle.toLowerCase().includes(searchValue.toLowerCase())
+              x.uouser.toLowerCase().includes(searchValue.toLowerCase())
             )
             break
-
+          case 'uoowner':
+            itemsFilter = items.filter(x =>
+              x.uoowner.toLowerCase().includes(searchValue.toLowerCase())
+            )
+            break
           default:
         }
         if (debugLog) console.log('itemsFilter ', itemsFilter)
@@ -359,12 +314,11 @@ export default function OwnerList({ handlePage }) {
     })
   }
   //.............................................................................
-  //
   //  Update Database
   //
   const addOrEdit = (row, resetForm) => {
     if (debugFunStart) console.log('addOrEdit')
-    recordForEdit === null ? insertRowData(row) : updateRowData(row)
+    insertRowData(row)
 
     setNotify({
       isOpen: true,
@@ -374,70 +328,54 @@ export default function OwnerList({ handlePage }) {
   }
   //.............................................................................
   //
-  //  Data Entry Popup
-  //
-  const openInPopup = row => {
-    if (debugFunStart) console.log('openInPopup')
-    setServerMessage('')
-    setRecordForEdit(row)
-    setOpenPopup(true)
-  }
-  //.............................................................................
-  //
-  //  Owner/Group
-  //
-  const handleOwnerGroupList = owner => {
-    sessionStorage.setItem('Selection_Owner', JSON.stringify(owner))
-    if (debugLog) console.log('Owner ', owner)
-    handlePage('OwnerGroupList')
-  }
-  //.............................................................................
-  //
   //  Delete Row
   //
-  const onDelete = oowner => {
+  const onDelete = row => {
     if (debugFunStart) console.log('onDelete')
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false
     })
-    deleteRowData(oowner)
+    deleteRowData(row)
     setNotify({
       isOpen: true,
       message: 'Deleted Successfully',
       severity: 'error'
     })
   }
-
-  //...................................................................................
-  //.  Main Line
-  //...................................................................................
-
-  if (debugFunStart) console.log(debugModule)
-  //
-  //  Initial Data Load
-  //
-  useEffect(() => {
-    getRowAllData()
-    // eslint-disable-next-line
-  }, [])
   //.............................................................................
   //
-  //  Populate the Table
+  //  Data Entry Popup
   //
-  const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } = useMyTable(
-    records,
-    headCells,
-    filterFn
-  )
+  const editRow = row => {
+    if (debugFunStart) console.log('editRow')
+    setServerMessage('')
+    setRecordForEdit(row)
+    setOpenPopup(true)
+  }
+  //.............................................................................
+  //
+  //  Data Entry Popup
+  //
+  const addRow = () => {
+    if (debugFunStart) console.log('addRow')
+    setServerMessage('')
+    const row = {
+      uoid: s_id,
+      uouser: s_user,
+      uoowner: null
+    }
+    setRecordForEdit(row)
+    setOpenPopup(true)
+  }
   //...................................................................................
   //.  Render the form
   //...................................................................................
   return (
     <>
       <PageHeader
-        title='Owners'
-        subTitle='Data Entry and Maintenance'
+        title='User Owners'
+        subTitle={subTitle}
         icon={<PeopleOutlineTwoToneIcon fontSize='large' />}
       />
       <Paper className={classes.pageContent}>
@@ -480,44 +418,28 @@ export default function OwnerList({ handlePage }) {
             onClick={getRowAllData}
             className={classes.myButton}
           />
-
-          <MyButton
-            text='Add New'
-            variant='outlined'
-            startIcon={<AddIcon />}
-            className={classes.newButton}
-            onClick={() => {
-              setServerMessage('')
-              setOpenPopup(true)
-              setRecordForEdit(null)
-            }}
-          />
+          {hasId ? (
+            <MyButton
+              text='Add New'
+              variant='outlined'
+              startIcon={<AddIcon />}
+              onClick={() => {
+                addRow()
+              }}
+              className={classes.newButton}
+            />
+          ) : null}
         </Toolbar>
         <TblContainer>
           <TblHead />
           <TableBody>
             {recordsAfterPagingAndSorting().map(row => (
-              <TableRow key={row.oowner}>
-                <TableCell>{row.oowner}</TableCell>
-                <TableCell>{row.otitle}</TableCell>
+              <TableRow key={row.uoid + row.uoowner}>
+                <TableCell>{row.uoid}</TableCell>
+                <TableCell>{row.uouser}</TableCell>
+                <TableCell>{row.uoowner}</TableCell>
 
                 <TableCell>
-                  <MyActionButton
-                    startIcon={<GroupIcon fontSize='medium' />}
-                    variant='contained'
-                    color='warning'
-                    text='OwnerGroup'
-                    onClick={() => {
-                      handleOwnerGroupList(row.oowner)
-                    }}
-                  ></MyActionButton>
-                  <MyActionButton
-                    startIcon={<EditOutlinedIcon fontSize='small' />}
-                    color='primary'
-                    onClick={() => {
-                      openInPopup(row)
-                    }}
-                  ></MyActionButton>
                   <MyActionButton
                     startIcon={<CloseIcon fontSize='small' />}
                     color='secondary'
@@ -527,9 +449,16 @@ export default function OwnerList({ handlePage }) {
                         title: 'Are you sure to delete this record?',
                         subTitle: "You can't undo this operation",
                         onConfirm: () => {
-                          onDelete(row.oowner)
+                          onDelete(row)
                         }
                       })
+                    }}
+                  ></MyActionButton>
+                  <MyActionButton
+                    startIcon={<AddIcon fontSize='small' />}
+                    color='primary'
+                    onClick={() => {
+                      editRow(row)
                     }}
                   ></MyActionButton>
                 </TableCell>
@@ -550,8 +479,8 @@ export default function OwnerList({ handlePage }) {
         }}
       />
       {/* .......................................................................................... */}
-      <Popup title='Owner Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>
-        <OwnerEntry
+      <Popup title='Usersowner Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>
+        <UsersownerEntry
           recordForEdit={recordForEdit}
           addOrEdit={addOrEdit}
           serverMessage={serverMessage}

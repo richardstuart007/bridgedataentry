@@ -582,6 +582,17 @@ export default function LibraryList({ handlePage }) {
         </TblContainer>
         <TblPagination />
       </Paper>
+      {/* .......................................................................................... */}
+      <MyButton
+        type='submit'
+        text='Back'
+        color='warning'
+        variant='contained'
+        onClick={() => {
+          handlePage('PAGEBACK')
+        }}
+      />
+      {/* .......................................................................................... */}
       <Popup title='Library Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>
         <LibraryEntry
           recordForEdit={recordForEdit}

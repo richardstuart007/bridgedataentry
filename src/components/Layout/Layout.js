@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => {
 //
 const debugLog = debugSettings()
 //===================================================================================
-export default function Layout({ handlePage, children }) {
+export default function Layout({ handlePage, pageCurrent, children }) {
   if (debugLog) console.log('Start Layout')
   //
   //  Style overrides
@@ -64,9 +64,8 @@ export default function Layout({ handlePage, children }) {
   //  Title
   //
   let title
-  const CurrentPage = JSON.parse(sessionStorage.getItem('Nav_Page_Current'))
-
-  switch (CurrentPage) {
+  if (debugLog) console.log('pageCurrent ', pageCurrent)
+  switch (pageCurrent) {
     case 'QuestionList':
       title = 'Questions'
       break
@@ -74,7 +73,7 @@ export default function Layout({ handlePage, children }) {
       title = 'Owner'
       break
     default:
-      title = CurrentPage
+      title = pageCurrent
       break
   }
   //

@@ -570,6 +570,17 @@ export default function OwnerGroupList({ handlePage }) {
         </TblContainer>
         <TblPagination />
       </Paper>
+      {/* .......................................................................................... */}
+      <MyButton
+        type='submit'
+        text='Back'
+        color='warning'
+        variant='contained'
+        onClick={() => {
+          handlePage('PAGEBACK')
+        }}
+      />
+      {/* .......................................................................................... */}
       <Popup title='OwnerGroup Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>
         <OwnerGroupEntry
           recordForEdit={recordForEdit}

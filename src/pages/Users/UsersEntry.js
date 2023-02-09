@@ -23,6 +23,7 @@ const initialFValues = {
   u_email: '',
   u_name: '',
   u_admin: false,
+  u_dev: false,
   u_showprogress: true,
   u_showscore: true,
   u_sortquestions: true,
@@ -145,7 +146,7 @@ export default function UsersEntry(props) {
     }
   }
   //...................................................................................
-  //.  Debug
+  //.  Select Country
   //...................................................................................
   function handleSelectCountry(CountryCode) {
     if (debugLog) console.log('handleSelectCountry')
@@ -211,7 +212,7 @@ export default function UsersEntry(props) {
           {/*------------------------------------------------------------------------------ */}
           <Grid item xs={6}>
             <SelectCountry
-              label='Bridge Federation Country1'
+              label='Bridge Federation Country'
               onChange={handleSelectCountry}
               countryCode={values.u_fedcountry}
             />
@@ -229,7 +230,6 @@ export default function UsersEntry(props) {
             </Box>
           </Grid>
           {/*------------------------------------------------------------------------------ */}
-
           <Grid item xs={6}>
             <MyCheckbox
               name='u_admin'
@@ -239,7 +239,15 @@ export default function UsersEntry(props) {
               error={errors.u_admin}
             />
           </Grid>
-          <Grid item xs={6}></Grid>
+          <Grid item xs={6}>
+            <MyCheckbox
+              name='u_dev'
+              label='Developer'
+              value={values.u_dev}
+              onChange={handleInputChange}
+              error={errors.u_dev}
+            />
+          </Grid>
           {/*------------------------------------------------------------------------------ */}
           <Grid item xs={6}>
             <MyCheckbox
