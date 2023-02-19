@@ -24,10 +24,10 @@ export default function SelectCountry(props) {
   //
   const { COUNTRIES } = require('../../services/countries.js')
   let countryObj = COUNTRIES.find(country => country.code === countryCode)
-  if (debugLog) console.log('countryObj ', countryObj)
   if (!countryObj) {
     countryObj = { code: 'ZZ', label: 'World', phone: '999' }
   }
+  if (debugLog) console.log('countryObj ', countryObj)
   //
   //  State
   //
