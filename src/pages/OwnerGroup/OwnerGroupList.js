@@ -80,6 +80,7 @@ const headCells = [
   { id: 'ogowner', label: 'Owner' },
   { id: 'oggroup', label: 'Group' },
   { id: 'ogtitle', label: 'Title' },
+  { id: 'ogcntquestions', label: 'Questions' },
   { id: 'actions', label: 'Actions', disableSorting: true }
 ]
 const searchTypeOptions = [
@@ -522,6 +523,7 @@ export default function OwnerGroupList({ handlePage }) {
                 <TableCell>{row.ogowner}</TableCell>
                 <TableCell>{row.oggroup}</TableCell>
                 <TableCell>{row.ogtitle}</TableCell>
+                <TableCell>{row.ogcntquestions}</TableCell>
 
                 <TableCell>
                   <MyActionButton

@@ -43,7 +43,7 @@ export default function useMyTable(records, headCells, filterFn) {
   //
   //  State
   //
-  const pages = [10, 20, 50]
+  const pages = [50, 10, 20]
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(pages[page])
   const [order, setOrder] = useState()
