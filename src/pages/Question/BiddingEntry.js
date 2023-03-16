@@ -4,10 +4,6 @@
 import { useState, useEffect } from 'react'
 import { Grid, Typography } from '@mui/material'
 //
-//  Debug Settings
-//
-import debugSettings from '../../debug/debugSettings'
-//
 //  Controls
 //
 import MyButton from '../../components/controls/MyButton'
@@ -136,12 +132,9 @@ const VALIDBIDS = [
   '7NT'
 ]
 const SPECIALBIDS = ['PASS', 'X', 'XX', '?']
-
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
-const debugFunStart = false
 const debugModule = 'BiddingEntry'
 //=====================================================================================
 export default function BiddingEntry(props) {
@@ -149,13 +142,10 @@ export default function BiddingEntry(props) {
   //.  dbRow Un-pack
   //.............................................................................
   const dbRowUnPack = row => {
-    if (debugFunStart) console.log('dbRowUnPack')
     //
     //  Build Bidding Arrays
     //
-    if (debugLog) console.log('row ', row)
     let Rounds = row.brounds
-    if (debugLog) console.log('Rounds ', Rounds)
     //
     //  Unpack arrays into form fields
     //
@@ -163,12 +153,9 @@ export default function BiddingEntry(props) {
     let roundCnt = 0
     Rounds.forEach(round => {
       roundCnt++
-      // if (debugLog) console.log(`round ${roundCnt}`, round)
-
       let bidCnt = 0
       round.forEach(bid => {
         bidCnt++
-        // if (debugLog) console.log(`bid ${bidCnt}`, bid)
         //
         //  Convert N to empty string
         //
@@ -217,7 +204,6 @@ export default function BiddingEntry(props) {
   //.  dbRow Pack
   //.............................................................................
   const dbRowPack = () => {
-    if (debugFunStart) console.log('dbRowPack')
     //
     //  Initialise dbValues
     //
@@ -265,7 +251,6 @@ export default function BiddingEntry(props) {
   //.  Tidy Field
   //.............................................................................
   const tidyField = field => {
-    if (debugFunStart) console.log('tidyField')
     let fieldRtn = field
     if (fieldRtn) {
       fieldRtn = fieldRtn.trim()
@@ -277,7 +262,6 @@ export default function BiddingEntry(props) {
   //.  Tidy All Fields
   //.............................................................................
   const tidyFieldAll = workValues => {
-    if (debugFunStart) console.log('tidyFieldAll')
     //
     //  Get Last Bid
     //
@@ -311,7 +295,6 @@ export default function BiddingEntry(props) {
   //.  GET Data by ID
   //.............................................................................
   const getRowById = () => {
-    if (debugFunStart) console.log('getRowById')
     //
     //  Process promise
     //
@@ -328,7 +311,6 @@ export default function BiddingEntry(props) {
     //  Resolve Status
     //
     myPromiseGet.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseGet rtnObj ', rtnObj)
       //
       //  No data returned
       //
@@ -352,7 +334,6 @@ export default function BiddingEntry(props) {
   //.  INSERT
   //.............................................................................
   const upsertRowData = () => {
-    if (debugFunStart) console.log('upsertRowData')
     //
     //  Pack values to dbValues
     //
@@ -373,7 +354,6 @@ export default function BiddingEntry(props) {
     //  Resolve Status
     //
     myPromiseInsert.then(function (rtnObj) {
-      if (debugLog) console.log('rtnObj ', rtnObj)
       //
       //  Completion message
       //
@@ -405,7 +385,6 @@ export default function BiddingEntry(props) {
   //.  DELETE
   //.............................................................................
   const deleteRowData = () => {
-    if (debugFunStart) console.log('deleteRowData')
     //
     //  Process promise
     //
@@ -421,7 +400,6 @@ export default function BiddingEntry(props) {
     //  Resolve Status
     //
     myPromiseDelete.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseDelete rtnObj ', rtnObj)
       //
       //  Set values to Initial Values
       //
@@ -440,7 +418,6 @@ export default function BiddingEntry(props) {
   // Validate a field
   //
   const validateField = value => {
-    if (debugFunStart) console.log('validateField')
     //
     //  Error Message
     //
@@ -472,7 +449,6 @@ export default function BiddingEntry(props) {
   // Validate Bids
   //
   const valBidValue = workValues => {
-    if (debugFunStart) console.log('valBidValue')
     //
     //  Validate bid
     //
@@ -494,7 +470,6 @@ export default function BiddingEntry(props) {
   // Validate Order of bids
   //
   const valBidOrder = workValues => {
-    if (debugFunStart) console.log('valBidOrder')
     //
     //  Initial Values
     //
@@ -529,7 +504,6 @@ export default function BiddingEntry(props) {
   // Validate Bids
   //
   const valBids = workValues => {
-    if (debugFunStart) console.log('valBids')
     let errors
     //
     //  Validate bid Value
@@ -545,7 +519,6 @@ export default function BiddingEntry(props) {
   // Validate the fields
   //
   const validate = (fieldValues = values) => {
-    if (debugFunStart) console.log('Validate')
     //
     //  Update g_formValues to values
     //
@@ -594,7 +567,6 @@ export default function BiddingEntry(props) {
   //.  Submit form
   //...................................................................................
   const handleSubmit = e => {
-    if (debugFunStart) console.log(handleSubmit)
     e.preventDefault()
     //
     //  Validate & Update
@@ -609,8 +581,6 @@ export default function BiddingEntry(props) {
   //...................................................................................
   //.  Main Line
   //...................................................................................
-
-  if (debugFunStart) console.log(debugModule)
   //
   //  Deconstruct props
   //

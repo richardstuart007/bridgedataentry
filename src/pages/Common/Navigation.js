@@ -10,10 +10,6 @@ import PersonIcon from '@mui/icons-material/Person'
 import QuizIcon from '@mui/icons-material/Quiz'
 import GroupIcon from '@mui/icons-material/Group'
 //
-//  Debug Settings
-//
-import debugSettings from '../../debug/debugSettings'
-//
 //  Components
 //
 import MyActionButton from '../../components/controls/MyActionButton'
@@ -27,18 +23,13 @@ const useStyles = makeStyles(theme => {
     }
   }
 })
-//
-// Debug Settings
-//
-const debugLog = debugSettings()
 //===================================================================================
 export default function Navigation({ handlePage }) {
   const classes = useStyles()
   //
   //  Define the Store
   //
-  const CurrentPage = JSON.parse(sessionStorage.getItem('Nav_Page_Current'))
-  if (debugLog) console.log('CurrentPage', CurrentPage)
+  const CurrentPage = JSON.parse(sessionStorage.getItem('Nav_Current'))
   //...................................................................................
   //.  Render the component
   //...................................................................................

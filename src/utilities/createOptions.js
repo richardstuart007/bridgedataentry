@@ -1,30 +1,37 @@
 //
-//  Debug Settings
-//
-import debugSettings from '../debug/debugSettings'
-//
 //  Utilities
 //
 import rowCrud from './rowCrud'
 //
-// Debug Settings
+//  Debug Settings
 //
+import debugSettings from '../debug/debugSettings'
+import consoleLogTime from '../debug/consoleLogTime'
 const debugLog = debugSettings()
 const debugModule = 'createOptions'
 //...................................................................................
 //.  Main Line
 //...................................................................................
 export default function createOptions(props) {
-  const { cop_sqlTable, cop_owner, cop_id, cop_title, cop_store, cop_received } = props
-  if (debugLog) console.log(props)
+  if (debugLog) console.log(consoleLogTime(debugModule, 'Start'))
+  const {
+    cop_sqlTable,
+    cop_sqlWhere = null,
+    cop_owner,
+    cop_id,
+    cop_title,
+    cop_store,
+    cop_R
+  } = props
   //
   //  Received flag
   //
-  sessionStorage.setItem(cop_received, false)
+  sessionStorage.setItem(cop_R, false)
   //
   //  Process promise
   //
-  const sqlString = `* from ${cop_sqlTable}`
+  let sqlString = `* from ${cop_sqlTable} `
+  if (cop_sqlWhere) sqlString = sqlString + cop_sqlWhere
   const rowCrudparams = {
     axiosMethod: 'post',
     sqlCaller: debugModule,
@@ -37,7 +44,6 @@ export default function createOptions(props) {
   //  Resolve Status
   //
   myPromiseGet.then(function (rtnObj) {
-    if (debugLog) console.log('myPromiseGet rtnObj ', rtnObj)
     //
     //  No data returned
     //
@@ -46,7 +52,7 @@ export default function createOptions(props) {
     //  Load Options from Data
     //
     const data = rtnObj.rtnRows
-    LoadOptions(data, cop_owner, cop_id, cop_title, cop_store, cop_received)
+    LoadOptions(data, cop_owner, cop_id, cop_title, cop_store, cop_R)
     return
   })
   //
@@ -56,7 +62,7 @@ export default function createOptions(props) {
   //...................................................................................
   //.  Load Options
   //...................................................................................
-  function LoadOptions(data, cop_owner, cop_id, cop_title, cop_store, cop_received) {
+  function LoadOptions(data, cop_owner, cop_id, cop_title, cop_store, cop_R) {
     //
     //  Options
     //
@@ -93,7 +99,7 @@ export default function createOptions(props) {
     //
     //  Received flag
     //
-    sessionStorage.setItem(cop_received, true)
+    sessionStorage.setItem(cop_R, true)
   }
   //...................................................................................
 }

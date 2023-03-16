@@ -9,10 +9,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 //  Options
 //
 import createOptions from '../utilities/createOptions'
-//
-//  Debug Settings
-//
-import debugSettings from '../debug/debugSettings'
+
 //
 //  Pages
 //
@@ -21,6 +18,13 @@ import Control from '../pages/Control'
 //  Common Components
 //
 import Layout from '../components/Layout/Layout'
+//
+//  Debug Settings
+//
+import debugSettings from '../debug/debugSettings'
+import consoleLogTime from '../debug/consoleLogTime'
+const debugLog = debugSettings()
+const debugModule = 'App'
 //
 //  Global Themes used by the Theme Provider
 //
@@ -92,10 +96,6 @@ const { SERVERURL11 } = require('../services/constants.js')
 const { SERVER12 } = require('../services/constants.js')
 const { SERVERURL12 } = require('../services/constants.js')
 //
-// Debug Settings
-//
-const debugLog = debugSettings()
-//
 // Global
 //
 let g_firstTimeFlag = true
@@ -109,14 +109,14 @@ const PageStart = 'OwnerList'
 //- Main Line
 //----------------------------------------------------------------------------
 export default function App() {
-  if (debugLog) console.log(`Start APP`)
+  if (debugLog) console.log(consoleLogTime(debugModule, 'Start Module'))
   const [pageCurrent, setPageCurrent] = useState(PageStart)
   //
   //  Screen Width
   //
   const ScreenMedium = useMediaQuery(theme.breakpoints.up('sm'))
   const ScreenSmall = !ScreenMedium
-  sessionStorage.setItem('App_Settings_ScreenSmall', ScreenSmall)
+  sessionStorage.setItem('App_ScreenSmall', ScreenSmall)
   //
   //  First Time Setup
   //
@@ -128,15 +128,12 @@ export default function App() {
   //  First Time Setup
   //.............................................................................
   function firstTime() {
-    if (debugLog) console.log(`First Time APP Reset`)
     //
     //  Environment variables
     //
     w_server_database = process.env.REACT_APP_SERVER_DATABASE
     w_server_database = w_server_database.trim()
-    if (debugLog) console.log('w_server_database ', w_server_database)
     w_node_env = process.env.NODE_ENV
-    if (debugLog) console.log('w_node_env ', w_node_env)
     //
     //  Server & Database
     //
@@ -144,25 +141,23 @@ export default function App() {
     //
     //  Store Server, Database, URL
     //
-    sessionStorage.setItem('App_Settings_Server_Database', JSON.stringify(w_server_database))
-    sessionStorage.setItem('App_Settings_Node_Env', JSON.stringify(w_node_env))
-    sessionStorage.setItem('App_Settings_Server', JSON.stringify(w_Server))
-    sessionStorage.setItem('App_Settings_Database', JSON.stringify(w_Database))
-    sessionStorage.setItem('App_Settings_URL', JSON.stringify(w_URL))
-    if (debugLog)
-      console.log(`QuizClient: SERVER(${w_Server}) DATABASE(${w_Database}) URL(${w_URL})`)
+    sessionStorage.setItem('App_Server_Database', JSON.stringify(w_server_database))
+    sessionStorage.setItem('App_Node_Env', JSON.stringify(w_node_env))
+    sessionStorage.setItem('App_Server', JSON.stringify(w_Server))
+    sessionStorage.setItem('App_Database', JSON.stringify(w_Database))
+    sessionStorage.setItem('App_URL', JSON.stringify(w_URL))
     //
     //  DevMode if local client
     //
-    let App_Settings_DevMode
-    w_node_env === 'development' ? (App_Settings_DevMode = true) : (App_Settings_DevMode = false)
-    sessionStorage.setItem('App_Settings_DevMode', App_Settings_DevMode)
+    let App_DevMode
+    w_node_env === 'development' ? (App_DevMode = true) : (App_DevMode = false)
+    sessionStorage.setItem('App_DevMode', App_DevMode)
     //
     //  Navigation
     //
-    sessionStorage.setItem('Nav_Page_PageStart', JSON.stringify(PageStart))
-    sessionStorage.setItem('Nav_Page_Current', JSON.stringify(PageStart))
-    sessionStorage.setItem('Nav_Page_Previous', JSON.stringify(''))
+    sessionStorage.setItem('Nav_PageStart', JSON.stringify(PageStart))
+    sessionStorage.setItem('Nav_Current', JSON.stringify(PageStart))
+    sessionStorage.setItem('Nav_Previous', JSON.stringify(''))
     //
     //  Selection
     //
@@ -218,7 +213,6 @@ export default function App() {
       Promise_Who,
       Promise_Reftype
     ]).then(values => {
-      if (debugLog) console.log(`Promise values ALL`, values)
       sessionStorage.setItem('Data_Options_ALL_Received', true)
     })
   }
@@ -292,8 +286,8 @@ export default function App() {
     //
     //  Retrieve the state
     //
-    const PageCurrent = JSON.parse(sessionStorage.getItem('Nav_Page_Current'))
-    const PagePrevious = JSON.parse(sessionStorage.getItem('Nav_Page_Previous'))
+    const PageCurrent = JSON.parse(sessionStorage.getItem('Nav_Current'))
+    const PagePrevious = JSON.parse(sessionStorage.getItem('Nav_Previous'))
     //
     //  If no change of Page, return
     //
@@ -304,25 +298,13 @@ export default function App() {
     const PageNext =
       nextPage === 'PAGEBACK' ? PagePrevious : nextPage === 'PAGESTART' ? PageStart : nextPage
     //
-    //  Change of Page
-    //
-    if (debugLog) console.log(`Current Page ${PageCurrent} ==> New Page ${PageNext}`)
-    //
     //  Update Previous Page
     //
-    sessionStorage.setItem('Nav_Page_Previous', JSON.stringify(PageCurrent))
-    if (debugLog)
-      console.log(
-        `UPDATED Nav_Page_Previous ${JSON.parse(sessionStorage.getItem('Nav_Page_Previous'))}`
-      )
+    sessionStorage.setItem('Nav_Previous', JSON.stringify(PageCurrent))
     //
     //  Update NEW Page
     //
-    sessionStorage.setItem('Nav_Page_Current', JSON.stringify(PageNext))
-    if (debugLog)
-      console.log(
-        `UPDATED Nav_Page_Current ${JSON.parse(sessionStorage.getItem('Nav_Page_Current'))}`
-      )
+    sessionStorage.setItem('Nav_Current', JSON.stringify(PageNext))
     //
     //  Update State
     //

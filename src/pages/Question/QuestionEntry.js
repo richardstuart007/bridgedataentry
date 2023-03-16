@@ -4,10 +4,6 @@
 import { useEffect, useState } from 'react'
 import { Grid, Typography } from '@mui/material'
 //
-//  Debug Settings
-//
-import debugSettings from '../../debug/debugSettings'
-//
 //  Pages
 //
 import HandEntry from './HandEntry'
@@ -49,19 +45,11 @@ let disableOwner
 let disableGroup
 let Data_Options_OwnerGroup_Subset = []
 let ownerPrevious
-//
-// Debug Settings
-//
-const debugLog = debugSettings()
-const debugFunStart = false
-const debugModule = 'QuestionEntry'
 //...................................................................................
 //.  Main Line
 //...................................................................................
 export default function QuestionEntry(props) {
   const { addOrEdit, recordForEdit, serverMessage, s_owner, s_group } = props
-  if (debugFunStart) console.log(debugModule)
-  if (debugLog) console.log('props ', props)
   //
   //  UseMyForm
   //
@@ -84,8 +72,6 @@ export default function QuestionEntry(props) {
   //  On change of record, set State
   //
   useEffect(() => {
-    if (debugLog) console.log('useEffect')
-    if (debugLog) console.log('recordForEdit ', recordForEdit)
     //
     //  Split arrays into fields
     //
@@ -101,13 +87,11 @@ export default function QuestionEntry(props) {
 
     // eslint-disable-next-line
   }, [recordForEdit])
-  if (debugLog) console.log('recordForEdit ', recordForEdit)
   //
   //  Disable/Allow entry
   //
   actionUpdate = false
   if (values && values.qid !== 0) actionUpdate = true
-  if (debugLog) console.log('actionUpdate', actionUpdate)
   disableOwner = actionUpdate
   if (s_owner) disableOwner = true
   disableGroup = actionUpdate
@@ -123,7 +107,6 @@ export default function QuestionEntry(props) {
   if (s_owner) {
     if (ownerPrevious !== s_owner) {
       ownerPrevious = s_owner
-      if (debugLog) console.log('Data_Options_OwnerGroup_Subset ', Data_Options_OwnerGroup_Subset)
       Data_Options_OwnerGroup_Subset = loadOwnerGroupSubset(true, s_owner, s_group)
     }
   }
@@ -132,7 +115,6 @@ export default function QuestionEntry(props) {
   //.............................................................................
   function recordForEdit_unpack() {
     let { qans, qpoints, ...inValues } = recordForEdit
-    if (debugLog) console.log(qans, qpoints, inValues)
     //
     //  array: qans/qpoints
     //
@@ -155,7 +137,6 @@ export default function QuestionEntry(props) {
     //
     //  Update form values
     //
-    if (debugLog) console.log('inValues ', inValues)
     setValues({
       ...inValues
     })
@@ -164,10 +145,6 @@ export default function QuestionEntry(props) {
   //.  Load Owner/Group Options
   //.............................................................................
   function loadOwnerGroupSubset(InitialLoad, owner, group) {
-    if (debugFunStart) console.log('loadOwnerGroupSubset')
-    if (debugLog) console.log('owner ', owner)
-    if (debugLog) console.log('group ', group)
-    if (debugLog) console.log('Data_Options_OwnerGroup ', Data_Options_OwnerGroup)
     //
     //  Select out Owner
     //
@@ -185,7 +162,6 @@ export default function QuestionEntry(props) {
     //  If current Group is not in valid value, force first
     //
     const valid = options.some(option => option['id'] === group)
-    if (debugLog) console.log(`valid `, valid)
     if (!valid) {
       const firstOption = options[0]
       if (!InitialLoad) {
@@ -194,14 +170,12 @@ export default function QuestionEntry(props) {
           qowner: owner,
           qgroup: firstOption.id
         })
-        if (debugLog) console.log(`qgroup default to ${firstOption.id}`)
       }
     }
     //
     //  Save and return
     //
     sessionStorage.setItem('Data_Options_OwnerGroup_Subset', JSON.stringify(options))
-    if (debugLog) console.log('Data_Options_OwnerGroup_Subset ', options)
     return options
   }
   //...................................................................................
@@ -217,7 +191,6 @@ export default function QuestionEntry(props) {
     //
     if ('qowner' in fieldValues) {
       errorsUpd.qowner = fieldValues.qowner ? '' : 'This field is required.'
-      if (debugLog) console.log('execute Data_Options_OwnerGroup_Subset ')
       Data_Options_OwnerGroup_Subset = loadOwnerGroupSubset(
         false,
         fieldValues.qowner,
@@ -250,13 +223,11 @@ export default function QuestionEntry(props) {
   //.  Submit form
   //...................................................................................
   function handleSubmit(e) {
-    if (debugFunStart) console.log('handleSubmit')
     e.preventDefault()
     //
     //  Validate & Update
     //
     if (validate()) {
-      if (debugLog) console.log('values ', values)
       const {
         qans1,
         qans2,
@@ -297,7 +268,6 @@ export default function QuestionEntry(props) {
   //.  Copy Row
   //...................................................................................
   function handleCopy(e) {
-    if (debugFunStart) console.log('handleCopy')
     e.preventDefault()
     //
     //  Reset the form in Add mode

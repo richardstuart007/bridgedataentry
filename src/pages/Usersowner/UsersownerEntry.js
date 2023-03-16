@@ -4,10 +4,6 @@
 import { useEffect } from 'react'
 import { Grid, Typography } from '@mui/material'
 //
-//  Debug Settings
-//
-import debugSettings from '../../debug/debugSettings'
-//
 //  Controls
 //
 import MyButton from '../../components/controls/MyButton'
@@ -22,21 +18,12 @@ const initialFValues = {
   uouser: '',
   uoowner: ''
 }
-//
-// Debug Settings
-//
-const debugLog = debugSettings()
-const debugFunStart = false
-const debugModule = 'UsersownerEntry'
 //=====================================================================================
 export default function UsersownerEntry(props) {
   //...................................................................................
   //.  Main Line
   //...................................................................................
-  if (debugFunStart) console.log(debugModule)
   const { addOrEdit, recordForEdit, serverMessage } = props
-  if (debugLog) console.log('props ', props)
-
   //
   //  Get Store
   //
@@ -52,7 +39,6 @@ export default function UsersownerEntry(props) {
     const s_user = recordForEdit.uouser
     let s_owner = recordForEdit.uoowner
     if (!s_owner) s_owner = OptionsOwner[0].title
-    if (debugLog) console.log('s_owner ', s_owner)
     setValues({
       ...values,
       uoid: s_id,
@@ -77,8 +63,6 @@ export default function UsersownerEntry(props) {
   // Validate the fields
   //...................................................................................
   function validate(fieldValues = values) {
-    if (debugFunStart) console.log('validate')
-    if (debugLog) console.log(fieldValues)
     //
     //  Load previous errors
     //
@@ -107,19 +91,15 @@ export default function UsersownerEntry(props) {
   //.  Submit form
   //...................................................................................
   const handleSubmit = e => {
-    if (debugFunStart) console.log('handleSubmit')
     e.preventDefault()
     //
     //  Validate & Update
     //
     if (validate()) {
-      if (debugLog) console.log('values ', values)
       const { ...UpdateValues } = { ...values }
-      if (debugLog) console.log('UpdateValues ', UpdateValues)
       //
       //  Update database
       //
-      if (debugLog) console.log('UpdateValues ', UpdateValues)
       addOrEdit(UpdateValues, resetForm)
     }
   }

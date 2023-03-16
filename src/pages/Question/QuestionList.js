@@ -35,10 +35,6 @@ import useMyTable from '../../components/useMyTable'
 //
 import rowCrud from '../../utilities/rowCrud'
 //
-//  Debug Settings
-//
-import debugSettings from '../../debug/debugSettings'
-//
 //  Styles
 //
 const useStyles = makeStyles(theme => ({
@@ -88,14 +84,11 @@ const searchTypeOptions = [
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
-const debugFunStart = false
 const debugModule = 'QuestionList'
 //...................................................................................
 //.  Main Line
 //...................................................................................
 export default function QuestionList({ handlePage }) {
-  if (debugFunStart) console.log(debugModule)
   //
   //  Styles
   //
@@ -157,7 +150,6 @@ export default function QuestionList({ handlePage }) {
   //.  GET ALL
   //.............................................................................
   function getRowAllData() {
-    if (debugFunStart) console.log('getRowAllData')
     //
     //  SQL String
     //
@@ -169,7 +161,6 @@ export default function QuestionList({ handlePage }) {
       if (s_group) sqlString = sqlString + ` qgroup = '${s_group}'`
     }
     sqlString = sqlString + ` order by qowner, qgroup, qseq FETCH FIRST ${SQL_ROWS} ROWS ONLY`
-    if (debugLog) console.log('sqlString ', sqlString)
     //
     //  Process promise
     //
@@ -185,7 +176,6 @@ export default function QuestionList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseGet.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseGet rtnObj ', rtnObj)
       //
       //  Update Table
       //
@@ -205,7 +195,6 @@ export default function QuestionList({ handlePage }) {
   //.  DELETE
   //.............................................................................
   function deleteRowData(qid) {
-    if (debugFunStart) console.log('deleteRowData')
     //
     //  Process promise
     //
@@ -221,7 +210,6 @@ export default function QuestionList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseDelete.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseDelete rtnObj ', rtnObj)
       //
       //  Update State - refetch data
       //
@@ -237,13 +225,10 @@ export default function QuestionList({ handlePage }) {
   //.  INSERT
   //.............................................................................
   function insertRowData(data) {
-    if (debugFunStart) console.log('insertRowData')
-    if (debugLog) console.log('insertRowData data ', data)
     //
     //  Strip out KEY as it will be populated by Insert
     //
     let { qid, ...nokeyData } = data
-    if (debugLog) console.log('Upsert Database nokeyData ', nokeyData)
     //
     //  Process promise
     //
@@ -260,7 +245,6 @@ export default function QuestionList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseInsert.then(function (rtnObj) {
-      if (debugLog) console.log('rtnObj ', rtnObj)
       //
       //  Completion message
       //
@@ -274,7 +258,6 @@ export default function QuestionList({ handlePage }) {
       //
       const rtnData = rtnObj.rtnRows
       setRecordForEdit(rtnData[0])
-      if (debugLog) console.log(`recordForEdit `, recordForEdit)
       //
       //  Update State - refetch data
       //
@@ -290,13 +273,10 @@ export default function QuestionList({ handlePage }) {
   //.  UPDATE
   //.............................................................................
   function updateRowData(data) {
-    if (debugFunStart) console.log('updateRowData')
-    if (debugLog) console.log('Upsert Database data ', data)
     //
     //  Strip out KEY as it is not updated
     //
     let { qid, qowner, qgroup, qseq, ...nokeyData } = data
-    if (debugLog) console.log('Upsert Database nokeyData ', nokeyData)
     //
     //  Process promise
     //
@@ -313,7 +293,6 @@ export default function QuestionList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseUpdate.then(function (rtnObj) {
-      if (debugLog) console.log('rtnObj ', rtnObj)
       //
       //  Completion message
       //
@@ -327,7 +306,6 @@ export default function QuestionList({ handlePage }) {
       //
       const rtnData = rtnObj.rtnRows
       setRecordForEdit(rtnData[0])
-      if (debugLog) console.log(`recordForEdit `, recordForEdit)
       //
       //  Update State - refetch data
       //
@@ -343,7 +321,6 @@ export default function QuestionList({ handlePage }) {
   //  Search/Filter
   //.............................................................................
   function handleSearch() {
-    if (debugFunStart) console.log('handleSearch')
     setFilterFn({
       fn: items => {
         //
@@ -385,7 +362,6 @@ export default function QuestionList({ handlePage }) {
   //  Update Database
   //.............................................................................
   function addOrEdit(row, resetForm) {
-    if (debugFunStart) console.log('addOrEdit')
     row.qid === 0 ? insertRowData(row) : updateRowData(row)
 
     setNotify({
@@ -398,7 +374,6 @@ export default function QuestionList({ handlePage }) {
   //  Data Entry Popup
   //.............................................................................
   const openInPopup = row => {
-    if (debugFunStart) console.log('openInPopup')
     setServerMessage('')
     setRecordForEdit(row)
     setOpenPopup(true)
@@ -407,7 +382,6 @@ export default function QuestionList({ handlePage }) {
   //  Delete Row
   //.............................................................................
   const onDelete = qid => {
-    if (debugFunStart) console.log('onDelete')
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false

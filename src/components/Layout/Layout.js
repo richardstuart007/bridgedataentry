@@ -8,10 +8,6 @@ import makeStyles from '@mui/styles/makeStyles'
 //
 import Navigation from '../../pages/Common/Navigation'
 //
-//  Debug Settings
-//
-import debugSettings from '../../debug/debugSettings'
-//
 //  Components
 //
 import cards from '../../assets/images/cards.svg'
@@ -45,13 +41,8 @@ const useStyles = makeStyles(theme => {
     }
   }
 })
-//
-// Debug Settings
-//
-const debugLog = debugSettings()
 //===================================================================================
 export default function Layout({ handlePage, pageCurrent, children }) {
-  if (debugLog) console.log('Start Layout')
   //
   //  Style overrides
   //
@@ -59,12 +50,11 @@ export default function Layout({ handlePage, pageCurrent, children }) {
   //
   //  Screen Width
   //
-  const ScreenSmall = JSON.parse(sessionStorage.getItem('App_Settings_ScreenSmall'))
+  const ScreenSmall = JSON.parse(sessionStorage.getItem('App_ScreenSmall'))
   //
   //  Title
   //
   let title
-  if (debugLog) console.log('pageCurrent ', pageCurrent)
   switch (pageCurrent) {
     case 'QuestionList':
       title = 'Questions'
@@ -79,9 +69,9 @@ export default function Layout({ handlePage, pageCurrent, children }) {
   //
   //  Add clientserver
   //
-  const App_Settings_Server = JSON.parse(sessionStorage.getItem('App_Settings_Server'))
-  const App_Settings_Database = JSON.parse(sessionStorage.getItem('App_Settings_Database'))
-  const clientserver = `Server(${App_Settings_Server}) Database(${App_Settings_Database})`
+  const App_Server = JSON.parse(sessionStorage.getItem('App_Server'))
+  const App_Database = JSON.parse(sessionStorage.getItem('App_Database'))
+  const clientserver = `Server(${App_Server}) Database(${App_Database})`
   //...................................................................................
   //.  Render the component
   //...................................................................................

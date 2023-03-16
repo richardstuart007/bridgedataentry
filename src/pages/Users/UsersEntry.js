@@ -4,10 +4,6 @@
 import { useEffect } from 'react'
 import { Grid, Box, Typography } from '@mui/material'
 //
-//  Debug Settings
-//
-import debugSettings from '../../debug/debugSettings'
-//
 //  Controls
 //
 import MyButton from '../../components/controls/MyButton'
@@ -37,28 +33,18 @@ const initialFValues = {
 //  Global Variable
 //
 let actionUpdate = true
-//
-// Debug Settings
-//
-const debugLog = debugSettings()
-const debugFunStart = true
-const debugModule = 'UsersEntry'
 //...................................................................................
 //.  Main Line
 //...................................................................................
 export default function UsersEntry(props) {
-  if (debugFunStart) console.log(debugModule)
   //
   //  Deconstruct props
   //
   const { addOrEdit, recordForEdit, serverMessage } = props
-  if (debugLog) console.log('props ', props)
   //
   //  On change of record, set State
   //
   useEffect(() => {
-    if (debugLog) console.log('useEffect')
-    if (debugLog) console.log('recordForEdit ', recordForEdit)
     //
     //  Update form values
     //
@@ -86,13 +72,10 @@ export default function UsersEntry(props) {
     true,
     validate
   )
-  if (debugLog) console.log('values ', values)
   //...................................................................................
   // Validate the fields
   //...................................................................................
   function validate(fieldValues = values) {
-    if (debugFunStart) console.log('validate')
-    if (debugLog) console.log(fieldValues)
     //
     //  Load previous errors
     //
@@ -129,19 +112,15 @@ export default function UsersEntry(props) {
   //.  Submit form
   //...................................................................................
   function handleSubmit(e) {
-    if (debugFunStart) console.log('handleSubmit')
     e.preventDefault()
     //
     //  Validate & Update
     //
     if (validate()) {
-      if (debugLog) console.log('values ', values)
       const { ...UpdateValues } = { ...values }
-      if (debugLog) console.log('UpdateValues ', UpdateValues)
       //
       //  Update database
       //
-      if (debugLog) console.log('UpdateValues ', UpdateValues)
       addOrEdit(UpdateValues, resetForm)
     }
   }
@@ -149,14 +128,11 @@ export default function UsersEntry(props) {
   //.  Select Country
   //...................................................................................
   function handleSelectCountry(CountryCode) {
-    if (debugLog) console.log('handleSelectCountry')
-    if (debugLog) console.log('CountryCode ', CountryCode)
     //
     //  Populate Country Object & change country code
     //
     const updValues = { ...values }
     updValues.u_fedcountry = CountryCode
-    if (debugLog) console.log('updValues ', updValues)
     //
     //  Update values
     //

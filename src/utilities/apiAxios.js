@@ -6,13 +6,9 @@ import axios from 'axios'
 //  Debug Settings
 //
 import debugSettings from '../debug/debugSettings'
-//.............................................................................
-//.  Initialisation
-//.............................................................................
-//
-// Debug Settings
-//
+import consoleLogTime from '../debug/consoleLogTime'
 const debugLog = debugSettings()
+const debugModule = 'apiAxios'
 //
 //  Returned values
 //
@@ -20,24 +16,66 @@ const rtnObj = {
   rtnValue: false,
   rtnMessage: '',
   rtnSqlFunction: '',
-  rtnCatchFunction: 'apiAxios',
+  rtnCatchFunction: debugModule,
   rtnCatch: true,
   rtnCatchMsg: '',
   rtnRows: []
 }
+if (debugLog) console.log(consoleLogTime(debugModule, 'Start Global'))
 //===================================================================================
 //
 // methods - post(get), post(update), delete(delete), post(upsert)
 //
-export default async function apiAxios(method, url, data) {
+export default async function apiAxios(method, url, data, timeout = 2000, info = 'SqlDatabase') {
+  //
+  //  Try
+  //
   try {
-    if (debugLog) console.log(`url(${url}) method(${method})`)
+    if (debugLog) console.log(consoleLogTime(debugModule, 'Start Module'))
+    //
+    //  Reset rtnObj
+    //
+    rtnObj.rtnValue = false
+    rtnObj.rtnMessage = ''
+    rtnObj.rtnSqlFunction = debugModule
+    rtnObj.rtnCatchFunction = ''
+    rtnObj.rtnCatch = false
+    rtnObj.rtnCatchMsg = ''
+    rtnObj.rtnRows = []
+    //
+    //  Inceptor - req start time
+    //
+    axios.interceptors.request.use(req => {
+      req.meta = req.meta || {}
+      req.meta.requestStartedAt = new Date().getTime()
+      return req
+    })
+    //
+    //  Inceptor - res duration (response - start time)
+    //
+    axios.interceptors.response.use(
+      res => {
+        res.durationInMs = new Date().getTime() - res.config.meta.requestStartedAt
+        return res
+      },
+      res => {
+        res.durationInMs = new Date().getTime() - res.config.meta.requestStartedAt
+        throw res
+      }
+    )
+
+    if (debugLog) console.log(consoleLogTime(debugModule, 'Request--->'), data)
     const response = await axios({
       method: method,
       url: url,
-      data: data
+      data: data,
+      timeout: timeout
     })
-    if (debugLog) console.log(response)
+    if (debugLog) console.log(consoleLogTime(debugModule, 'Response-->'), response)
+    if (debugLog)
+      console.log(
+        consoleLogTime(debugModule, `<--Timing-> ${response.durationInMs} ${info} SUCCESS`)
+      )
     //
     //  Errors
     //
@@ -51,29 +89,22 @@ export default async function apiAxios(method, url, data) {
     //  Catch Error
     //
   } catch (error) {
-    rtnObj.rtnCatchFunction = 'apiAxios'
+    rtnObj.rtnCatchFunction = debugModule
     rtnObj.rtnValue = false
     rtnObj.rtnCatch = true
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.log('Error.message.data ', error.response.data)
-      console.log('Error.message.status ', error.response.status)
-      console.log('Error.message.headers ', error.response.headers)
-      rtnObj.rtnCatchMsg = 'Error returned by server'
-    } else if (error.request) {
-      // The request was made but no response was received
-      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-      // http.ClientRequest in node.js
-      console.log('Error.request ', error.request)
-      rtnObj.rtnCatchMsg = 'No response from Server'
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.log('Error.message ', error.message)
-      rtnObj.rtnCatchMsg = 'Request setup error'
+    //
+    //  No response
+    //
+    if (!error.response) {
+      error.request
+        ? (rtnObj.rtnCatchMsg = 'No response from Server')
+        : (rtnObj.rtnCatchMsg = 'Request setup error')
     }
-    console.log('Error.config ', error.config)
-
+    //
+    //  Error logging - All
+    //
+    console.log(consoleLogTime(debugModule, 'Catch - rtnObj'), rtnObj)
+    console.log(consoleLogTime(debugModule, `<--Timing-> ${error.durationInMs} ${info} ERROR`))
     return rtnObj
   }
 }

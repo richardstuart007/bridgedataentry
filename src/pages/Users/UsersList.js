@@ -35,10 +35,6 @@ import useMyTable from '../../components/useMyTable'
 //
 import rowCrud from '../../utilities/rowCrud'
 //
-//  Debug Settings
-//
-import debugSettings from '../../debug/debugSettings'
-//
 //  Styles
 //
 const useStyles = makeStyles(theme => ({
@@ -92,14 +88,11 @@ const searchTypeOptions = [
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
-const debugFunStart = false
 const debugModule = 'UsersList'
 //...................................................................................
 //.  Main Line
 //...................................................................................
 export default function UsersList({ handlePage }) {
-  if (debugFunStart) console.log(debugModule)
   //
   //  Styles
   //
@@ -154,7 +147,6 @@ export default function UsersList({ handlePage }) {
   //.  GET ALL
   //.............................................................................
   const getRowAllData = () => {
-    if (debugFunStart) console.log('getRowAllData')
     //
     //  Process promise
     //
@@ -171,7 +163,6 @@ export default function UsersList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseGet.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseGet rtnObj ', rtnObj)
       //
       //  Update Table
       //
@@ -191,7 +182,6 @@ export default function UsersList({ handlePage }) {
   //.  DELETE
   //.............................................................................
   const deleteRowData = u_id => {
-    if (debugFunStart) console.log('deleteRowData')
     //
     //  Delete users and related files
     //
@@ -207,8 +197,6 @@ export default function UsersList({ handlePage }) {
   //.  DELETE - User
   //.............................................................................
   const deleteUsers = u_id => {
-    if (debugFunStart) console.log('deleteUsers')
-
     //
     //  Process promise
     //
@@ -224,7 +212,6 @@ export default function UsersList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseDelete.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseDelete rtnObj ', rtnObj)
       return
     })
     return myPromiseDelete
@@ -233,7 +220,6 @@ export default function UsersList({ handlePage }) {
   //.  DELETE - Userpwd
   //.............................................................................
   const deleteUserspwd = u_id => {
-    if (debugFunStart) console.log('deleteUsers')
     //
     //  Process promise
     //
@@ -250,7 +236,6 @@ export default function UsersList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseDelete.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseDelete rtnObj ', rtnObj)
       return
     })
     return myPromiseDelete
@@ -259,7 +244,6 @@ export default function UsersList({ handlePage }) {
   //.  DELETE - UserHistory
   //.............................................................................
   const deleteUsershistory = u_id => {
-    if (debugFunStart) console.log('deleteUsers')
     //
     //  Process promise
     //
@@ -275,7 +259,6 @@ export default function UsersList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseDelete.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseDelete rtnObj ', rtnObj)
       return
     })
     return myPromiseDelete
@@ -284,16 +267,10 @@ export default function UsersList({ handlePage }) {
   //.  UPDATE
   //.............................................................................
   const updateRowData = data => {
-    if (debugFunStart) console.log('updateRowData')
-    //
-    //  Data Received
-    //
-    if (debugLog) console.log('updateRowData Row ', data)
     //
     //  Strip out KEY as it is not updated
     //
     let { u_id, u_user, ...nokeyData } = data
-    if (debugLog) console.log('Upsert Database nokeyData ', nokeyData)
     //
     //  Process promise
     //
@@ -310,7 +287,6 @@ export default function UsersList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseUpdate.then(function (rtnObj) {
-      if (debugLog) console.log('rtnObj ', rtnObj)
       //
       //  Completion message
       //
@@ -324,7 +300,6 @@ export default function UsersList({ handlePage }) {
       //
       const rtnData = rtnObj.rtnRows
       setRecordForEdit(rtnData[0])
-      if (debugLog) console.log(`recordForEdit `, recordForEdit)
       //
       //  Update State - refetch data
       //
@@ -343,7 +318,6 @@ export default function UsersList({ handlePage }) {
   //  Search/Filter
   //
   const handleSearch = () => {
-    if (debugFunStart) console.log('handleSearch')
     setFilterFn({
       fn: items => {
         //
@@ -379,7 +353,6 @@ export default function UsersList({ handlePage }) {
             break
           default:
         }
-        if (debugLog) console.log('itemsFilter ', itemsFilter)
 
         return itemsFilter
       }
@@ -390,8 +363,6 @@ export default function UsersList({ handlePage }) {
   //  Update Database
   //
   const addOrEdit = (row, resetForm) => {
-    if (debugFunStart) console.log('addOrEdit')
-    if (debugLog) console.log('row ', row)
     updateRowData(row)
 
     setNotify({
@@ -405,7 +376,6 @@ export default function UsersList({ handlePage }) {
   //  Data Entry Popup
   //
   const openInPopup = row => {
-    if (debugFunStart) console.log('openInPopup')
     setServerMessage('')
     setRecordForEdit(row)
     setOpenPopup(true)
@@ -415,7 +385,6 @@ export default function UsersList({ handlePage }) {
   //  Delete Row
   //
   const onDelete = u_id => {
-    if (debugFunStart) console.log('onDelete')
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false

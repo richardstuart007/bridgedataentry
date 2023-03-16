@@ -39,10 +39,6 @@ import rowCrud from '../../utilities/rowCrud'
 //
 import createOptions from '../../utilities/createOptions'
 //
-//  Debug Settings
-//
-import debugSettings from '../../debug/debugSettings'
-//
 //  Styles
 //
 const useStyles = makeStyles(theme => ({
@@ -87,8 +83,6 @@ const searchTypeOptions = [
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
-const debugFunStart = false
 const debugModule = 'ReftypeList'
 //=====================================================================================
 export default function ReftypeList({ handlePage }) {
@@ -96,7 +90,6 @@ export default function ReftypeList({ handlePage }) {
   //.  GET ALL
   //.............................................................................
   const getRowAllData = () => {
-    if (debugFunStart) console.log('getRowAllData')
     //
     //  Process promise
     //
@@ -113,7 +106,6 @@ export default function ReftypeList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseGet.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseGet rtnObj ', rtnObj)
       //
       //  Update Table
       //
@@ -133,7 +125,6 @@ export default function ReftypeList({ handlePage }) {
   //.  DELETE
   //.............................................................................
   const deleteRowData = rttype => {
-    if (debugFunStart) console.log('deleteRowData')
     //
     //  Process promise
     //
@@ -149,7 +140,6 @@ export default function ReftypeList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseDelete.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseDelete rtnObj ', rtnObj)
       //
       //  Update State - refetch data
       //
@@ -166,11 +156,6 @@ export default function ReftypeList({ handlePage }) {
   //.  INSERT
   //.............................................................................
   const insertRowData = data => {
-    if (debugFunStart) console.log('insertRowData')
-    //
-    //  Data Received
-    //
-    if (debugLog) console.log('insertRowData data ', data)
     //
     //  Process promise
     //
@@ -187,7 +172,6 @@ export default function ReftypeList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseInsert.then(function (rtnObj) {
-      if (debugLog) console.log('rtnObj ', rtnObj)
       //
       //  Completion message
       //
@@ -201,7 +185,6 @@ export default function ReftypeList({ handlePage }) {
       //
       const rtnData = rtnObj.rtnRows
       setRecordForEdit(rtnData[0])
-      if (debugLog) console.log(`recordForEdit `, recordForEdit)
       //
       //  Update State - refetch data
       //
@@ -218,16 +201,10 @@ export default function ReftypeList({ handlePage }) {
   //.  UPDATE
   //.............................................................................
   const updateRowData = data => {
-    if (debugFunStart) console.log('updateRowData')
-    //
-    //  Data Received
-    //
-    if (debugLog) console.log('updateRowData Row ', data)
     //
     //  Strip out KEY as it is not updated
     //
     let { rttype, ...nokeyData } = data
-    if (debugLog) console.log('Upsert Database nokeyData ', nokeyData)
     //
     //  Process promise
     //
@@ -244,7 +221,6 @@ export default function ReftypeList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseUpdate.then(function (rtnObj) {
-      if (debugLog) console.log('rtnObj ', rtnObj)
       //
       //  Completion message
       //
@@ -258,7 +234,6 @@ export default function ReftypeList({ handlePage }) {
       //
       const rtnData = rtnObj.rtnRows
       setRecordForEdit(rtnData[0])
-      if (debugLog) console.log(`recordForEdit `, recordForEdit)
       //
       //  Update State - refetch data
       //
@@ -326,7 +301,6 @@ export default function ReftypeList({ handlePage }) {
   //  Search/Filter
   //
   const handleSearch = () => {
-    if (debugFunStart) console.log('handleSearch')
     setFilterFn({
       fn: items => {
         //
@@ -352,8 +326,6 @@ export default function ReftypeList({ handlePage }) {
             break
           default:
         }
-        if (debugLog) console.log('itemsFilter ', itemsFilter)
-
         return itemsFilter
       }
     })
@@ -363,7 +335,6 @@ export default function ReftypeList({ handlePage }) {
   //  Update Database
   //
   const addOrEdit = (row, resetForm) => {
-    if (debugFunStart) console.log('addOrEdit')
     recordForEdit === null ? insertRowData(row) : updateRowData(row)
 
     setNotify({
@@ -377,7 +348,6 @@ export default function ReftypeList({ handlePage }) {
   //  Data Entry Popup
   //
   const openInPopup = row => {
-    if (debugFunStart) console.log('openInPopup')
     setServerMessage('')
     setRecordForEdit(row)
     setOpenPopup(true)
@@ -387,7 +357,6 @@ export default function ReftypeList({ handlePage }) {
   //  Delete Row
   //
   const onDelete = rttype => {
-    if (debugFunStart) console.log('onDelete')
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false
@@ -399,11 +368,9 @@ export default function ReftypeList({ handlePage }) {
       severity: 'error'
     })
   }
-
   //...................................................................................
   //.  Main Line
   //...................................................................................
-  if (debugFunStart) console.log(debugModule)
   //
   //  Initial Data Load
   //

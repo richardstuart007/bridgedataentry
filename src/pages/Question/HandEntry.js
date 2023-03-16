@@ -4,10 +4,6 @@
 import { useState, useEffect } from 'react'
 import { Grid, Typography } from '@mui/material'
 //
-//  Debug Settings
-//
-import debugSettings from '../../debug/debugSettings'
-//
 //  Controls
 //
 import MyButton from '../../components/controls/MyButton'
@@ -87,17 +83,13 @@ const VALIDCARDS = 'AKQJT98765432'
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
-const debugFunStart = false
 const debugModule = 'HandEntry'
-
 //=====================================================================================
 export default function HandEntry(props) {
   //.............................................................................
   //.  db un Pack hand
   //.............................................................................
   const dbUnPackHand = hand => {
-    if (debugFunStart) console.log('dbUnPackHand')
     //
     //  Convert 'n' to empty string
     //
@@ -112,8 +104,6 @@ export default function HandEntry(props) {
   //.  dbRow Un-pack
   //.............................................................................
   const dbRowUnPack = row => {
-    if (debugFunStart) console.log('dbRowUnPack')
-    if (debugLog) console.log('row ', row)
     //
     //  Initialise dbValues
     //
@@ -184,7 +174,6 @@ export default function HandEntry(props) {
   //.  db Pack Hand
   //.............................................................................
   const dbPackHand = hand => {
-    if (debugFunStart) console.log('dbPackHand')
     //
     //  Return null if allvalues are empty
     //
@@ -204,7 +193,6 @@ export default function HandEntry(props) {
   //.  Sort Suit
   //.............................................................................
   const fieldStripSort = suit => {
-    if (debugFunStart) console.log('fieldStripSort')
     //
     //  Set Order of cards
     //
@@ -240,7 +228,6 @@ export default function HandEntry(props) {
   //.  dbRow Pack
   //.............................................................................
   const dbRowPack = () => {
-    if (debugFunStart) console.log('dbRowPack')
     //
     //  Initialise dbValues
     //
@@ -298,7 +285,6 @@ export default function HandEntry(props) {
   //.  Tidy Field
   //.............................................................................
   const tidyField = field => {
-    if (debugFunStart) console.log('tidyField')
     let fieldRtn = field
     if (fieldRtn) {
       fieldRtn = fieldRtn.trim()
@@ -312,7 +298,6 @@ export default function HandEntry(props) {
   //.  Tidy All Fields
   //.............................................................................
   const tidyFieldAll = workHands => {
-    if (debugFunStart) console.log('tidyFieldAll')
     //
     //  Loop through each form value and tidy the suit
     //
@@ -332,7 +317,6 @@ export default function HandEntry(props) {
   //.  GET Data by ID
   //.............................................................................
   const getRowById = () => {
-    if (debugFunStart) console.log('getRowById')
     //
     //  Process promise
     //
@@ -349,8 +333,6 @@ export default function HandEntry(props) {
     //  Resolve Status
     //
     myPromiseGet.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseGet rtnObj ', rtnObj)
-
       //
       //  No data returned
       //
@@ -374,7 +356,6 @@ export default function HandEntry(props) {
   //.  INSERT
   //.............................................................................
   const upsertRowData = () => {
-    if (debugFunStart) console.log('upsertRowData')
     //
     //  Pack values to dbValues
     //
@@ -395,7 +376,6 @@ export default function HandEntry(props) {
     //  Resolve Status
     //
     myPromiseInsert.then(function (rtnObj) {
-      if (debugLog) console.log('rtnObj ', rtnObj)
       //
       //  Completion message
       //
@@ -427,7 +407,6 @@ export default function HandEntry(props) {
   //.  DELETE
   //.............................................................................
   const deleteRowData = () => {
-    if (debugFunStart) console.log('deleteRowData')
     //
     //  Process promise
     //
@@ -443,7 +422,6 @@ export default function HandEntry(props) {
     //  Resolve Status
     //
     myPromiseDelete.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseDelete rtnObj ', rtnObj)
       //
       //  Set values to Initial Values
       //
@@ -462,7 +440,6 @@ export default function HandEntry(props) {
   // Remove Suit Cards - Invalid or Duplicate
   //
   const fieldCardRemove = field => {
-    if (debugFunStart) console.log('fieldCardRemove')
     //
     //  Error Message
     //
@@ -519,7 +496,6 @@ export default function HandEntry(props) {
   // Validate a field
   //
   const validateField = field => {
-    if (debugFunStart) console.log('validateField')
     //
     //  Error Message
     //
@@ -568,8 +544,6 @@ export default function HandEntry(props) {
   // Validate Spades
   //
   const valSpades = workSuit => {
-    if (debugFunStart) console.log('valSpades')
-
     g_valSuit = 'spades'
     if ('hNS' in workSuit) {
       g_valHand = 'north'
@@ -597,7 +571,6 @@ export default function HandEntry(props) {
   // Validate Hearts
   //
   const valHearts = workSuit => {
-    if (debugFunStart) console.log('valHearts')
     g_valSuit = 'hearts'
     if ('hNH' in workSuit) {
       g_valHand = 'north'
@@ -625,8 +598,6 @@ export default function HandEntry(props) {
   // Validate Diamonds
   //
   const valDiamonds = workSuit => {
-    if (debugFunStart) console.log('valDiamonds')
-
     g_valSuit = 'diamonds'
     if ('hND' in workSuit) {
       g_valHand = 'north'
@@ -654,7 +625,6 @@ export default function HandEntry(props) {
   // Validate Clubs
   //
   const valClubs = workSuit => {
-    if (debugFunStart) console.log('valClubs')
     g_valSuit = 'clubs'
     if ('hNC' in workSuit) {
       g_valHand = 'north'
@@ -682,7 +652,6 @@ export default function HandEntry(props) {
   // Validate Hand Card Count
   //
   const valHandCount = () => {
-    if (debugFunStart) console.log('valHandCount')
     let lengthTotal = 0
     //
     //  North
@@ -738,14 +707,10 @@ export default function HandEntry(props) {
   // Validate the fields, if no fieldsValues then validate ALL
   //
   const validate = (fieldValues = values) => {
-    if (debugFunStart) console.log('Validate')
-    if (debugLog) console.log('fieldValues ', fieldValues)
     //
     //  Update g_formValues to values
     //
-    if (debugLog) console.log('values ', values)
     g_formValues = { ...values }
-    if (debugLog) console.log('g_formValues ', g_formValues)
     //
     //  Validate one field - Update g_formValues that are not updated in values
     //
@@ -797,7 +762,6 @@ export default function HandEntry(props) {
   //.  Submit form
   //...................................................................................
   const handleSubmit = e => {
-    if (debugFunStart) console.log(handleSubmit)
     e.preventDefault()
     //
     //  Validate & Update
@@ -813,8 +777,6 @@ export default function HandEntry(props) {
   //...................................................................................
   //.  Main Line
   //...................................................................................
-
-  if (debugFunStart) console.log(debugModule)
   //
   //  Deconstruct props
   //

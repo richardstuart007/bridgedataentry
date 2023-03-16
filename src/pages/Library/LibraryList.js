@@ -39,10 +39,6 @@ import rowCrud from '../../utilities/rowCrud'
 //
 import createOptions from '../../utilities/createOptions'
 //
-//  Debug Settings
-//
-import debugSettings from '../../debug/debugSettings'
-//
 //  Styles
 //
 const useStyles = makeStyles(theme => ({
@@ -99,14 +95,11 @@ const searchTypeOptions = [
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
-const debugFunStart = false
 const debugModule = 'LibraryList'
 //.............................................................................
 //.  Main Line
 //.............................................................................
 export default function LibraryList({ handlePage }) {
-  if (debugFunStart) console.log(debugModule)
   //
   //  Styles
   //
@@ -168,7 +161,6 @@ export default function LibraryList({ handlePage }) {
   //.  GET ALL
   //.............................................................................
   const getRowAllData = () => {
-    if (debugFunStart) console.log('getRowAllData')
     //
     //  SQL String
     //
@@ -180,7 +172,6 @@ export default function LibraryList({ handlePage }) {
       if (s_group) sqlString = sqlString + ` lrgroup = '${s_group}'`
     }
     sqlString = sqlString + ` order by lrowner, lrgroup, lrref FETCH FIRST ${SQL_ROWS} ROWS ONLY`
-    if (debugLog) console.log('sqlString ', sqlString)
     //
     //  Process promise
     //
@@ -196,7 +187,6 @@ export default function LibraryList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseGet.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseGet rtnObj ', rtnObj)
       //
       //  Update Table
       //
@@ -216,7 +206,6 @@ export default function LibraryList({ handlePage }) {
   //.  DELETE
   //.............................................................................
   const deleteRowData = lrid => {
-    if (debugFunStart) console.log('deleteRowData')
     //
     //  Process promise
     //
@@ -232,7 +221,6 @@ export default function LibraryList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseDelete.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseDelete rtnObj ', rtnObj)
       //
       //  Update State - refetch data
       //
@@ -249,16 +237,10 @@ export default function LibraryList({ handlePage }) {
   //.  INSERT
   //.............................................................................
   const insertRowData = data => {
-    if (debugFunStart) console.log('insertRowData')
-    //
-    //  Data Received
-    //
-    if (debugLog) console.log('insertRowData data ', data)
     //
     //  Strip out KEY as it will be populated by Insert
     //
     let { lrid, ...nokeyData } = data
-    if (debugLog) console.log('Upsert Database nokeyData ', nokeyData)
     //
     //  Process promise
     //
@@ -275,7 +257,6 @@ export default function LibraryList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseInsert.then(function (rtnObj) {
-      if (debugLog) console.log('rtnObj ', rtnObj)
       //
       //  Completion message
       //
@@ -289,7 +270,6 @@ export default function LibraryList({ handlePage }) {
       //
       const rtnData = rtnObj.rtnRows
       setRecordForEdit(rtnData[0])
-      if (debugLog) console.log(`recordForEdit `, recordForEdit)
       //
       //  Update State - refetch data
       //
@@ -306,16 +286,10 @@ export default function LibraryList({ handlePage }) {
   //.  UPDATE
   //.............................................................................
   const updateRowData = data => {
-    if (debugFunStart) console.log('updateRowData')
-    //
-    //  Data Received
-    //
-    if (debugLog) console.log('updateRowData Row ', data)
     //
     //  Strip out KEY as it is not updated
     //
     let { lrid, lrowner, lrgroup, lrref, ...nokeyData } = data
-    if (debugLog) console.log('Update Database nokeyData ', nokeyData)
     //
     //  Process promise
     //
@@ -332,7 +306,6 @@ export default function LibraryList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseUpdate.then(function (rtnObj) {
-      if (debugLog) console.log('rtnObj ', rtnObj)
       //
       //  Completion message
       //
@@ -346,7 +319,6 @@ export default function LibraryList({ handlePage }) {
       //
       const rtnData = rtnObj.rtnRows
       setRecordForEdit(rtnData[0])
-      if (debugLog) console.log(`recordForEdit `, recordForEdit)
       //
       //  Update State - refetch data
       //
@@ -378,7 +350,6 @@ export default function LibraryList({ handlePage }) {
   //  Search/Filter
   //.............................................................................
   const handleSearch = () => {
-    if (debugFunStart) console.log('handleSearch')
     setFilterFn({
       fn: items => {
         //
@@ -433,7 +404,6 @@ export default function LibraryList({ handlePage }) {
 
           default:
         }
-        if (debugLog) console.log('itemsFilter ', itemsFilter)
         return itemsFilter
       }
     })
@@ -442,7 +412,6 @@ export default function LibraryList({ handlePage }) {
   //  Update Database
   //.............................................................................
   const addOrEdit = (row, resetForm) => {
-    if (debugFunStart) console.log('addOrEdit')
     recordForEdit === null ? insertRowData(row) : updateRowData(row)
 
     setNotify({
@@ -455,7 +424,6 @@ export default function LibraryList({ handlePage }) {
   //  Data Entry Popup
   //.............................................................................
   const openInPopup = row => {
-    if (debugFunStart) console.log('openInPopup')
     setServerMessage('')
     setRecordForEdit(row)
     setOpenPopup(true)
@@ -464,7 +432,6 @@ export default function LibraryList({ handlePage }) {
   //  Delete Row
   //.............................................................................
   const onDelete = lrid => {
-    if (debugFunStart) console.log('onDelete')
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false

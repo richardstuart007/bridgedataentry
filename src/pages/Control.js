@@ -1,8 +1,4 @@
 //
-//  Debug Settings
-//
-import debugSettings from '../debug/debugSettings'
-//
 //  Sub Components
 //
 import QuestionList from './Question/QuestionList'
@@ -13,22 +9,15 @@ import UsersList from './Users/UsersList'
 import UsersownerList from './Usersowner/UsersownerList'
 import LibraryList from './Library/LibraryList'
 import OwnerGroupList from './OwnerGroup/OwnerGroupList'
-//
-// Debug Settings
-//
-const debugLog = debugSettings()
 //===================================================================================
 function Control({ handlePage, pageCurrent }) {
-  if (debugLog) console.log('Start Control')
   //.............................................................................
   //  Main Line
   //.............................................................................
   //
   //  Store
   //
-  const PageCurrent = JSON.parse(sessionStorage.getItem('Nav_Page_Current'))
-  if (debugLog) console.log('PageCurrent ', PageCurrent)
-  if (debugLog) console.log('pageCurrent ', pageCurrent)
+  const PageCurrent = JSON.parse(sessionStorage.getItem('Nav_Current'))
   //
   //  Present the selected component
   //

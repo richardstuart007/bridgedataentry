@@ -34,10 +34,6 @@ import useMyTable from '../../components/useMyTable'
 //
 import rowCrud from '../../utilities/rowCrud'
 //
-//  Debug Settings
-//
-import debugSettings from '../../debug/debugSettings'
-//
 //  Styles
 //
 const useStyles = makeStyles(theme => ({
@@ -83,14 +79,11 @@ const searchTypeOptions = [
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
-const debugFunStart = false
 const debugModule = 'UsersownerList'
 //...................................................................................
 //.  Main Line
 //...................................................................................
 export default function UsersownerList({ handlePage }) {
-  if (debugFunStart) console.log(debugModule)
   //
   //  Styles
   //
@@ -156,14 +149,12 @@ export default function UsersownerList({ handlePage }) {
   //.  GET ALL
   //.............................................................................
   const getRowAllData = () => {
-    if (debugFunStart) console.log('getRowAllData')
     //
     //  Process promise
     //
     let sqlString = `* from ${sqlTable}`
     if (s_id) sqlString = sqlString + ` where uoid = '${s_id}' `
     sqlString = sqlString + ` order by uoid, uoowner FETCH FIRST ${SQL_ROWS} ROWS ONLY`
-    if (debugLog) console.log('sqlString ', sqlString)
     const rowCrudparams = {
       axiosMethod: 'post',
       sqlCaller: debugModule,
@@ -176,7 +167,6 @@ export default function UsersownerList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseGet.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseGet rtnObj ', rtnObj)
       //
       //  Update Table
       //
@@ -196,7 +186,6 @@ export default function UsersownerList({ handlePage }) {
   //.  DELETE
   //.............................................................................
   const deleteRowData = row => {
-    if (debugFunStart) console.log('deleteRowData')
     const uoid = row.uoid
     const uoowner = row.uoowner
     //
@@ -214,7 +203,6 @@ export default function UsersownerList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseDelete.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseDelete rtnObj ', rtnObj)
       //
       //  Update State - refetch data
       //
@@ -230,11 +218,6 @@ export default function UsersownerList({ handlePage }) {
   //.  INSERT
   //.............................................................................
   const insertRowData = data => {
-    if (debugFunStart) console.log('insertRowData')
-    //
-    //  Data Received
-    //
-    if (debugLog) console.log('insertRowData data ', data)
     //
     //  Process promise
     //
@@ -251,7 +234,6 @@ export default function UsersownerList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseInsert.then(function (rtnObj) {
-      if (debugLog) console.log('rtnObj ', rtnObj)
       //
       //  Completion message
       //
@@ -265,7 +247,6 @@ export default function UsersownerList({ handlePage }) {
       //
       const rtnData = rtnObj.rtnRows
       setRecordForEdit(rtnData[0])
-      if (debugLog) console.log(`recordForEdit `, recordForEdit)
       //
       //  Update State - refetch data
       //
@@ -281,7 +262,6 @@ export default function UsersownerList({ handlePage }) {
   //  Search/Filter
   //.............................................................................
   const handleSearch = () => {
-    if (debugFunStart) console.log('handleSearch')
     setFilterFn({
       fn: items => {
         //
@@ -307,7 +287,6 @@ export default function UsersownerList({ handlePage }) {
             break
           default:
         }
-        if (debugLog) console.log('itemsFilter ', itemsFilter)
 
         return itemsFilter
       }
@@ -317,7 +296,6 @@ export default function UsersownerList({ handlePage }) {
   //  Update Database
   //
   const addOrEdit = (row, resetForm) => {
-    if (debugFunStart) console.log('addOrEdit')
     insertRowData(row)
 
     setNotify({
@@ -331,7 +309,6 @@ export default function UsersownerList({ handlePage }) {
   //  Delete Row
   //
   const onDelete = row => {
-    if (debugFunStart) console.log('onDelete')
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false
@@ -348,7 +325,6 @@ export default function UsersownerList({ handlePage }) {
   //  Data Entry Popup
   //
   const editRow = row => {
-    if (debugFunStart) console.log('editRow')
     setServerMessage('')
     setRecordForEdit(row)
     setOpenPopup(true)
@@ -358,7 +334,6 @@ export default function UsersownerList({ handlePage }) {
   //  Data Entry Popup
   //
   const addRow = () => {
-    if (debugFunStart) console.log('addRow')
     setServerMessage('')
     const row = {
       uoid: s_id,

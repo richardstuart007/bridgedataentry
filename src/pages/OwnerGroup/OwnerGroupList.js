@@ -40,10 +40,6 @@ import rowCrud from '../../utilities/rowCrud'
 //
 import createOptions from '../../utilities/createOptions'
 //
-//  Debug Settings
-//
-import debugSettings from '../../debug/debugSettings'
-//
 //  Styles
 //
 const useStyles = makeStyles(theme => ({
@@ -91,8 +87,6 @@ const searchTypeOptions = [
 //
 // Debug Settings
 //
-const debugLog = debugSettings()
-const debugFunStart = false
 const debugModule = 'OwnerGroupList'
 //...................................................................................
 //.  Main Line
@@ -157,15 +151,12 @@ export default function OwnerGroupList({ handlePage }) {
   //.  GET ALL
   //.............................................................................
   const getRowAllData = () => {
-    if (debugFunStart) console.log('getRowAllData')
     //
     //  Process promise
     //
     let sqlString = `*, concat(ogowner,oggroup) as ogkey from ${sqlTable}`
     if (s_owner) sqlString = sqlString + ` where ogowner = '${s_owner}'`
     sqlString = sqlString + ` order by ogowner, oggroup FETCH FIRST ${SQL_ROWS} ROWS ONLY`
-    if (debugLog) console.log('sqlString ', sqlString)
-
     const rowCrudparams = {
       axiosMethod: 'post',
       sqlCaller: debugModule,
@@ -178,7 +169,6 @@ export default function OwnerGroupList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseGet.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseGet rtnObj ', rtnObj)
       //
       //  Update Table
       //
@@ -198,7 +188,6 @@ export default function OwnerGroupList({ handlePage }) {
   //.  DELETE
   //.............................................................................
   function deleteRowData(ogowner, oggroup) {
-    if (debugFunStart) console.log('deleteRowData')
     //
     //  Process promise
     //
@@ -214,7 +203,6 @@ export default function OwnerGroupList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseDelete.then(function (rtnObj) {
-      if (debugLog) console.log('myPromiseDelete rtnObj ', rtnObj)
       //
       //  Update State - refetch data
       //
@@ -231,11 +219,6 @@ export default function OwnerGroupList({ handlePage }) {
   //.  INSERT
   //.............................................................................
   const insertRowData = data => {
-    if (debugFunStart) console.log('insertRowData')
-    //
-    //  Data Received
-    //
-    if (debugLog) console.log('insertRowData data ', data)
     //
     //  Process promise
     //
@@ -252,7 +235,6 @@ export default function OwnerGroupList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseInsert.then(function (rtnObj) {
-      if (debugLog) console.log('rtnObj ', rtnObj)
       //
       //  Completion message
       //
@@ -266,7 +248,6 @@ export default function OwnerGroupList({ handlePage }) {
       //
       const rtnData = rtnObj.rtnRows
       setRecordForEdit(rtnData[0])
-      if (debugLog) console.log(`recordForEdit `, recordForEdit)
       //
       //  Update State - refetch data
       //
@@ -283,11 +264,6 @@ export default function OwnerGroupList({ handlePage }) {
   //.  UPDATE
   //.............................................................................
   const updateRowData = data => {
-    if (debugFunStart) console.log('updateRowData')
-    //
-    //  Data Received
-    //
-    if (debugLog) console.log('updateRowData Row ', data)
     //
     //  Strip out KEY as it is not updated - remove concatenated field
     //
@@ -308,7 +284,6 @@ export default function OwnerGroupList({ handlePage }) {
     //  Resolve Status
     //
     myPromiseUpdate.then(function (rtnObj) {
-      if (debugLog) console.log('rtnObj ', rtnObj)
       //
       //  Completion message
       //
@@ -322,7 +297,6 @@ export default function OwnerGroupList({ handlePage }) {
       //
       const rtnData = rtnObj.rtnRows
       setRecordForEdit(rtnData[0])
-      if (debugLog) console.log(`recordForEdit `, recordForEdit)
       //
       //  Update State - refetch data
       //
@@ -356,7 +330,6 @@ export default function OwnerGroupList({ handlePage }) {
   //  Search/Filter
   //
   const handleSearch = () => {
-    if (debugFunStart) console.log('handleSearch')
     setFilterFn({
       fn: items => {
         //
@@ -388,7 +361,6 @@ export default function OwnerGroupList({ handlePage }) {
 
           default:
         }
-        if (debugLog) console.log('itemsFilter ', itemsFilter)
         return itemsFilter
       }
     })
@@ -398,7 +370,6 @@ export default function OwnerGroupList({ handlePage }) {
   //  Update Database
   //
   const addOrEdit = (row, resetForm) => {
-    if (debugFunStart) console.log('addOrEdit')
     recordForEdit === null ? insertRowData(row) : updateRowData(row)
 
     setNotify({
@@ -412,7 +383,6 @@ export default function OwnerGroupList({ handlePage }) {
   //  Data Entry Popup
   //
   const openInPopup = row => {
-    if (debugFunStart) console.log('openInPopup')
     setServerMessage('')
     setRecordForEdit(row)
     setOpenPopup(true)
@@ -422,7 +392,6 @@ export default function OwnerGroupList({ handlePage }) {
   //  Delete Row
   //
   const onDelete = row => {
-    if (debugFunStart) console.log('onDelete')
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false
