@@ -13,6 +13,18 @@ exports.SERVERURL01 = 'https://bridgeserver01.onrender.com'
 exports.SERVER02 = 'REMOTE:Render/3902'
 exports.DATABASE02 = 'REMOTE-2:Railway'
 exports.SERVERURL02 = 'https://bridgeserver02.onrender.com'
+//
+//  Remote Server 3 --> Remote Database 3
+//
+exports.SERVER03 = 'REMOTE:Cyclic/3903'
+exports.DATABASE03 = 'REMOTE-3:Elephant'
+exports.SERVERURL03 = 'https://bridgeserver03.cyclic.app'
+//
+//  Remote Server 4 --> Remote Database 4
+//
+exports.SERVER04 = 'REMOTE:Cyclic/3904'
+exports.DATABASE04 = 'REMOTE-4:Railway04'
+exports.SERVERURL04 = 'https://bridgeserver04.cyclic.app'
 //------------------------------------------------------------------------
 //  Local Server
 //------------------------------------------------------------------------
@@ -26,6 +38,16 @@ exports.SERVERURL11 = 'http://localhost:3911'
 //
 exports.SERVER12 = 'LOCAL:3912'
 exports.SERVERURL12 = 'http://localhost:3912'
+//
+//  Local Server 3 --> Remote Database 3
+//
+exports.SERVER13 = 'LOCAL:3913'
+exports.SERVERURL13 = 'http://localhost:3913'
+//
+//  Local Server 4 --> Remote Database 4
+//
+exports.SERVER14 = 'LOCAL:3914'
+exports.SERVERURL14 = 'http://localhost:3914'
 //
 //  Local Server --> Local Database 6
 //
