@@ -1,6 +1,7 @@
 //
 //  Sub Components
 //
+import Splash from './Splash/Splash'
 import QuestionList from './Question/QuestionList'
 import OwnerList from './Owner/OwnerList'
 import WhoList from './Who/WhoList'
@@ -22,6 +23,8 @@ function Control({ handlePage, pageCurrent }) {
   //  Present the selected component
   //
   switch (PageCurrent) {
+    case 'Splash':
+      return <Splash handlePage={handlePage} />
     case 'OwnerList':
       return <OwnerList handlePage={handlePage} />
     case 'OwnerGroupList':

@@ -9,7 +9,6 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 //  Options
 //
 import createOptions from '../utilities/createOptions'
-
 //
 //  Pages
 //
@@ -65,7 +64,7 @@ let w_node_env
 let w_Database = 'Error'
 let w_Server = 'Error'
 let w_URL = 'Error'
-const PageStart = 'OwnerList'
+const PageStart = 'Splash'
 //----------------------------------------------------------------------------
 //- Main Line
 //----------------------------------------------------------------------------
