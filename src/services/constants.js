@@ -65,6 +65,16 @@ exports.DATABASE7 = 'LOCAL:bridge7'
 //------------------------------------------------------------------------
 exports.URL_TABLES = '/QuizTables'
 exports.URL_HELLO = '/QuizHello'
+exports.URL_REGISTER = '/QuizRegister'
+//------------------------------------------------------------------------
+//  User Defaults
+//------------------------------------------------------------------------
+exports.DFT_USER_MAXQUESTIONS = 20
+exports.DFT_USER_OWNER = 'NZBridge'
+exports.DFT_USER_SHOWPROGRESS = true
+exports.DFT_USER_SHOWSCORE = true
+exports.DFT_USER_SORTQUESTIONS = true
+exports.DFT_USER_SKIPCORRECT = true
 //------------------------------------------------------------------------
 //  Other Parameters
 //------------------------------------------------------------------------

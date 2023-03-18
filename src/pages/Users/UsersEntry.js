@@ -9,8 +9,7 @@ import { Grid, Box, Typography } from '@mui/material'
 import MyButton from '../../components/controls/MyButton'
 import MyInput from '../../components/controls/MyInput'
 import MyCheckbox from '../../components/controls/MyCheckbox'
-import MySelect from '../../components/controls/MySelect'
-import { useMyForm, MyForm } from '../../components/useMyForm'
+import { useMyForm, MyForm } from '../../components/controls/useMyForm'
 import SelectCountry from './SelectCountry'
 //
 //  Form Initial Values
@@ -25,14 +24,9 @@ const initialFValues = {
   u_sortquestions: true,
   u_skipcorrect: true,
   u_dftmaxquestions: 5,
-  u_dftowner: '',
   u_fedcountry: '',
   u_fedid: ''
 }
-//
-//  Global Variable
-//
-let actionUpdate = true
 //...................................................................................
 //.  Main Line
 //...................................................................................
@@ -59,10 +53,6 @@ export default function UsersEntry(props) {
   //  Button Text
   //
   let submitButtonText = 'Update'
-  //
-  //  Get Store
-  //
-  const OptionsOwner = JSON.parse(sessionStorage.getItem('Data_Options_Owner'))
   //
   //  UseMyForm
   //
@@ -145,57 +135,44 @@ export default function UsersEntry(props) {
     <>
       <MyForm onSubmit={handleSubmit}>
         <Grid container>
+          <Grid item xs={6}>
+            <Box sx={{ mr: 2 }}>
+              <MyInput
+                name='u_name'
+                label='Name'
+                value={values.u_name}
+                onChange={handleInputChange}
+                error={errors.u_name}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={6}></Grid>
           {/*------------------------------------------------------------------------------ */}
           <Grid item xs={6}>
-            <MyInput
-              name='u_id'
-              label='ID'
-              value={values.u_id}
-              onChange={handleInputChange}
-              error={errors.u_id}
-              disabled={actionUpdate}
-            />
+            <Box sx={{ mr: 2 }}>
+              <MyInput
+                name='u_email'
+                label='Email'
+                value={values.u_email}
+                onChange={handleInputChange}
+                error={errors.u_email}
+              />
+            </Box>
           </Grid>
-          <Grid item xs={6}>
-            <MyInput
-              name='u_user'
-              label='User'
-              value={values.u_user}
-              onChange={handleInputChange}
-              error={errors.u_user}
-              disabled={actionUpdate}
-            />
-          </Grid>
+          <Grid item xs={6}></Grid>
           {/*------------------------------------------------------------------------------ */}
           <Grid item xs={6}>
-            <MyInput
-              name='u_name'
-              label='Name'
-              value={values.u_name}
-              onChange={handleInputChange}
-              error={errors.u_name}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <MyInput
-              name='u_email'
-              label='Email'
-              value={values.u_email}
-              onChange={handleInputChange}
-              error={errors.u_email}
-            />
-          </Grid>
-          {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={6}>
-            <SelectCountry
-              label='Bridge Federation Country'
-              onChange={handleSelectCountry}
-              countryCode={values.u_fedcountry}
-            />
+            <Box sx={{ mr: 2 }}>
+              <SelectCountry
+                label='Bridge Federation Country'
+                onChange={handleSelectCountry}
+                countryCode={values.u_fedcountry}
+              />
+            </Box>
           </Grid>
 
           <Grid item xs={6}>
-            <Box sx={{ mt: 2, maxWidth: 200 }}>
+            <Box sx={{ maxWidth: 200 }}>
               <MyInput
                 name='u_fedid'
                 label='Bridge Federation ID'
@@ -274,21 +251,6 @@ export default function UsersEntry(props) {
                 value={values.u_dftmaxquestions}
                 onChange={handleInputChange}
                 error={errors.u_dftmaxquestions}
-              />
-            </Box>
-          </Grid>
-          <Grid item xs={9}></Grid>
-          {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={3}>
-            <Box sx={{ mt: 2, maxWidth: 200 }}>
-              <MySelect
-                key={OptionsOwner.id}
-                name='u_dftowner'
-                label='Default Owner'
-                value={values.u_dftowner}
-                onChange={handleInputChange}
-                error={errors.u_dftowner}
-                options={OptionsOwner}
               />
             </Box>
           </Grid>

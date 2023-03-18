@@ -42,7 +42,7 @@ export default function useMyTable(records, headCells, filterFn, startPage0, set
   //
   //  State
   //
-  const pages = [10, 100, 200]
+  const pages = [100, 10, 200]
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(pages[page])
   const [order, setOrder] = useState()

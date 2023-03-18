@@ -27,8 +27,8 @@ import MySelect from '../../components/controls/MySelect'
 import Notification from '../../components/Notification'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import Popup from '../../components/Popup'
-import PageHeader from '../../components/PageHeader'
-import useMyTable from '../../components/useMyTable'
+import PageHeader from '../../components/controls/PageHeader'
+import useMyTable from '../../components/controls/useMyTable'
 //
 //  Services
 //
@@ -432,9 +432,7 @@ export default function UsersownerList({ handlePage }) {
                   <MyActionButton
                     startIcon={<AddIcon fontSize='small' />}
                     color='primary'
-                    onClick={() => {
-                      editRow(row)
-                    }}
+                    onClick={() => editRow(row)}
                   ></MyActionButton>
                 </TableCell>
               </TableRow>

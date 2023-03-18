@@ -11,6 +11,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import QuizIcon from '@mui/icons-material/Quiz'
+import AddIcon from '@mui/icons-material/Add'
 //
 //  Pages
 //
@@ -28,8 +29,8 @@ import MySelect from '../../components/controls/MySelect'
 import Notification from '../../components/Notification'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import Popup from '../../components/Popup'
-import PageHeader from '../../components/PageHeader'
-import useMyTable from '../../components/useMyTable'
+import PageHeader from '../../components/controls/PageHeader'
+import useMyTable from '../../components/controls/useMyTable'
 //
 //  Services
 //
@@ -188,6 +189,7 @@ export default function UsersList({ handlePage }) {
     deleteUsers(u_id)
     deleteUserspwd(u_id)
     deleteUsershistory(u_id)
+    deleteUsersOwner(u_id)
     //
     //  Refresh
     //
@@ -253,6 +255,29 @@ export default function UsersList({ handlePage }) {
       sqlTable: 'usershistory',
       sqlAction: 'DELETE',
       sqlWhere: `r_uid = '${u_id}'`
+    }
+    const myPromiseDelete = rowCrud(rowCrudparams)
+    //
+    //  Resolve Status
+    //
+    myPromiseDelete.then(function (rtnObj) {
+      return
+    })
+    return myPromiseDelete
+  }
+  //.............................................................................
+  //.  DELETE - UsersOwner
+  //.............................................................................
+  const deleteUsersOwner = u_id => {
+    //
+    //  Process promise
+    //
+    const rowCrudparams = {
+      axiosMethod: 'delete',
+      sqlCaller: debugModule,
+      sqlTable: 'usersowner',
+      sqlAction: 'DELETE',
+      sqlWhere: `uoid = '${u_id}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -458,6 +483,13 @@ export default function UsersList({ handlePage }) {
             onClick={getRowAllData}
             className={classes.myButton}
           />
+          <MyButton
+            text='Add New'
+            variant='outlined'
+            startIcon={<AddIcon />}
+            className={classes.newButton}
+            onClick={() => handlePage('Register')}
+          />
         </Toolbar>
         <TblContainer>
           <TblHead />
@@ -486,9 +518,7 @@ export default function UsersList({ handlePage }) {
                   <MyActionButton
                     startIcon={<EditOutlinedIcon fontSize='small' />}
                     color='primary'
-                    onClick={() => {
-                      openInPopup(row)
-                    }}
+                    onClick={() => openInPopup(row)}
                   ></MyActionButton>
                   <MyActionButton
                     startIcon={<CloseIcon fontSize='small' />}
@@ -517,9 +547,7 @@ export default function UsersList({ handlePage }) {
         text='Back'
         color='warning'
         variant='contained'
-        onClick={() => {
-          handlePage('PAGEBACK')
-        }}
+        onClick={() => handlePage('PAGEBACK')}
       />
       {/* .......................................................................................... */}
       <Popup title='Users Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>

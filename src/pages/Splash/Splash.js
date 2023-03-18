@@ -71,7 +71,7 @@ export default function Splash({ handlePage }) {
     //-----------------
     //  Check SERVER
     //-----------------
-    const myPromiseHelloServer = Hello('SERVER')
+    const myPromiseHelloServer = Hello()
     myPromiseHelloServer.then(function (rtnObj) {
       if (debugLog) console.log(consoleLogTime(debugModule, 'rtnObj'), rtnObj)
       //
@@ -87,38 +87,19 @@ export default function Splash({ handlePage }) {
         return
       }
       //-----------------
-      //  Check DATABASE
+      //  OK
       //-----------------
-      const myPromiseHelloDatabase = Hello('DATABASE')
-      myPromiseHelloDatabase.then(function (rtnObj) {
-        if (debugLog) console.log(consoleLogTime(debugModule, 'rtnObj'), rtnObj)
-        //
-        //  Error
-        //
-        const rtnValue = rtnObj.rtnValue
-        if (!rtnValue) {
-          let message
-          rtnObj.rtnCatch ? (message = rtnObj.rtnCatchMsg) : (message = rtnObj.rtnMessage)
-          if (debugLog) console.log(consoleLogTime(debugModule, 'Error Message'), message)
-          setForm_message(message)
-          setshowConnect(true)
-          return
-        }
-        //-----------------
-        //  OK
-        //-----------------
-        if (maint) handlePage('OwnerList')
-        else {
-          setForm_message('')
-          setshowContinue(true)
-        }
-      })
+      if (maint) handlePage('OwnerList')
+      else {
+        setForm_message('')
+        setshowContinue(true)
+      }
     })
   }
   //--------------------------------------------------------------------
   //-  Check The Server/Database
   //--------------------------------------------------------------------
-  async function Hello(helloType) {
+  async function Hello() {
     //
     //  Initialise Values
     //
@@ -143,20 +124,18 @@ export default function Splash({ handlePage }) {
       //
       const method = 'post'
       let body = {
-        sqlClient: debugModule,
-        helloType: helloType
+        sqlClient: debugModule
       }
       const URL = App_URL + URL_HELLO
       if (debugLog) console.log(consoleLogTime(debugModule, 'URL'), URL)
       //
       //  Timeout
       //
-      let timeout
-      helloType === 'SERVER' ? (timeout = 2000) : (timeout = 1200)
+      let timeout = 2000
       //
       //  Info
       //
-      const info = `Client(${debugModule}) Action(${helloType})`
+      const info = `Client(${debugModule}) Action(Hello)`
       //
       //  SQL database
       //

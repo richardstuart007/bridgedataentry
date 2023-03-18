@@ -10,6 +10,7 @@ import UsersList from './Users/UsersList'
 import UsersownerList from './Usersowner/UsersownerList'
 import LibraryList from './Library/LibraryList'
 import OwnerGroupList from './OwnerGroup/OwnerGroupList'
+import Register from './Register/Register'
 //===================================================================================
 function Control({ handlePage, pageCurrent }) {
   //.............................................................................
@@ -41,6 +42,8 @@ function Control({ handlePage, pageCurrent }) {
       return <UsersList handlePage={handlePage} />
     case 'UsersownerList':
       return <UsersownerList handlePage={handlePage} />
+    case 'Register':
+      return <Register handlePage={handlePage} />
     default:
       return <OwnerList handlePage={handlePage} />
   }
