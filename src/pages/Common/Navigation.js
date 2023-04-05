@@ -33,6 +33,7 @@ export default function Navigation({ handlePage }) {
   //...................................................................................
   //.  Render the component
   //...................................................................................
+  if (CurrentPage === 'Splash') return null
   return (
     <div className={classes.root}>
       <Grid container alignItems='center'>

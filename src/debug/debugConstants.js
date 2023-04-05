@@ -1,2 +1,2 @@
-exports.DEBUG_LOG_OVERRIDE = true
-exports.DEBUG_LOG = true
+exports.DEBUG_LOG_OVERRIDE = false
+exports.DEBUG_LOG = false

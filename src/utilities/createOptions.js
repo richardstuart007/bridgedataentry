@@ -21,12 +21,12 @@ export default function createOptions(props) {
     cop_id,
     cop_title,
     cop_store,
-    cop_R
+    cop_received
   } = props
   //
   //  Received flag
   //
-  sessionStorage.setItem(cop_R, false)
+  sessionStorage.setItem(cop_received, false)
   //
   //  Process promise
   //
@@ -52,7 +52,7 @@ export default function createOptions(props) {
     //  Load Options from Data
     //
     const data = rtnObj.rtnRows
-    LoadOptions(data, cop_owner, cop_id, cop_title, cop_store, cop_R)
+    LoadOptions(data, cop_owner, cop_id, cop_title, cop_store, cop_received)
     return
   })
   //
@@ -62,7 +62,7 @@ export default function createOptions(props) {
   //...................................................................................
   //.  Load Options
   //...................................................................................
-  function LoadOptions(data, cop_owner, cop_id, cop_title, cop_store, cop_R) {
+  function LoadOptions(data, cop_owner, cop_id, cop_title, cop_store, cop_received) {
     //
     //  Options
     //
@@ -99,7 +99,7 @@ export default function createOptions(props) {
     //
     //  Received flag
     //
-    sessionStorage.setItem(cop_R, true)
+    sessionStorage.setItem(cop_received, true)
   }
   //...................................................................................
 }
