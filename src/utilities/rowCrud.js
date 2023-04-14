@@ -13,81 +13,65 @@ const debugModule = 'rowCrud'
 // Constants
 //
 const { URL_TABLES } = require('../services/constants.js')
-const { DFT_TIMEOUT } = require('../services/constants.js')
-//
-//  Global Variables
-//
-let rtnObj = {}
 //--------------------------------------------------------------------
 //-  Main Line
 //--------------------------------------------------------------------
 export default async function rowCrud(props) {
+  if (debugLog) console.log(consoleLogTime(debugModule, 'Start'))
   //
-  //  Reset rtnObj
+  //  Define returned object (for errors)
   //
-  rtnObj.rtnBodyParms = ''
-  rtnObj.rtnValue = false
-  rtnObj.rtnMessage = ''
-  rtnObj.rtnSqlFunction = debugModule
-  rtnObj.rtnCatchFunction = ''
-  rtnObj.rtnCatch = false
-  rtnObj.rtnCatchMsg = ''
-  rtnObj.rtnRows = []
+  const rtnErr = {
+    rtnBodyParms: '',
+    rtnValue: false,
+    rtnMessage: '',
+    rtnSqlFunction: debugModule,
+    rtnCatchFunction: '',
+    rtnCatch: false,
+    rtnCatchMsg: '',
+    rtnRows: []
+  }
+  //
+  //  Deconstruct
+  //
+  const {
+    AxCaller,
+    AxMethod = 'post',
+    AxAction = 'SELECT',
+    AxTable,
+    AxString,
+    AxWhere,
+    AxRow,
+    AxKeyName,
+    AxOrderBy,
+    AxOrderByRaw,
+    AxTimeout
+  } = props
+  if (debugLog) console.log(consoleLogTime(debugModule, 'Props'), { ...props })
+  const AxClient = `${debugModule}/${AxCaller}`
   //
   //  Try
   //
   try {
-    if (debugLog) console.log(consoleLogTime(debugModule, 'Start'))
-    //
-    //  Deconstruct
-    //
-    const {
-      sqlCaller,
-      axiosMethod = 'post',
-      sqlAction = 'SELECT',
-      sqlTable,
-      sqlString,
-      sqlWhere,
-      sqlRow,
-      sqlKeyName,
-      sqlOrderBy,
-      sqlOrderByRaw,
-      timeout = DFT_TIMEOUT
-    } = props
-    if (debugLog) console.log(consoleLogTime(debugModule, 'Props'), { ...props })
-    const sqlClient = `${debugModule}/${sqlCaller}`
     //
     //  Validate the parameters
     //
-    const valid = validateProps(sqlAction, sqlString, sqlTable)
+    const valid = validateProps()
     //
-    //  Invalid
+    //  Invalid return message
     //
     if (!valid) {
       console.log(
         consoleLogTime(
-          `sqlClient(${sqlClient}) Action(${sqlAction}) Table(${sqlTable}) Error(${rtnObj.rtnMessage})`
+          `AxClient(${AxClient}) Action(${AxAction}) Table(${AxTable}) Error(${rtnErr.rtnMessage})`
         )
       )
-      if (debugLog) console.log(consoleLogTime(debugModule, 'rtnObj'), rtnObj)
-      return rtnObj
+      return rtnErr
     }
     //
     // Fetch the data
     //
-    const rtnObjServer = sqlDatabase(
-      sqlClient,
-      sqlTable,
-      sqlAction,
-      sqlString,
-      sqlWhere,
-      sqlRow,
-      sqlKeyName,
-      sqlOrderBy,
-      sqlOrderByRaw,
-      axiosMethod,
-      timeout
-    )
+    const rtnObjServer = sqlDatabase()
     //
     //  Return value from Server
     //
@@ -99,49 +83,50 @@ export default async function rowCrud(props) {
   } catch (e) {
     if (debugLog) console.log(consoleLogTime(debugModule, 'Catch'))
     console.log(e)
-    rtnObj.rtnCatch = true
-    rtnObj.rtnCatchMsg = 'rowCrud catch error'
-    if (debugLog) console.log(consoleLogTime(debugModule, 'rtnObj'), { ...rtnObj })
-    return rtnObj
+    rtnErr.rtnCatch = true
+    rtnErr.rtnCatchMsg = 'rowCrud catch error'
+    if (debugLog) console.log(consoleLogTime(debugModule, 'rtnErr'), { ...rtnErr })
+    return rtnErr
   }
   //--------------------------------------------------------------------
   //  Validate the parameters
   //--------------------------------------------------------------------
-  function validateProps(sqlAction, sqlString, sqlTable) {
+  function validateProps() {
     //
     // Check values sent
     //
-    if (!sqlAction) {
-      rtnObj.rtnMessage = `SqlAction parameter not passed`
+    if (!AxAction) {
+      rtnErr.rtnMessage = `SqlAction parameter not passed`
       return false
     }
     //
-    //  Validate sqlAction type
+    //  Validate Action
     //
     if (
-      sqlAction !== 'DELETE' &&
-      sqlAction !== 'EXIST' &&
-      sqlAction !== 'SELECTSQL' &&
-      sqlAction !== 'SELECT' &&
-      sqlAction !== 'INSERT' &&
-      sqlAction !== 'UPDATE' &&
-      sqlAction !== 'UPSERT'
+      AxAction !== 'DELETE' &&
+      AxAction !== 'EXIST' &&
+      AxAction !== 'SELECTSQL' &&
+      AxAction !== 'SELECT' &&
+      AxAction !== 'INSERT' &&
+      AxAction !== 'UPDATE' &&
+      AxAction !== 'UPDATERAW' &&
+      AxAction !== 'UPSERT'
     ) {
-      rtnObj.rtnMessage = `SqlAction ${sqlAction}: SqlAction not valid`
+      rtnErr.rtnMessage = `SqlAction ${AxAction}: SqlAction not valid`
       return false
     }
     //
-    //  SELECTSQL needs sqlString
+    //  SELECTSQL needs String
     //
-    if (sqlAction === 'SELECTSQL' && !sqlString) {
-      rtnObj.rtnMessage = `SqlAction ${sqlAction}: sqlString not passed`
+    if ((AxAction === 'SELECTSQL' || AxAction === 'UPDATERAW') && !AxString) {
+      rtnErr.rtnMessage = `SqlAction ${AxAction}: String not passed`
       return false
     }
     //
     //  not SELECTSQL needs table
     //
-    if (sqlAction !== 'SELECTSQL' && !sqlTable) {
-      rtnObj.rtnMessage = `SqlAction ${sqlAction}: sqlTable not passed`
+    if (AxAction !== 'SELECTSQL' && !AxTable) {
+      rtnErr.rtnMessage = `SqlAction ${AxAction}: Table not passed`
       return false
     }
     //
@@ -152,34 +137,22 @@ export default async function rowCrud(props) {
   //--------------------------------------------------------------------
   //  Database SQL
   //--------------------------------------------------------------------
-  async function sqlDatabase(
-    sqlClient,
-    sqlTable,
-    sqlAction,
-    sqlString,
-    sqlWhere,
-    sqlRow,
-    sqlKeyName,
-    sqlOrderBy,
-    sqlOrderByRaw,
-    axiosMethod,
-    timeout
-  ) {
+  async function sqlDatabase() {
     let body
     try {
       //
       //  Body
       //
       body = {
-        sqlClient: sqlClient,
-        sqlTable: sqlTable,
-        sqlAction: sqlAction,
-        sqlString: sqlString,
-        sqlWhere: sqlWhere,
-        sqlRow: sqlRow,
-        sqlKeyName: sqlKeyName,
-        sqlOrderBy: sqlOrderBy,
-        sqlOrderByRaw: sqlOrderByRaw
+        AxClient: AxClient,
+        AxTable: AxTable,
+        AxAction: AxAction,
+        AxString: AxString,
+        AxWhere: AxWhere,
+        AxRow: AxRow,
+        AxKeyName: AxKeyName,
+        AxOrderBy: AxOrderBy,
+        AxOrderByRaw: AxOrderByRaw
       }
       //
       //  Base URL
@@ -192,19 +165,23 @@ export default async function rowCrud(props) {
       if (debugLog) console.log(consoleLogTime(debugModule, 'URL'), URL)
       if (debugLog)
         console.log(
-          consoleLogTime(
-            debugModule,
-            `sqlClient(${sqlClient}) Action(${sqlAction}) Table(${sqlTable})`
-          )
+          consoleLogTime(debugModule, `Client(${AxClient}) Action(${AxAction}) Table(${AxTable})`)
         )
       //
       //  Info
       //
-      const info = `sqlClient(${sqlClient}) Action(${sqlAction}) Table(${sqlTable})`
+      const info = `Client(${AxClient}) Action(${AxAction}) Table(${AxTable})`
       //
       //  SQL database
       //
-      const rtnObjServer = await apiAxios(axiosMethod, URL, body, timeout, info)
+      const apiAxiosProps = {
+        AxMethod: AxMethod,
+        AxUrl: URL,
+        AxData: body,
+        AxTimeout: AxTimeout,
+        AxInfo: info
+      }
+      const rtnObjServer = await apiAxios(apiAxiosProps)
       if (debugLog) console.log(consoleLogTime(debugModule, 'rtnObjServer'), { ...rtnObjServer })
       return rtnObjServer
       //
@@ -213,7 +190,7 @@ export default async function rowCrud(props) {
     } catch (e) {
       if (debugLog) console.log(consoleLogTime(debugModule, 'Catch'))
       console.log(e)
-      const rtnObj = {
+      const rtnErr = {
         rtnBodyParms: body,
         rtnValue: false,
         rtnMessage: '',
@@ -223,7 +200,7 @@ export default async function rowCrud(props) {
         rtnCatchMsg: 'Catch calling apiAxios',
         rtnRows: []
       }
-      return rtnObj
+      return rtnErr
     }
   }
 }

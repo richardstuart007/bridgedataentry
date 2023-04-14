@@ -64,7 +64,7 @@ const useStyles = makeStyles(theme => ({
 //  Table
 //
 const { SQL_ROWS } = require('../../services/constants.js')
-const sqlTable = 'users'
+const AxTable = 'users'
 //
 //  Table Heading
 //
@@ -151,13 +151,13 @@ export default function UsersList({ handlePage }) {
     //
     //  Process promise
     //
-    let sqlString = `* from ${sqlTable} order by u_id FETCH FIRST ${SQL_ROWS} ROWS ONLY`
+    let AxString = `* from ${AxTable} order by u_id FETCH FIRST ${SQL_ROWS} ROWS ONLY`
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'SELECTSQL',
-      sqlString: sqlString
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'SELECTSQL',
+      AxString: AxString
     }
     const myPromiseGet = rowCrud(rowCrudparams)
     //
@@ -203,11 +203,11 @@ export default function UsersList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'delete',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'DELETE',
-      sqlWhere: `u_id = '${u_id}'`
+      AxMethod: 'delete',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'DELETE',
+      AxWhere: `u_id = '${u_id}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -226,11 +226,11 @@ export default function UsersList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'delete',
-      sqlCaller: debugModule,
-      sqlTable: 'userspwd',
-      sqlAction: 'DELETE',
-      sqlWhere: `upid = '${u_id}'`
+      AxMethod: 'delete',
+      AxCaller: debugModule,
+      AxTable: 'userspwd',
+      AxAction: 'DELETE',
+      AxWhere: `upid = '${u_id}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
 
@@ -250,11 +250,11 @@ export default function UsersList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'delete',
-      sqlCaller: debugModule,
-      sqlTable: 'usershistory',
-      sqlAction: 'DELETE',
-      sqlWhere: `r_uid = '${u_id}'`
+      AxMethod: 'delete',
+      AxCaller: debugModule,
+      AxTable: 'usershistory',
+      AxAction: 'DELETE',
+      AxWhere: `r_uid = '${u_id}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -273,11 +273,11 @@ export default function UsersList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'delete',
-      sqlCaller: debugModule,
-      sqlTable: 'usersowner',
-      sqlAction: 'DELETE',
-      sqlWhere: `uoid = '${u_id}'`
+      AxMethod: 'delete',
+      AxCaller: debugModule,
+      AxTable: 'usersowner',
+      AxAction: 'DELETE',
+      AxWhere: `uoid = '${u_id}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -300,12 +300,12 @@ export default function UsersList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'UPDATE',
-      sqlWhere: `u_id = '${u_id}'`,
-      sqlRow: nokeyData
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'UPDATE',
+      AxWhere: `u_id = '${u_id}'`,
+      AxRow: nokeyData
     }
     const myPromiseUpdate = rowCrud(rowCrudparams)
     //
@@ -548,6 +548,14 @@ export default function UsersList({ handlePage }) {
         color='warning'
         variant='contained'
         onClick={() => handlePage('PAGEBACK')}
+      />
+      {/* .......................................................................................... */}
+      <MyButton
+        type='submit'
+        text='Re-Start'
+        color='warning'
+        variant='contained'
+        onClick={() => handlePage('PAGESTART')}
       />
       {/* .......................................................................................... */}
       <Popup title='Users Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>

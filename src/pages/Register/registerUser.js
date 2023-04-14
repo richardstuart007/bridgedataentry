@@ -23,7 +23,7 @@ export default async function registerUser(props) {
   //  Deconstruct props
   //
   const {
-    sqlCaller,
+    AxCaller,
     user,
     email,
     password,
@@ -39,7 +39,7 @@ export default async function registerUser(props) {
     admin,
     dev
   } = props
-  let sqlClient = `${debugModule}/${sqlCaller}`
+  let AxClient = `${debugModule}/${AxCaller}`
   //
   //  Get the URL
   //
@@ -53,13 +53,14 @@ export default async function registerUser(props) {
   //.  fetch data
   //--------------------------------------------------------------------
   async function fetchItems() {
+    let body
     try {
       //
       //  Setup actions
       //
-      const method = 'post'
-      let body = {
-        sqlClient: sqlClient,
+      body = {
+        AxClient: AxClient,
+        AxTable: 'users',
         user: user,
         email: email,
         password: password,
@@ -77,24 +78,36 @@ export default async function registerUser(props) {
       }
       const URL = App_URL + URL_REGISTER
       //
-      //  Timeout
-      //
-      let timeout = 2000
-      //
       //  Info
       //
-      const info = `Client(${sqlClient}) Action(Register)`
+      const info = `Client(${AxClient}) Action(Register)`
       //
       //  SQL database
       //
-      rtnObj = await apiAxios(method, URL, body, timeout, info)
+      const apiAxiosProps = {
+        AxUrl: URL,
+        AxData: body,
+        AxTimeout: 2500,
+        AxInfo: info
+      }
+      rtnObj = await apiAxios(apiAxiosProps)
       return rtnObj
       //
       // Errors
       //
     } catch (err) {
-      console.log(err)
-      return []
+      if (debugLog) console.log(consoleLogTime(debugModule, 'Catch err'), { ...err })
+      const rtnObj = {
+        rtnBodyParms: body,
+        rtnValue: false,
+        rtnMessage: '',
+        rtnSqlFunction: debugModule,
+        rtnCatchFunction: debugModule,
+        rtnCatch: true,
+        rtnCatchMsg: 'Catch calling apiAxios',
+        rtnRows: []
+      }
+      return rtnObj
     }
   }
   //--------------------------------------------------------------------

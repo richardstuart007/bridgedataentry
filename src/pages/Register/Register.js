@@ -172,7 +172,7 @@ export default function Register({ handlePage }) {
     //  Process promise
     //
     const params = {
-      sqlCaller: debugModule,
+      AxCaller: debugModule,
       user: user,
       email: email,
       password: password,

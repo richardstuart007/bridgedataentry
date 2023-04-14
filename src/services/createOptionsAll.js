@@ -19,14 +19,14 @@ export default function createOptionsAll() {
   //
   sessionStorage.setItem('Data_Options_ALL_Received', false)
   const Promise_Owner = createOptions({
-    cop_sqlTable: 'owner',
+    cop_AxTable: 'owner',
     cop_id: 'oowner',
     cop_title: 'otitle',
     cop_store: 'Data_Options_Owner',
     cop_received: 'Data_Options_Owner_Received'
   })
   const Promise_OwnerGroup = createOptions({
-    cop_sqlTable: 'ownergroup',
+    cop_AxTable: 'ownergroup',
     cop_owner: 'ogowner',
     cop_id: 'oggroup',
     cop_title: 'ogtitle',
@@ -34,21 +34,21 @@ export default function createOptionsAll() {
     cop_received: 'Data_Options_OwnerGroup_Received'
   })
   const Promise_Library = createOptions({
-    cop_sqlTable: 'library',
+    cop_AxTable: 'library',
     cop_id: 'lrref',
     cop_title: 'lrdesc',
     cop_store: 'Data_Options_Library',
     cop_received: 'Data_Options_Library_Received'
   })
   const Promise_Who = createOptions({
-    cop_sqlTable: 'who',
+    cop_AxTable: 'who',
     cop_id: 'wwho',
     cop_title: 'wtitle',
     cop_store: 'Data_Options_Who',
     cop_received: 'Data_Options_Who_Received'
   })
   const Promise_Reftype = createOptions({
-    cop_sqlTable: 'reftype',
+    cop_AxTable: 'reftype',
     cop_id: 'rttype',
     cop_title: 'rttitle',
     cop_store: 'Data_Options_Reftype',

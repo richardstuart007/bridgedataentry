@@ -18,12 +18,13 @@ import MyButton from '../../components/controls/MyButton'
 //
 import debugSettings from '../../debug/debugSettings'
 import consoleLogTime from '../../debug/consoleLogTime'
-const debugLog = debugSettings()
+const debugLog = debugSettings(true)
 const debugModule = 'Splash'
 //
 // Constants
 //
 const { URL_HELLO } = require('../../services/constants.js')
+const { PAGE_RESTART } = require('../../services/constants.js')
 //===================================================================================
 export default function Splash({ handlePage }) {
   if (debugLog) console.log(consoleLogTime(debugModule, 'Start'))
@@ -104,17 +105,12 @@ export default function Splash({ handlePage }) {
       //
       //  Setup actions
       //
-      const method = 'post'
       body = {
-        sqlClient: debugModule,
-        sqlTable: 'dbstats'
+        AxClient: debugModule,
+        AxTable: 'dbstats'
       }
       const URL = App_URL + URL_HELLO
       if (debugLog) console.log(consoleLogTime(debugModule, 'URL'), URL)
-      //
-      //  Timeout
-      //
-      let timeout = 2000
       //
       //  Info
       //
@@ -122,7 +118,12 @@ export default function Splash({ handlePage }) {
       //
       //  SQL database
       //
-      const rtnObj = await apiAxios(method, URL, body, timeout, info)
+      const apiAxiosProps = {
+        AxUrl: URL,
+        AxData: body,
+        AxInfo: info
+      }
+      const rtnObj = await apiAxios(apiAxiosProps)
       return rtnObj
       //
       // Errors
@@ -190,12 +191,12 @@ export default function Splash({ handlePage }) {
             <Grid item xs={12}>
               <MyButton
                 type='submit'
-                text='OwnerList'
+                text='Start'
                 value='Submit'
                 onClick={() => {
                   writeSession()
                   createOptionsAll()
-                  handlePage('OwnerList')
+                  handlePage(PAGE_RESTART)
                 }}
               />
             </Grid>

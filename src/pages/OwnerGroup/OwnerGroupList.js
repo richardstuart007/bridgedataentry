@@ -40,6 +40,13 @@ import rowCrud from '../../utilities/rowCrud'
 //
 import createOptions from '../../utilities/createOptions'
 //
+//  Debug Settings
+//
+import debugSettings from '../../debug/debugSettings'
+import consoleLogTime from '../../debug/consoleLogTime'
+const debugLog = debugSettings(true)
+const debugModule = 'OwnerGroupList'
+//
 //  Styles
 //
 const useStyles = makeStyles(theme => ({
@@ -68,7 +75,7 @@ const useStyles = makeStyles(theme => ({
 //  ownergroup Table
 //
 const { SQL_ROWS } = require('../../services/constants.js')
-const sqlTable = 'ownergroup'
+const AxTable = 'ownergroup'
 //
 //  Table Heading
 //
@@ -76,6 +83,7 @@ const headCells = [
   { id: 'ogowner', label: 'Owner' },
   { id: 'oggroup', label: 'Group' },
   { id: 'ogtitle', label: 'Title' },
+  { id: 'ogcntlibrary', label: 'Library' },
   { id: 'ogcntquestions', label: 'Questions' },
   { id: 'actions', label: 'Actions', disableSorting: true }
 ]
@@ -84,14 +92,11 @@ const searchTypeOptions = [
   { id: 'oggroup', title: 'Group' },
   { id: 'ogtitle', title: 'Title' }
 ]
-//
-// Debug Settings
-//
-const debugModule = 'OwnerGroupList'
 //...................................................................................
 //.  Main Line
 //...................................................................................
 export default function OwnerGroupList({ handlePage }) {
+  if (debugLog) console.log(consoleLogTime(debugModule, 'Start'))
   //
   //  Styles
   //
@@ -154,15 +159,15 @@ export default function OwnerGroupList({ handlePage }) {
     //
     //  Process promise
     //
-    let sqlString = `*, concat(ogowner,oggroup) as ogkey from ${sqlTable}`
-    if (s_owner) sqlString = sqlString + ` where ogowner = '${s_owner}'`
-    sqlString = sqlString + ` order by ogowner, oggroup FETCH FIRST ${SQL_ROWS} ROWS ONLY`
+    let AxString = `*, concat(ogowner,oggroup) as ogkey from ${AxTable}`
+    if (s_owner) AxString = AxString + ` where ogowner = '${s_owner}'`
+    AxString = AxString + ` order by ogowner, oggroup FETCH FIRST ${SQL_ROWS} ROWS ONLY`
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'SELECTSQL',
-      sqlString: sqlString
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'SELECTSQL',
+      AxString: AxString
     }
     const myPromiseGet = rowCrud(rowCrudparams)
     //
@@ -192,11 +197,11 @@ export default function OwnerGroupList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'delete',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'DELETE',
-      sqlWhere: `ogowner = '${ogowner}' and oggroup = '${oggroup}'`
+      AxMethod: 'delete',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'DELETE',
+      AxWhere: `ogowner = '${ogowner}' and oggroup = '${oggroup}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -223,12 +228,12 @@ export default function OwnerGroupList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'INSERT',
-      sqlKeyName: ['ogowner', 'oggroup'],
-      sqlRow: data
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'INSERT',
+      AxKeyName: ['ogowner', 'oggroup'],
+      AxRow: data
     }
     const myPromiseInsert = rowCrud(rowCrudparams)
     //
@@ -272,12 +277,12 @@ export default function OwnerGroupList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'UPDATE',
-      sqlWhere: `ogowner = '${ogowner}' and oggroup = '${oggroup}'`,
-      sqlRow: nokeyData
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'UPDATE',
+      AxWhere: `ogowner = '${ogowner}' and oggroup = '${oggroup}'`,
+      AxRow: nokeyData
     }
     const myPromiseUpdate = rowCrud(rowCrudparams)
     //
@@ -310,6 +315,51 @@ export default function OwnerGroupList({ handlePage }) {
     return myPromiseUpdate
   }
   //.............................................................................
+  //.  Update Counts
+  //.............................................................................
+  const updOwnerGroupCounts = () => {
+    //
+    //  Process promise
+    //
+    let AxString = `update ownergroup set`
+    AxString =
+      AxString +
+      ` ogcntquestions = (select count(*) from questions where ogowner = qowner and oggroup = qgroup )`
+    AxString =
+      AxString +
+      `, ogcntlibrary = (select count(*) from library where ogowner = lrowner and oggroup = lrgroup )`
+    if (s_owner) AxString = AxString + ` where ogowner = '${s_owner}'`
+
+    const rowCrudparams = {
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'UPDATERAW',
+      AxString: AxString
+    }
+    if (debugLog) console.log(consoleLogTime(debugModule, 'AxString'), AxString)
+    const updOwnerGroupCounts = rowCrud(rowCrudparams)
+    //
+    //  Resolve Status
+    //
+    updOwnerGroupCounts.then(function (rtnObj) {
+      //
+      //  Completion message
+      //
+      setServerMessage(rtnObj.rtnMessage)
+      //
+      //  Update State - refetch data
+      //
+      getRowAllData()
+      updateOptions()
+      return
+    })
+    //
+    //  Return Promise
+    //
+    return updOwnerGroupCounts
+  }
+  //.............................................................................
   //  Update the  Options
   //.............................................................................
   function updateOptions() {
@@ -317,7 +367,7 @@ export default function OwnerGroupList({ handlePage }) {
     //  Create options
     //
     createOptions({
-      cop_sqlTable: 'ownergroup',
+      cop_AxTable: 'ownergroup',
       cop_owner: 'ogowner',
       cop_id: 'oggroup',
       cop_title: 'ogtitle',
@@ -471,6 +521,15 @@ export default function OwnerGroupList({ handlePage }) {
             onClick={getRowAllData}
             className={classes.myButton}
           />
+          <MyButton
+            text='Update Counts'
+            variant='outlined'
+            startIcon={<RefreshIcon />}
+            onClick={() => {
+              updOwnerGroupCounts()
+            }}
+            className={classes.myButton}
+          />
 
           <MyButton
             text='Add New'
@@ -492,6 +551,7 @@ export default function OwnerGroupList({ handlePage }) {
                 <TableCell>{row.ogowner}</TableCell>
                 <TableCell>{row.oggroup}</TableCell>
                 <TableCell>{row.ogtitle}</TableCell>
+                <TableCell>{row.ogcntlibrary}</TableCell>
                 <TableCell>{row.ogcntquestions}</TableCell>
 
                 <TableCell>
@@ -550,6 +610,14 @@ export default function OwnerGroupList({ handlePage }) {
         onClick={() => {
           handlePage('PAGEBACK')
         }}
+      />
+      {/* .......................................................................................... */}
+      <MyButton
+        type='submit'
+        text='Re-Start'
+        color='warning'
+        variant='contained'
+        onClick={() => handlePage('PAGESTART')}
       />
       {/* .......................................................................................... */}
       <Popup title='OwnerGroup Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>

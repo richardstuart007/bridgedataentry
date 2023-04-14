@@ -15,8 +15,8 @@ const debugModule = 'createOptions'
 export default function createOptions(props) {
   if (debugLog) console.log(consoleLogTime(debugModule, 'Start'))
   const {
-    cop_sqlTable,
-    cop_sqlWhere = null,
+    cop_AxTable,
+    cop_AxWhere = null,
     cop_owner,
     cop_id,
     cop_title,
@@ -30,14 +30,14 @@ export default function createOptions(props) {
   //
   //  Process promise
   //
-  let sqlString = `* from ${cop_sqlTable} `
-  if (cop_sqlWhere) sqlString = sqlString + cop_sqlWhere
+  let AxString = `* from ${cop_AxTable} `
+  if (cop_AxWhere) AxString = AxString + cop_AxWhere
   const rowCrudparams = {
-    axiosMethod: 'post',
-    sqlCaller: debugModule,
-    sqlTable: cop_sqlTable,
-    sqlAction: 'SELECTSQL',
-    sqlString: sqlString
+    AxMethod: 'post',
+    AxCaller: debugModule,
+    AxTable: cop_AxTable,
+    AxAction: 'SELECTSQL',
+    AxString: AxString
   }
   const myPromiseGet = rowCrud(rowCrudparams)
   //

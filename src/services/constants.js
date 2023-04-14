@@ -80,6 +80,8 @@ exports.DFT_USER_SKIPCORRECT = true
 //------------------------------------------------------------------------
 exports.SQL_ROWS = 2000
 exports.VALIDATE_ON_CHANGE = false
-exports.DFT_TIMEOUT = 500
-exports.DFT_TIMEOUT_EXTRA = 1000
-exports.DFT_TIMEOUT_RETRY = 3
+exports.REACT_APP_ENV_TIMEOUT = 500
+exports.REACT_APP_ENV_TIMEOUT_EXTRA = 1000
+exports.REACT_APP_ENV_TIMEOUT_RETRY = 3
+exports.PAGE_START = 'Splash'
+exports.PAGE_RESTART = 'OwnersList'

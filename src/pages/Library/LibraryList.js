@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
 //  Table
 //
 const { SQL_ROWS } = require('../../services/constants.js')
-const sqlTable = 'library'
+const AxTable = 'library'
 //
 //  Table Heading
 //
@@ -164,23 +164,23 @@ export default function LibraryList({ handlePage }) {
     //
     //  SQL String
     //
-    let sqlString = `* from ${sqlTable}`
+    let AxString = `* from ${AxTable}`
     if (s_owner || s_group) {
-      sqlString = sqlString + ` where`
-      if (s_owner) sqlString = sqlString + ` lrowner = '${s_owner}'`
-      if (s_owner && s_group) sqlString = sqlString + ` and`
-      if (s_group) sqlString = sqlString + ` lrgroup = '${s_group}'`
+      AxString = AxString + ` where`
+      if (s_owner) AxString = AxString + ` lrowner = '${s_owner}'`
+      if (s_owner && s_group) AxString = AxString + ` and`
+      if (s_group) AxString = AxString + ` lrgroup = '${s_group}'`
     }
-    sqlString = sqlString + ` order by lrowner, lrgroup, lrref FETCH FIRST ${SQL_ROWS} ROWS ONLY`
+    AxString = AxString + ` order by lrowner, lrgroup, lrref FETCH FIRST ${SQL_ROWS} ROWS ONLY`
     //
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'SELECTSQL',
-      sqlString: sqlString
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'SELECTSQL',
+      AxString: AxString
     }
     const myPromiseGet = rowCrud(rowCrudparams)
     //
@@ -210,11 +210,11 @@ export default function LibraryList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'delete',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'DELETE',
-      sqlWhere: `lrid = '${lrid}'`
+      AxMethod: 'delete',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'DELETE',
+      AxWhere: `lrid = '${lrid}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -245,12 +245,12 @@ export default function LibraryList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'INSERT',
-      sqlKeyName: ['lrowner', 'lrgroup', 'lrref'],
-      sqlRow: nokeyData
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'INSERT',
+      AxKeyName: ['lrowner', 'lrgroup', 'lrref'],
+      AxRow: nokeyData
     }
     const myPromiseInsert = rowCrud(rowCrudparams)
     //
@@ -294,12 +294,12 @@ export default function LibraryList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'UPDATE',
-      sqlWhere: `lrid = '${lrid}'`,
-      sqlRow: nokeyData
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'UPDATE',
+      AxWhere: `lrid = '${lrid}'`,
+      AxRow: nokeyData
     }
     const myPromiseUpdate = rowCrud(rowCrudparams)
     //
@@ -339,7 +339,7 @@ export default function LibraryList({ handlePage }) {
     //  Create options
     //
     createOptions({
-      cop_sqlTable: 'library',
+      cop_AxTable: 'library',
       cop_id: 'lrref',
       cop_title: 'lrdesc',
       cop_store: 'Data_Options_Library',
@@ -556,6 +556,14 @@ export default function LibraryList({ handlePage }) {
         color='warning'
         variant='contained'
         onClick={() => handlePage('PAGEBACK')}
+      />
+      {/* .......................................................................................... */}
+      <MyButton
+        type='submit'
+        text='Re-Start'
+        color='warning'
+        variant='contained'
+        onClick={() => handlePage('PAGESTART')}
       />
       {/* .......................................................................................... */}
       <Popup title='Library Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>

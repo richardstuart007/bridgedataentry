@@ -59,13 +59,14 @@ let w_node_env
 let w_Database = 'Error'
 let w_Server = 'Error'
 let w_URL = 'Error'
-const PageStart = 'Splash'
+const { PAGE_START } = require('../services/constants.js')
+const { PAGE_RESTART } = require('../services/constants.js')
 //----------------------------------------------------------------------------
 //- Main Line
 //----------------------------------------------------------------------------
 export default function App() {
-  if (debugLog) console.log(consoleLogTime(debugModule, 'Start Module'))
-  const [pageCurrent, setPageCurrent] = useState(PageStart)
+  if (debugLog) console.log(consoleLogTime(debugModule, 'Start'))
+  const [pageCurrent, setPageCurrent] = useState(PAGE_START)
   //
   //  Screen Width
   //
@@ -83,12 +84,43 @@ export default function App() {
   //  First Time Setup
   //.............................................................................
   function firstTime() {
+    if (debugLog) console.log(consoleLogTime(debugModule, 'firstTime'))
     //
     //  Environment variables
     //
     w_server_database = process.env.REACT_APP_SERVER_DATABASE
     w_server_database = w_server_database.trim()
     w_node_env = process.env.NODE_ENV
+    //
+    //  Timeouts
+    //
+    const AppTimeout = {
+      timeout: null,
+      extra: null,
+      retry: null
+    }
+    const { REACT_APP_ENV_TIMEOUT } = require('../services/constants.js')
+    const env_timeout = process.env.REACT_APP_ENV_TIMEOUT
+    if (debugLog) console.log(consoleLogTime(debugModule, 'env_timeout'), env_timeout)
+    env_timeout
+      ? (AppTimeout.timeout = parseInt(env_timeout))
+      : (AppTimeout.timeout = REACT_APP_ENV_TIMEOUT)
+
+    const { REACT_APP_ENV_TIMEOUT_EXTRA } = require('../services/constants.js')
+    const env_timeout_extra = process.env.REACT_APP_ENV_TIMEOUT_EXTRA
+    env_timeout_extra
+      ? (AppTimeout.extra = parseInt(env_timeout_extra))
+      : (AppTimeout.extra = REACT_APP_ENV_TIMEOUT_EXTRA)
+
+    const { REACT_APP_ENV_TIMEOUT_RETRY } = require('../services/constants.js')
+    const env_timeout_retry = process.env.REACT_APP_ENV_TIMEOUT_RETRY
+    env_timeout_retry
+      ? (AppTimeout.retry = parseInt(env_timeout_retry))
+      : (AppTimeout.retry = REACT_APP_ENV_TIMEOUT_RETRY)
+    //
+    //  Save in session storage
+    //
+    sessionStorage.setItem('App_Timeout', JSON.stringify(AppTimeout))
     //
     //  Server & Database
     //
@@ -110,9 +142,9 @@ export default function App() {
     //
     //  Navigation
     //
-    sessionStorage.setItem('Nav_PageStart', JSON.stringify(PageStart))
-    sessionStorage.setItem('Nav_Current', JSON.stringify(PageStart))
-    sessionStorage.setItem('Nav_Previous', JSON.stringify(''))
+    let PageRoute = []
+    PageRoute.push(PAGE_START)
+    sessionStorage.setItem('Nav_Route', JSON.stringify(PageRoute))
     //
     //  Selection
     //
@@ -123,6 +155,7 @@ export default function App() {
   //.  Local Port Overridden - Update Constants
   //.............................................................................
   function update_serverdatabase() {
+    if (debugLog) console.log(consoleLogTime(debugModule, 'update_serverdatabase'))
     //------------------------------------------------------------------------
     //  Remote - Production
     //------------------------------------------------------------------------
@@ -280,32 +313,53 @@ export default function App() {
   //.  Handle Page Change
   //.............................................................................
   function handlePage(nextPage) {
+    if (debugLog) console.log(consoleLogTime(debugModule, 'handlePage'), nextPage)
     //
     //  Retrieve the state
     //
-    const PageCurrent = JSON.parse(sessionStorage.getItem('Nav_Current'))
-    const PagePrevious = JSON.parse(sessionStorage.getItem('Nav_Previous'))
+    let PageRoute = JSON.parse(sessionStorage.getItem('Nav_Route'))
+    const PageCurrent = PageRoute[PageRoute.length - 1]
     //
-    //  If no change of Page, return
+    //  Process next page
     //
-    if (nextPage === PageCurrent) return
-    //
-    //  Back/Start ?
-    //
-    const PageNext =
-      nextPage === 'PAGEBACK' ? PagePrevious : nextPage === 'PAGESTART' ? PageStart : nextPage
-    //
-    //  Update Previous Page
-    //
-    sessionStorage.setItem('Nav_Previous', JSON.stringify(PageCurrent))
-    //
-    //  Update NEW Page
-    //
-    sessionStorage.setItem('Nav_Current', JSON.stringify(PageNext))
-    //
-    //  Update State
-    //
-    setPageCurrent(PageNext)
+    switch (nextPage) {
+      //
+      //  No change, return
+      //
+      case PageCurrent:
+        return
+      //
+      //  Pageback
+      //
+      case 'PAGEBACK':
+        if (PageCurrent === PAGE_RESTART) return
+        PageRoute.pop()
+        const PagePrevious = PageRoute[PageRoute.length - 1]
+        sessionStorage.setItem('Nav_Route', JSON.stringify(PageRoute))
+        if (debugLog) console.log(consoleLogTime(debugModule, 'Nav_Route'), [PageRoute])
+        setPageCurrent(PagePrevious)
+        break
+      //
+      //  PAGESTART
+      //
+      case 'PAGESTART':
+        if (PageCurrent === PAGE_RESTART) return
+        PageRoute = []
+        PageRoute.push(PAGE_START)
+        PageRoute.push(PAGE_RESTART)
+        sessionStorage.setItem('Nav_Route', JSON.stringify(PageRoute))
+        if (debugLog) console.log(consoleLogTime(debugModule, 'Nav_Route'), [PageRoute])
+        setPageCurrent(PAGE_RESTART)
+        break
+      //
+      //  Standard Navigation
+      //
+      default:
+        PageRoute.push(nextPage)
+        sessionStorage.setItem('Nav_Route', JSON.stringify(PageRoute))
+        if (debugLog) console.log(consoleLogTime(debugModule, 'Nav_Route'), [PageRoute])
+        setPageCurrent(nextPage)
+    }
   }
   //.............................................................................
   return (

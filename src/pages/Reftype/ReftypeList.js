@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
 //  Table
 //
 const { SQL_ROWS } = require('../../services/constants.js')
-const sqlTable = 'reftype'
+const AxTable = 'reftype'
 //
 //  Table Heading
 //
@@ -93,13 +93,13 @@ export default function ReftypeList({ handlePage }) {
     //
     //  Process promise
     //
-    let sqlString = `* from ${sqlTable} order by rttype FETCH FIRST ${SQL_ROWS} ROWS ONLY`
+    let AxString = `* from ${AxTable} order by rttype FETCH FIRST ${SQL_ROWS} ROWS ONLY`
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'SELECTSQL',
-      sqlString: sqlString
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'SELECTSQL',
+      AxString: AxString
     }
     const myPromiseGet = rowCrud(rowCrudparams)
     //
@@ -129,11 +129,11 @@ export default function ReftypeList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'delete',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'DELETE',
-      sqlWhere: `rttype = '${rttype}'`
+      AxMethod: 'delete',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'DELETE',
+      AxWhere: `rttype = '${rttype}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -160,12 +160,12 @@ export default function ReftypeList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'INSERT',
-      sqlKeyName: ['rttype'],
-      sqlRow: data
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'INSERT',
+      AxKeyName: ['rttype'],
+      AxRow: data
     }
     const myPromiseInsert = rowCrud(rowCrudparams)
     //
@@ -209,12 +209,12 @@ export default function ReftypeList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'UPDATE',
-      sqlWhere: `rttype = '${rttype}'`,
-      sqlRow: nokeyData
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'UPDATE',
+      AxWhere: `rttype = '${rttype}'`,
+      AxRow: nokeyData
     }
     const myPromiseUpdate = rowCrud(rowCrudparams)
     //
@@ -254,7 +254,7 @@ export default function ReftypeList({ handlePage }) {
     //  Create options
     //
     createOptions({
-      cop_sqlTable: 'Reftype',
+      cop_AxTable: 'Reftype',
       cop_id: 'rttype',
       cop_title: 'rttitle',
       cop_store: 'Data_Options_Reftype',
@@ -496,6 +496,14 @@ export default function ReftypeList({ handlePage }) {
         onClick={() => {
           handlePage('PAGEBACK')
         }}
+      />
+      {/* .......................................................................................... */}
+      <MyButton
+        type='submit'
+        text='Re-Start'
+        color='warning'
+        variant='contained'
+        onClick={() => handlePage('PAGESTART')}
       />
       {/* .......................................................................................... */}
       <Popup title='Reftype Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>

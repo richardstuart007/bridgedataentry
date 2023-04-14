@@ -16,19 +16,19 @@ export default function writeSession() {
   //  Build row
   //
   const usdatetime = new Date().toJSON()
-  const sqlRow = {
+  const AxRow = {
     v_datetime: usdatetime
   }
-  if (debugLog) console.log(consoleLogTime(debugModule, 'sqlRow'), { ...sqlRow })
+  if (debugLog) console.log(consoleLogTime(debugModule, 'AxRow'), { ...AxRow })
   //
   //  Build Props
   //
   const props = {
-    sqlCaller: debugModule,
-    axiosMethod: 'post',
-    sqlAction: 'INSERT',
-    sqlTable: 'sessions',
-    sqlRow: sqlRow
+    AxCaller: debugModule,
+    AxMethod: 'post',
+    AxAction: 'INSERT',
+    AxTable: 'sessions',
+    AxRow: AxRow
   }
   //
   //  Process promise

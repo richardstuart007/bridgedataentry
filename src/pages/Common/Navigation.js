@@ -27,18 +27,19 @@ const useStyles = makeStyles(theme => {
 export default function Navigation({ handlePage }) {
   const classes = useStyles()
   //
-  //  Define the Store
+  //  Current Page
   //
-  const CurrentPage = JSON.parse(sessionStorage.getItem('Nav_Current'))
+  const PageRoute = JSON.parse(sessionStorage.getItem('Nav_Route'))
+  const PageCurrent = PageRoute[PageRoute.length - 1]
   //...................................................................................
   //.  Render the component
   //...................................................................................
-  if (CurrentPage === 'Splash') return null
+  if (PageCurrent === 'Splash') return null
   return (
     <div className={classes.root}>
       <Grid container alignItems='center'>
         {/* .......................................................................................... */}
-        {CurrentPage !== 'OwnerList' ? (
+        {PageCurrent !== 'OwnerList' ? (
           <MyActionButton
             startIcon={<PersonIcon fontSize='medium' />}
             variant='contained'
@@ -52,7 +53,7 @@ export default function Navigation({ handlePage }) {
 
         {/* .......................................................................................... */}
 
-        {CurrentPage !== 'OwnerGroupList' ? (
+        {PageCurrent !== 'OwnerGroupList' ? (
           <MyActionButton
             startIcon={<GroupIcon fontSize='medium' />}
             variant='contained'
@@ -64,7 +65,7 @@ export default function Navigation({ handlePage }) {
           ></MyActionButton>
         ) : null}
         {/* .......................................................................................... */}
-        {CurrentPage !== 'LibraryList' ? (
+        {PageCurrent !== 'LibraryList' ? (
           <MyActionButton
             startIcon={<QuizIcon fontSize='medium' />}
             variant='contained'
@@ -78,7 +79,7 @@ export default function Navigation({ handlePage }) {
           ></MyActionButton>
         ) : null}
         {/* .......................................................................................... */}
-        {CurrentPage !== 'QuestionList' ? (
+        {PageCurrent !== 'QuestionList' ? (
           <MyActionButton
             startIcon={<QuizIcon fontSize='medium' />}
             variant='contained'
@@ -92,7 +93,7 @@ export default function Navigation({ handlePage }) {
           ></MyActionButton>
         ) : null}
         {/* .......................................................................................... */}
-        {CurrentPage !== 'WhoList' ? (
+        {PageCurrent !== 'WhoList' ? (
           <MyActionButton
             startIcon={<PersonIcon fontSize='medium' />}
             variant='contained'
@@ -104,7 +105,7 @@ export default function Navigation({ handlePage }) {
           ></MyActionButton>
         ) : null}
         {/* .......................................................................................... */}
-        {CurrentPage !== 'ReftypeList' ? (
+        {PageCurrent !== 'ReftypeList' ? (
           <MyActionButton
             startIcon={<PersonIcon fontSize='medium' />}
             variant='contained'
@@ -116,7 +117,7 @@ export default function Navigation({ handlePage }) {
           ></MyActionButton>
         ) : null}
         {/* .......................................................................................... */}
-        {CurrentPage !== 'UsersList' ? (
+        {PageCurrent !== 'UsersList' ? (
           <MyActionButton
             startIcon={<PersonIcon fontSize='medium' />}
             variant='contained'
@@ -128,7 +129,7 @@ export default function Navigation({ handlePage }) {
           ></MyActionButton>
         ) : null}
         {/* .......................................................................................... */}
-        {CurrentPage !== 'UsersownerList' ? (
+        {PageCurrent !== 'UsersownerList' ? (
           <MyActionButton
             startIcon={<PersonIcon fontSize='medium' />}
             variant='contained'

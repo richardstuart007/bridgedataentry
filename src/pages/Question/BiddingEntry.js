@@ -13,7 +13,7 @@ import { useMyForm, MyForm } from '../../components/controls/useMyForm'
 //  Services
 //
 import rowCrud from '../../utilities/rowCrud'
-const sqlTable = 'bidding'
+const AxTable = 'bidding'
 //
 //  Form Initial Values
 //
@@ -298,13 +298,13 @@ export default function BiddingEntry(props) {
     //
     //  Process promise
     //
-    let sqlString = `* from ${sqlTable} where bid = ${bid}`
+    let AxString = `* from ${AxTable} where bid = ${bid}`
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'SELECTSQL',
-      sqlString: sqlString
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'SELECTSQL',
+      AxString: AxString
     }
     const myPromiseGet = rowCrud(rowCrudparams)
     //
@@ -342,12 +342,12 @@ export default function BiddingEntry(props) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'UPSERT',
-      sqlKeyName: ['bid'],
-      sqlRow: dbValues
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'UPSERT',
+      AxKeyName: ['bid'],
+      AxRow: dbValues
     }
     const myPromiseInsert = rowCrud(rowCrudparams)
     //
@@ -389,11 +389,11 @@ export default function BiddingEntry(props) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'delete',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'DELETE',
-      sqlWhere: `bid = ${bid}`
+      AxMethod: 'delete',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'DELETE',
+      AxWhere: `bid = ${bid}`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //

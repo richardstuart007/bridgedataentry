@@ -9,98 +9,92 @@ import debugSettings from '../debug/debugSettings'
 import consoleLogTime from '../debug/consoleLogTime'
 const debugLog = debugSettings()
 const debugModule = 'apiAxios'
-
 if (debugLog) console.log(consoleLogTime(debugModule, 'Start Global'))
-//
-//  Constants
-//
-const { DFT_TIMEOUT } = require('../services/constants.js')
-const { DFT_TIMEOUT_EXTRA } = require('../services/constants.js')
-const { DFT_TIMEOUT_RETRY } = require('../services/constants.js')
 //
 //  Global
 //
 let g_AxId = 0
-let g_Sess = 0
+let g_AxSess = 0
 //===================================================================================
 //
 // methods - post(get), post(update), delete(delete), post(upsert)
 //
-export default async function apiAxios(
-  method,
-  url,
-  data,
-  timeout = DFT_TIMEOUT,
-  info = 'SqlDatabase',
-  retry = DFT_TIMEOUT_RETRY
-) {
-  if (debugLog) console.log(consoleLogTime(debugModule, 'Start Module'))
+export default async function apiAxios(props) {
+  if (debugLog) console.log(consoleLogTime(debugModule, 'Start'))
+  if (debugLog) console.log(consoleLogTime(debugModule, 'props'), { ...props })
+  //
+  //  Constants
+  //
+  const AppTimeout = JSON.parse(sessionStorage.getItem('App_Timeout'))
+  if (debugLog) console.log(consoleLogTime(debugModule, 'AppTimeout'), AppTimeout)
+  const {
+    AxMethod = 'post',
+    AxUrl,
+    AxData,
+    AxTimeout = AppTimeout.timeout,
+    AxInfo = 'SqlDatabase',
+    AxRetry = AppTimeout.retry,
+    AxExtra = AppTimeout.extra
+  } = props
   //
   //  retry on Fail
   //
   let rtnObjtry
-  rtnObjtry = await apiRetry(TryReq, retry)
+  rtnObjtry = await apiRetry(TryReq, AxRetry)
   //
   //  Return values to caller
   //
-  if (debugLog) console.log(consoleLogTime(debugModule, 'RETURN rtnObjtry'), { ...rtnObjtry })
+  if (debugLog) console.log(consoleLogTime(debugModule, 'rtnObjtry'), { ...rtnObjtry })
   return rtnObjtry
   //--------------------------------------------------------------------------------------------
   // apiRetry
   //--------------------------------------------------------------------------------------------
-  async function apiRetry(asyncFunction, n) {
-    let last_apiRetryRtn
-    for (let index = 1; index < n + 1; index++) {
+  async function apiRetry(fpAsyncFunction, fpRetry) {
+    let w_Last_apiRetryRtn
+    for (let w_AxTry = 1; w_AxTry < fpRetry + 1; w_AxTry++) {
       try {
-        const timeoutAlt = timeout + (index - 1) * DFT_TIMEOUT_EXTRA
-        const apiRetryRtn = await asyncFunction(index, timeoutAlt)
-        if (debugLog)
-          console.log(consoleLogTime(debugModule, 'RETURN apiRetryRtn'), { ...apiRetryRtn })
+        const w_AxTimeoutAlt = AxTimeout + (w_AxTry - 1) * AxExtra
+        const apiRetryRtn = await fpAsyncFunction(w_AxTry, w_AxTimeoutAlt)
+        if (debugLog) console.log(consoleLogTime(debugModule, 'apiRetryRtn'), { ...apiRetryRtn })
         //
-        //  Return value
-        //
-        if (apiRetryRtn.rtnValue) return apiRetryRtn
-        //
-        //  No catch then return
+        //  No Catch (not a server error)
         //
         if (!apiRetryRtn.rtnCatch) return apiRetryRtn
         //
         //  Update last return value
         //
-        last_apiRetryRtn = apiRetryRtn
+        w_Last_apiRetryRtn = apiRetryRtn
       } catch (error) {
-        console.log(consoleLogTime(debugModule, 'CATCH Error'), { ...error })
+        console.log(consoleLogTime(debugModule, 'CATCH Error'), error)
       }
     }
     //
     //  Return last error
     //
-    return last_apiRetryRtn
+    return w_Last_apiRetryRtn
   }
   //--------------------------------------------------------------------------------------------
   // Try request
   //--------------------------------------------------------------------------------------------
-  async function TryReq(AxTry = 0, timeoutAlt) {
+  async function TryReq(fpAxTry, fpAxTimeoutAlt) {
     //
     //  Try
     //
     try {
-      if (debugLog) console.log(consoleLogTime(debugModule, 'TryReq AxTry'), AxTry)
       //
       //  Sess
       //
       const AppSessionJSON = sessionStorage.getItem('App_Session')
       if (AppSessionJSON) {
         const AppSession = JSON.parse(AppSessionJSON)
-        g_Sess = AppSession.v_vid
+        g_AxSess = AppSession.v_vid
       }
-      if (debugLog) console.log(consoleLogTime(debugModule, 'g_Sess'), g_Sess)
       //
       //  Inceptor - req start time
       //
       axios.interceptors.request.use(req => {
         req.meta = req.meta || {}
-        req.meta.requestStartedAt = new Date().getTime()
+        req.meta.AxrequestStartedAt = new Date().getTime()
         return req
       })
       //
@@ -108,36 +102,35 @@ export default async function apiAxios(
       //
       axios.interceptors.response.use(
         res => {
-          res.durationInMs = new Date().getTime() - res.config.meta.requestStartedAt
+          res.AxdurationInMs = new Date().getTime() - res.config.meta.AxrequestStartedAt
           return res
         },
         res => {
-          res.durationInMs = new Date().getTime() - res.config.meta.requestStartedAt
+          res.AxdurationInMs = new Date().getTime() - res.config.meta.AxrequestStartedAt
           throw res
         }
       )
       //
       //  Store axios values - Request
       //
-      StoreReq(AxTry, timeoutAlt)
+      StoreReq(fpAxTry, fpAxTimeoutAlt)
       //
-      //  Add id to body parms
+      //  Add information to body parms
       //
-      const dataApiAxios = data
-      dataApiAxios.Sess = g_Sess
-      dataApiAxios.AxId = g_AxId
-      dataApiAxios.AxTry = AxTry
-      dataApiAxios.AxTimeout = timeoutAlt
+      const AxDataAlt = AxData
+      AxDataAlt.AxSess = g_AxSess
+      AxDataAlt.AxId = g_AxId
+      AxDataAlt.AxTry = fpAxTry
+      AxDataAlt.AxTimeout = fpAxTimeoutAlt
       //
       //  Invoke Axios fetch
       //
-      if (debugLog) console.log(consoleLogTime(debugModule, 'Request--->'), { ...dataApiAxios })
-
+      if (debugLog) console.log(consoleLogTime(debugModule, 'Request--->'), { ...AxDataAlt })
       const response = await axios({
-        method: method,
-        url: url,
-        data: dataApiAxios,
-        timeout: timeoutAlt
+        method: AxMethod,
+        url: AxUrl,
+        data: AxDataAlt,
+        timeout: fpAxTimeoutAlt
       })
       //
       //  Sucessful response
@@ -145,7 +138,7 @@ export default async function apiAxios(
       if (debugLog) console.log(consoleLogTime(debugModule, 'Response-->'), { ...response })
       if (debugLog)
         console.log(
-          consoleLogTime(debugModule, `<--Timing-> ${response.durationInMs} ${info} SUCCESS`)
+          consoleLogTime(debugModule, `<--Timing-> ${response.AxdurationInMs} ${AxInfo} SUCCESS`)
         )
       //
       //  Errors
@@ -155,11 +148,13 @@ export default async function apiAxios(
       //
       //  Update store - Return
       //
-      StoreRes(response.data)
+      const apiAxiosObj = Object.assign(response.data)
+      apiAxiosObj.AxdurationInMs = response.AxdurationInMs
+      StoreRes(apiAxiosObj)
       //
       //  Return Object
       //
-      return response.data
+      return apiAxiosObj
       //
       //  Catch Error
       //
@@ -167,46 +162,48 @@ export default async function apiAxios(
       //
       //  Returned values
       //
-      const rtnObj = {
+      const apiAxiosErr = {
         rtnBodyParms: '',
         rtnValue: false,
         rtnMessage: error.message,
-        rtnSqlFunction: '',
         rtnCatchFunction: debugModule,
         rtnCatch: true,
-        rtnCatchMsg: '',
-        rtnRows: []
+        rtnCatchMsg: ''
       }
+      //
+      //  Error logging - Error
+      //
+      console.log(consoleLogTime(debugModule, 'Catch - error'), error)
       //
       //  Update body parms
       //
-      rtnObj.rtnBodyParms = JSON.parse(error.config.data)
+      apiAxiosErr.rtnBodyParms = JSON.parse(error.config.data)
       //
       //  No response
       //
       if (!error.response) {
         error.request
-          ? (rtnObj.rtnCatchMsg = 'No response from Server')
-          : (rtnObj.rtnCatchMsg = 'Request setup error')
+          ? (apiAxiosErr.rtnCatchMsg = 'No response from Server')
+          : (apiAxiosErr.rtnCatchMsg = 'Request setup error')
       }
       //
-      //  Error logging - All
+      //  Error logging - Timing
       //
-      if (debugLog) console.log(consoleLogTime(debugModule, 'Catch - Message'), error.message)
-      if (debugLog) console.log(consoleLogTime(debugModule, 'Catch - error'), error)
-      if (debugLog) console.log(consoleLogTime(debugModule, 'Catch - rtnObj'), rtnObj)
-      console.log(consoleLogTime(debugModule, `<--Timing-> ${error.durationInMs} ${info} ERROR`))
+      console.log(
+        consoleLogTime(debugModule, `<--Timing-> ${error.AxdurationInMs} ${AxInfo} ERROR`)
+      )
       //
       //  Update store
       //
-      StoreRes(rtnObj)
-      return rtnObj
+      apiAxiosErr.AxdurationInMs = error.AxdurationInMs
+      StoreRes(apiAxiosErr)
+      return apiAxiosErr
     }
   }
   //--------------------------------------------------------------------------------------------
   // Store the request values
   //--------------------------------------------------------------------------------------------
-  function StoreReq(AxTry, timeoutAlt) {
+  function StoreReq(fpAxTry, fpAxTimeoutAlt) {
     //
     //  Allocate Id
     //
@@ -217,28 +214,26 @@ export default async function apiAxios(
     let arrReq = []
     const tempJSON = sessionStorage.getItem('App_apiAxios_Req')
     if (tempJSON) arrReq = JSON.parse(tempJSON)
-    if (debugLog) console.log(consoleLogTime(debugModule, 'arrReq'), [...arrReq])
     //
     //  Populate the store object
     //
     const objReq = {
-      Sess: g_Sess,
+      AxSess: g_AxSess,
+      AxTable: AxData.AxTable,
       AxId: g_AxId,
-      AxTry: AxTry,
-      AxTimeout: timeoutAlt,
-      sqlTable: data.sqlTable,
-      sqlClient: data.sqlClient,
-      info: info,
-      data: data,
-      url: url,
-      method: method
+      AxTry: fpAxTry,
+      AxTimeout: fpAxTimeoutAlt,
+      AxClient: AxData.AxClient,
+      AxInfo: AxInfo,
+      AxData: AxData,
+      AxUrl: AxUrl,
+      AxMethod: AxMethod
     }
     if (debugLog) console.log(consoleLogTime(debugModule, 'objReq'), { ...objReq })
     //
     //  Save to array
     //
     arrReq.push(objReq)
-    if (debugLog) console.log(consoleLogTime(debugModule, 'arrReq'), [...arrReq])
     //
     //  update the store
     //
@@ -247,35 +242,39 @@ export default async function apiAxios(
   //--------------------------------------------------------------------------------------------
   // Store the Return values
   //--------------------------------------------------------------------------------------------
-  function StoreRes(rtnObj) {
-    if (debugLog) console.log(consoleLogTime(debugModule, 'rtnObj'), { ...rtnObj })
+  function StoreRes(resObj) {
+    if (debugLog) console.log(consoleLogTime(debugModule, 'resObj'), { ...resObj })
     //
     //  Get the store
     //
     let arrRes = []
     const tempJSON = sessionStorage.getItem('App_apiAxios_Res')
     if (tempJSON) arrRes = JSON.parse(tempJSON)
-    if (debugLog) console.log(consoleLogTime(debugModule, 'arrRes'), [...arrRes])
+    //
+    //  Count the returned rows
+    //
+    let rtnCount = 0
+    if (resObj.rtnValue) rtnCount = resObj.rtnRows.length
     //
     //  Populate the store object
     //
     const objRes = {
-      Sess: rtnObj.rtnBodyParms.Sess,
-      AxId: rtnObj.rtnBodyParms.AxId,
-      AxTry: rtnObj.rtnBodyParms.AxTry,
-      rtnValue: rtnObj.rtnValue,
-      AxTimeout: rtnObj.rtnBodyParms.AxTimeout,
-      sqlTable: rtnObj.rtnBodyParms.sqlTable,
-      sqlClient: rtnObj.rtnBodyParms.sqlClient,
-      rtnMessage: rtnObj.rtnMessage,
-      rtnObj: rtnObj
+      AxId: resObj.rtnBodyParms.AxId,
+      AxTable: resObj.rtnBodyParms.AxTable,
+      AxSts: resObj.rtnSts,
+      AxCount: rtnCount,
+      AxValue: resObj.rtnValue,
+      AxMessage: resObj.rtnMessage,
+      AxTry: resObj.rtnBodyParms.AxTry,
+      AxTimeout: resObj.rtnBodyParms.AxTimeout,
+      AxClient: resObj.rtnBodyParms.AxClient,
+      AxObj: resObj
     }
     if (debugLog) console.log(consoleLogTime(debugModule, 'objRes'), { ...objRes })
     //
     //  Save to array
     //
     arrRes.push(objRes)
-    if (debugLog) console.log(consoleLogTime(debugModule, 'arrRes'), [...arrRes])
     //
     //  update the store
     //
@@ -294,7 +293,6 @@ export default async function apiAxios(
     //
     //  update the store
     //
-    if (debugLog) console.log(consoleLogTime(debugModule, 'g_AxId'), g_AxId)
     sessionStorage.setItem('App_apiAxios_Id', JSON.stringify(g_AxId))
   }
 }

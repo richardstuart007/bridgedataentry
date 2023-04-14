@@ -63,7 +63,7 @@ const useStyles = makeStyles(theme => ({
 //  Questions Table
 //
 const { SQL_ROWS } = require('../../services/constants.js')
-const sqlTable = 'questions'
+const AxTable = 'questions'
 //
 //  Table Heading
 //
@@ -153,23 +153,23 @@ export default function QuestionList({ handlePage }) {
     //
     //  SQL String
     //
-    let sqlString = `* from ${sqlTable}`
+    let AxString = `* from ${AxTable}`
     if (s_owner || s_group) {
-      sqlString = sqlString + ` where`
-      if (s_owner) sqlString = sqlString + ` qowner = '${s_owner}'`
-      if (s_owner && s_group) sqlString = sqlString + ` and`
-      if (s_group) sqlString = sqlString + ` qgroup = '${s_group}'`
+      AxString = AxString + ` where`
+      if (s_owner) AxString = AxString + ` qowner = '${s_owner}'`
+      if (s_owner && s_group) AxString = AxString + ` and`
+      if (s_group) AxString = AxString + ` qgroup = '${s_group}'`
     }
-    sqlString = sqlString + ` order by qowner, qgroup, qseq FETCH FIRST ${SQL_ROWS} ROWS ONLY`
+    AxString = AxString + ` order by qowner, qgroup, qseq FETCH FIRST ${SQL_ROWS} ROWS ONLY`
     //
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'SELECTSQL',
-      sqlString: sqlString
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'SELECTSQL',
+      AxString: AxString
     }
     const myPromiseGet = rowCrud(rowCrudparams)
     //
@@ -199,11 +199,11 @@ export default function QuestionList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'delete',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'DELETE',
-      sqlWhere: `qid = ${qid}`
+      AxMethod: 'delete',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'DELETE',
+      AxWhere: `qid = ${qid}`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -233,12 +233,12 @@ export default function QuestionList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'INSERT',
-      sqlKeyName: ['qowner', 'qgroup', 'qseq'],
-      sqlRow: nokeyData
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'INSERT',
+      AxKeyName: ['qowner', 'qgroup', 'qseq'],
+      AxRow: nokeyData
     }
     const myPromiseInsert = rowCrud(rowCrudparams)
     //
@@ -281,12 +281,12 @@ export default function QuestionList({ handlePage }) {
     //  Process promise
     //
     const rowCrudparams = {
-      axiosMethod: 'post',
-      sqlCaller: debugModule,
-      sqlTable: sqlTable,
-      sqlAction: 'UPDATE',
-      sqlWhere: `qid = ${qid}`,
-      sqlRow: nokeyData
+      AxMethod: 'post',
+      AxCaller: debugModule,
+      AxTable: AxTable,
+      AxAction: 'UPDATE',
+      AxWhere: `qid = ${qid}`,
+      AxRow: nokeyData
     }
     const myPromiseUpdate = rowCrud(rowCrudparams)
     //
@@ -505,6 +505,14 @@ export default function QuestionList({ handlePage }) {
         onClick={() => {
           handlePage('PAGEBACK')
         }}
+      />
+      {/* .......................................................................................... */}
+      <MyButton
+        type='submit'
+        text='Re-Start'
+        color='warning'
+        variant='contained'
+        onClick={() => handlePage('PAGESTART')}
       />
       {/* .......................................................................................... */}
       <Popup title='Question Form' openPopup={openPopup} setOpenPopup={setOpenPopup}>

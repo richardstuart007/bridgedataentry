@@ -17,9 +17,10 @@ function Control({ handlePage, pageCurrent }) {
   //  Main Line
   //.............................................................................
   //
-  //  Store
+  //  Current Page
   //
-  const PageCurrent = JSON.parse(sessionStorage.getItem('Nav_Current'))
+  const PageRoute = JSON.parse(sessionStorage.getItem('Nav_Route'))
+  const PageCurrent = PageRoute[PageRoute.length - 1]
   //
   //  Present the selected component
   //
