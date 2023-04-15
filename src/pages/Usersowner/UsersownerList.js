@@ -67,7 +67,7 @@ const AxTable = 'usersowner'
 //  Table Heading
 //
 const headCells = [
-  { id: 'uoid', label: 'Id' },
+  { id: 'uouid', label: 'Id' },
   { id: 'uouser', label: 'User' },
   { id: 'uoowner', label: 'Owner' },
   { id: 'actions', label: 'Actions', disableSorting: true }
@@ -153,8 +153,8 @@ export default function UsersownerList({ handlePage }) {
     //  Process promise
     //
     let AxString = `* from ${AxTable}`
-    if (s_id) AxString = AxString + ` where uoid = '${s_id}' `
-    AxString = AxString + ` order by uoid, uoowner FETCH FIRST ${SQL_ROWS} ROWS ONLY`
+    if (s_id) AxString = AxString + ` where uouid = '${s_id}' `
+    AxString = AxString + ` order by uouid, uoowner FETCH FIRST ${SQL_ROWS} ROWS ONLY`
     const rowCrudparams = {
       AxMethod: 'post',
       AxCaller: debugModule,
@@ -186,7 +186,7 @@ export default function UsersownerList({ handlePage }) {
   //.  DELETE
   //.............................................................................
   const deleteRowData = row => {
-    const uoid = row.uoid
+    const uouid = row.uouid
     const uoowner = row.uoowner
     //
     //  Process promise
@@ -196,7 +196,7 @@ export default function UsersownerList({ handlePage }) {
       AxCaller: debugModule,
       AxTable: AxTable,
       AxAction: 'DELETE',
-      AxWhere: `uoid = '${uoid}' and uoowner = '${uoowner}'`
+      AxWhere: `uouid = '${uouid}' and uoowner = '${uoowner}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -226,7 +226,7 @@ export default function UsersownerList({ handlePage }) {
       AxCaller: debugModule,
       AxTable: AxTable,
       AxAction: 'INSERT',
-      AxKeyName: ['uoid', 'uoowner'],
+      AxKeyName: ['uouid', 'uoowner'],
       AxRow: data
     }
     const myPromiseInsert = rowCrud(rowCrudparams)
@@ -336,7 +336,7 @@ export default function UsersownerList({ handlePage }) {
   const addRow = () => {
     setServerMessage('')
     const row = {
-      uoid: s_id,
+      uouid: s_id,
       uouser: s_user,
       uoowner: null
     }
@@ -409,8 +409,8 @@ export default function UsersownerList({ handlePage }) {
           <TblHead />
           <TableBody>
             {recordsAfterPagingAndSorting().map(row => (
-              <TableRow key={row.uoid + row.uoowner}>
-                <TableCell>{row.uoid}</TableCell>
+              <TableRow key={row.uouid + row.uoowner}>
+                <TableCell>{row.uouid}</TableCell>
                 <TableCell>{row.uouser}</TableCell>
                 <TableCell>{row.uoowner}</TableCell>
 

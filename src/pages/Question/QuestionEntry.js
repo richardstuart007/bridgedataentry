@@ -23,7 +23,7 @@ import Popup from '../../components/Popup'
 //  Form Initial Values
 //
 const initialFValues = {
-  qid: 0,
+  qqid: 0,
   qowner: '',
   qseq: 0,
   qdetail: '',
@@ -91,7 +91,7 @@ export default function QuestionEntry(props) {
   //  Disable/Allow entry
   //
   actionUpdate = false
-  if (values && values.qid !== 0) actionUpdate = true
+  if (values && values.qqid !== 0) actionUpdate = true
   disableOwner = actionUpdate
   if (s_owner) disableOwner = true
   disableGroup = actionUpdate
@@ -274,7 +274,7 @@ export default function QuestionEntry(props) {
     //
 
     let valuesUpd = { ...values }
-    valuesUpd.qid = 0
+    valuesUpd.qqid = 0
     setValues({
       ...valuesUpd
     })
@@ -324,7 +324,7 @@ export default function QuestionEntry(props) {
 
           {actionUpdate ? (
             <Grid item xs={2}>
-              <MyInput name='qid' label='ID' value={values.qid} disabled={true} />
+              <MyInput name='qqid' label='ID' value={values.qqid} disabled={true} />
             </Grid>
           ) : null}
           <Grid item xs={4}></Grid>
@@ -460,11 +460,11 @@ export default function QuestionEntry(props) {
       </MyForm>
       {/*------------------------------------------------------------------------------ */}
       <Popup title='Hands Form' openPopup={openPopupHand} setOpenPopup={setOpenPopupHand}>
-        <HandEntry hid={values.qid} />
+        <HandEntry hqid={values.qqid} />
       </Popup>
       {/*------------------------------------------------------------------------------ */}
       <Popup title='Bidding Form' openPopup={openPopupBidding} setOpenPopup={setOpenPopupBidding}>
-        <BiddingEntry bid={values.qid} />
+        <BiddingEntry bqid={values.qqid} />
       </Popup>
       {/*------------------------------------------------------------------------------ */}
     </>

@@ -69,7 +69,7 @@ const AxTable = 'users'
 //  Table Heading
 //
 const headCells = [
-  { id: 'u_id', label: 'ID' },
+  { id: 'u_uid', label: 'ID' },
   { id: 'u_user', label: 'User' },
   { id: 'u_name', label: 'Name' },
   { id: 'u_admin', label: 'Admin' },
@@ -151,7 +151,7 @@ export default function UsersList({ handlePage }) {
     //
     //  Process promise
     //
-    let AxString = `* from ${AxTable} order by u_id FETCH FIRST ${SQL_ROWS} ROWS ONLY`
+    let AxString = `* from ${AxTable} order by u_uid FETCH FIRST ${SQL_ROWS} ROWS ONLY`
     const rowCrudparams = {
       AxMethod: 'post',
       AxCaller: debugModule,
@@ -182,14 +182,14 @@ export default function UsersList({ handlePage }) {
   //.............................................................................
   //.  DELETE
   //.............................................................................
-  const deleteRowData = u_id => {
+  const deleteRowData = u_uid => {
     //
     //  Delete users and related files
     //
-    deleteUsers(u_id)
-    deleteUserspwd(u_id)
-    deleteUsershistory(u_id)
-    deleteUsersOwner(u_id)
+    deleteUsers(u_uid)
+    deleteUserspwd(u_uid)
+    deleteUsershistory(u_uid)
+    deleteUsersOwner(u_uid)
     //
     //  Refresh
     //
@@ -198,7 +198,7 @@ export default function UsersList({ handlePage }) {
   //.............................................................................
   //.  DELETE - User
   //.............................................................................
-  const deleteUsers = u_id => {
+  const deleteUsers = u_uid => {
     //
     //  Process promise
     //
@@ -207,7 +207,7 @@ export default function UsersList({ handlePage }) {
       AxCaller: debugModule,
       AxTable: AxTable,
       AxAction: 'DELETE',
-      AxWhere: `u_id = '${u_id}'`
+      AxWhere: `u_uid = '${u_uid}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -221,7 +221,7 @@ export default function UsersList({ handlePage }) {
   //.............................................................................
   //.  DELETE - Userpwd
   //.............................................................................
-  const deleteUserspwd = u_id => {
+  const deleteUserspwd = u_uid => {
     //
     //  Process promise
     //
@@ -230,7 +230,7 @@ export default function UsersList({ handlePage }) {
       AxCaller: debugModule,
       AxTable: 'userspwd',
       AxAction: 'DELETE',
-      AxWhere: `upid = '${u_id}'`
+      AxWhere: `upuid = '${u_uid}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
 
@@ -245,7 +245,7 @@ export default function UsersList({ handlePage }) {
   //.............................................................................
   //.  DELETE - UserHistory
   //.............................................................................
-  const deleteUsershistory = u_id => {
+  const deleteUsershistory = u_uid => {
     //
     //  Process promise
     //
@@ -254,7 +254,7 @@ export default function UsersList({ handlePage }) {
       AxCaller: debugModule,
       AxTable: 'usershistory',
       AxAction: 'DELETE',
-      AxWhere: `r_uid = '${u_id}'`
+      AxWhere: `r_uid = '${u_uid}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -268,7 +268,7 @@ export default function UsersList({ handlePage }) {
   //.............................................................................
   //.  DELETE - UsersOwner
   //.............................................................................
-  const deleteUsersOwner = u_id => {
+  const deleteUsersOwner = u_uid => {
     //
     //  Process promise
     //
@@ -277,7 +277,7 @@ export default function UsersList({ handlePage }) {
       AxCaller: debugModule,
       AxTable: 'usersowner',
       AxAction: 'DELETE',
-      AxWhere: `uoid = '${u_id}'`
+      AxWhere: `uouid = '${u_uid}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -295,7 +295,7 @@ export default function UsersList({ handlePage }) {
     //
     //  Strip out KEY as it is not updated
     //
-    let { u_id, u_user, ...nokeyData } = data
+    let { u_uid, u_user, ...nokeyData } = data
     //
     //  Process promise
     //
@@ -304,7 +304,7 @@ export default function UsersList({ handlePage }) {
       AxCaller: debugModule,
       AxTable: AxTable,
       AxAction: 'UPDATE',
-      AxWhere: `u_id = '${u_id}'`,
+      AxWhere: `u_uid = '${u_uid}'`,
       AxRow: nokeyData
     }
     const myPromiseUpdate = rowCrud(rowCrudparams)
@@ -409,12 +409,12 @@ export default function UsersList({ handlePage }) {
   //
   //  Delete Row
   //
-  const onDelete = u_id => {
+  const onDelete = u_uid => {
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false
     })
-    deleteRowData(u_id)
+    deleteRowData(u_uid)
     setNotify({
       isOpen: true,
       message: 'Deleted Successfully',
@@ -426,7 +426,7 @@ export default function UsersList({ handlePage }) {
   //  Usersowners
   //
   const handleUsersownerList = row => {
-    sessionStorage.setItem('Selection_UserId', JSON.stringify(row.u_id))
+    sessionStorage.setItem('Selection_UserId', JSON.stringify(row.u_uid))
     sessionStorage.setItem('Selection_User', JSON.stringify(row.u_user))
     handlePage('UsersownerList')
   }
@@ -495,8 +495,8 @@ export default function UsersList({ handlePage }) {
           <TblHead />
           <TableBody>
             {recordsAfterPagingAndSorting().map(row => (
-              <TableRow key={row.u_id}>
-                <TableCell>{row.u_id}</TableCell>
+              <TableRow key={row.u_uid}>
+                <TableCell>{row.u_uid}</TableCell>
                 <TableCell>{row.u_user}</TableCell>
                 <TableCell>{row.u_name}</TableCell>
                 <TableCell>{row.u_admin ? 'Y' : 'N'}</TableCell>
@@ -529,7 +529,7 @@ export default function UsersList({ handlePage }) {
                         title: 'Are you sure to delete this record?',
                         subTitle: "You can't undo this operation",
                         onConfirm: () => {
-                          onDelete(row.u_id)
+                          onDelete(row.u_uid)
                         }
                       })
                     }}

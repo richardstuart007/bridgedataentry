@@ -18,7 +18,7 @@ const AxTable = 'hands'
 //  Form Initial Values
 //
 const initialFValues = {
-  hid: 0,
+  hqid: 0,
   hNS: '',
   hNH: '',
   hND: '',
@@ -40,7 +40,7 @@ const initialFValues = {
 //  Values in Form Format
 //
 let g_formValues = {
-  hid: 0,
+  hqid: 0,
   hNS: '',
   hNH: '',
   hND: '',
@@ -62,7 +62,7 @@ let g_formValues = {
 //  Values in DB format
 //
 const dbValues = {
-  hid: 0,
+  hqid: 0,
   hnorth: [],
   heast: [],
   hsouth: [],
@@ -107,14 +107,14 @@ export default function HandEntry(props) {
     //
     //  Initialise dbValues
     //
-    dbValues.hid = hid
+    dbValues.hqid = hqid
     dbValues.hnorth = []
     dbValues.heast = []
     dbValues.hsouth = []
     dbValues.hwest = []
     let hand
     //
-    g_formValues.hid = hid
+    g_formValues.hqid = hqid
     //
     //  North
     //
@@ -231,7 +231,7 @@ export default function HandEntry(props) {
     //
     //  Initialise dbValues
     //
-    dbValues.hid = hid
+    dbValues.hqid = hqid
     dbValues.hnorth = []
     dbValues.heast = []
     dbValues.hsouth = []
@@ -302,7 +302,7 @@ export default function HandEntry(props) {
     //  Loop through each form value and tidy the suit
     //
     Object.entries(workHands).forEach(([key, value]) => {
-      if (key !== 'hid') {
+      if (key !== 'hqid') {
         const returnedValue = tidyField(value)
         workHands[key] = returnedValue
       }
@@ -320,7 +320,7 @@ export default function HandEntry(props) {
     //
     //  Process promise
     //
-    let AxString = `* from ${AxTable} where hid = ${hid}`
+    let AxString = `* from ${AxTable} where hqid = ${hqid}`
     const rowCrudparams = {
       AxMethod: 'post',
       AxCaller: debugModule,
@@ -368,7 +368,7 @@ export default function HandEntry(props) {
       AxCaller: debugModule,
       AxTable: AxTable,
       AxAction: 'UPSERT',
-      AxKeyName: ['hid'],
+      AxKeyName: ['hqid'],
       AxRow: dbValues
     }
     const myPromiseInsert = rowCrud(rowCrudparams)
@@ -415,7 +415,7 @@ export default function HandEntry(props) {
       AxCaller: debugModule,
       AxTable: AxTable,
       AxAction: 'DELETE',
-      AxWhere: `hid = ${hid}`
+      AxWhere: `hqid = ${hqid}`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -425,7 +425,7 @@ export default function HandEntry(props) {
       //
       //  Set values to Initial Values
       //
-      initialFValues.hid = hid
+      initialFValues.hqid = hqid
       setValues(initialFValues)
       g_formValues = { ...initialFValues }
       return
@@ -780,8 +780,8 @@ export default function HandEntry(props) {
   //
   //  Deconstruct props
   //
-  const { hid } = props
-  initialFValues.hid = hid
+  const { hqid } = props
+  initialFValues.hqid = hqid
   const [serverMessage, setServerMessage] = useState('')
   //
   //  On change of record, set State
@@ -799,7 +799,7 @@ export default function HandEntry(props) {
       <Grid container>
         {/*------------------------------------------------------------------------------ */}
         <Grid item xs={2}>
-          <MyInput name='hid' label='ID' value={hid} disabled={true} />
+          <MyInput name='hqid' label='ID' value={hqid} disabled={true} />
         </Grid>
         <Grid item xs={10}></Grid>
         {/*------------------------------------------------------------------------------ */}

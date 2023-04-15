@@ -72,7 +72,7 @@ const AxTable = 'library'
 //  Table Heading
 //
 const headCells = [
-  { id: 'lrid', label: 'ID' },
+  { id: 'lrlid', label: 'ID' },
   { id: 'lrowner', label: 'Owner' },
   { id: 'lrgroup', label: 'Group' },
   { id: 'lrref', label: 'Reference' },
@@ -83,7 +83,7 @@ const headCells = [
   { id: 'actions', label: 'Actions', disableSorting: true }
 ]
 const searchTypeOptions = [
-  { id: 'lrid', title: 'ID' },
+  { id: 'lrlid', title: 'ID' },
   { id: 'lrowner', title: 'Owner' },
   { id: 'lrgroup', title: 'Group' },
   { id: 'lrref', title: 'Reference' },
@@ -205,7 +205,7 @@ export default function LibraryList({ handlePage }) {
   //.............................................................................
   //.  DELETE
   //.............................................................................
-  const deleteRowData = lrid => {
+  const deleteRowData = lrlid => {
     //
     //  Process promise
     //
@@ -214,7 +214,7 @@ export default function LibraryList({ handlePage }) {
       AxCaller: debugModule,
       AxTable: AxTable,
       AxAction: 'DELETE',
-      AxWhere: `lrid = '${lrid}'`
+      AxWhere: `lrlid = '${lrlid}'`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -240,7 +240,7 @@ export default function LibraryList({ handlePage }) {
     //
     //  Strip out KEY as it will be populated by Insert
     //
-    let { lrid, ...nokeyData } = data
+    let { lrlid, ...nokeyData } = data
     //
     //  Process promise
     //
@@ -289,7 +289,7 @@ export default function LibraryList({ handlePage }) {
     //
     //  Strip out KEY as it is not updated
     //
-    let { lrid, lrowner, lrgroup, lrref, ...nokeyData } = data
+    let { lrlid, lrowner, lrgroup, lrref, ...nokeyData } = data
     //
     //  Process promise
     //
@@ -298,7 +298,7 @@ export default function LibraryList({ handlePage }) {
       AxCaller: debugModule,
       AxTable: AxTable,
       AxAction: 'UPDATE',
-      AxWhere: `lrid = '${lrid}'`,
+      AxWhere: `lrlid = '${lrlid}'`,
       AxRow: nokeyData
     }
     const myPromiseUpdate = rowCrud(rowCrudparams)
@@ -363,8 +363,8 @@ export default function LibraryList({ handlePage }) {
         //
         let itemsFilter = items
         switch (searchType) {
-          case 'lrid':
-            itemsFilter = items.filter(x => x.lrid === parseInt(searchValue))
+          case 'lrlid':
+            itemsFilter = items.filter(x => x.lrlid === parseInt(searchValue))
             break
           case 'lrowner':
             itemsFilter = items.filter(x =>
@@ -431,12 +431,12 @@ export default function LibraryList({ handlePage }) {
   //.............................................................................
   //  Delete Row
   //.............................................................................
-  const onDelete = lrid => {
+  const onDelete = lrlid => {
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false
     })
-    deleteRowData(lrid)
+    deleteRowData(lrlid)
     setNotify({
       isOpen: true,
       message: 'Deleted Successfully',
@@ -510,8 +510,8 @@ export default function LibraryList({ handlePage }) {
           <TblHead />
           <TableBody>
             {recordsAfterPagingAndSorting().map(row => (
-              <TableRow key={row.lrid}>
-                <TableCell>{row.lrid}</TableCell>
+              <TableRow key={row.lrlid}>
+                <TableCell>{row.lrlid}</TableCell>
                 <TableCell>{row.lrowner}</TableCell>
                 <TableCell>{row.lrgroup}</TableCell>
                 <TableCell>{row.lrref}</TableCell>
@@ -537,7 +537,7 @@ export default function LibraryList({ handlePage }) {
                         title: 'Are you sure to delete this record?',
                         subTitle: "You can't undo this operation",
                         onConfirm: () => {
-                          onDelete(row.lrid)
+                          onDelete(row.lrlid)
                         }
                       })
                     }}

@@ -68,7 +68,7 @@ const AxTable = 'questions'
 //  Table Heading
 //
 const headCells = [
-  { id: 'qid', label: 'ID' },
+  { id: 'qqid', label: 'ID' },
   { id: 'qowner', label: 'Owner' },
   { id: 'qgroup', label: 'Owner Group' },
   { id: 'qseq', label: 'Seq' },
@@ -76,7 +76,7 @@ const headCells = [
   { id: 'actions', label: 'Actions', disableSorting: true }
 ]
 const searchTypeOptions = [
-  { id: 'qid', title: 'ID' },
+  { id: 'qqid', title: 'ID' },
   { id: 'qowner', title: 'Owner' },
   { id: 'qgroup', title: 'Owner Group' },
   { id: 'qdetail', title: 'Question' }
@@ -194,7 +194,7 @@ export default function QuestionList({ handlePage }) {
   //.............................................................................
   //.  DELETE
   //.............................................................................
-  function deleteRowData(qid) {
+  function deleteRowData(qqid) {
     //
     //  Process promise
     //
@@ -203,7 +203,7 @@ export default function QuestionList({ handlePage }) {
       AxCaller: debugModule,
       AxTable: AxTable,
       AxAction: 'DELETE',
-      AxWhere: `qid = ${qid}`
+      AxWhere: `qqid = ${qqid}`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -228,7 +228,7 @@ export default function QuestionList({ handlePage }) {
     //
     //  Strip out KEY as it will be populated by Insert
     //
-    let { qid, ...nokeyData } = data
+    let { qqid, ...nokeyData } = data
     //
     //  Process promise
     //
@@ -276,7 +276,7 @@ export default function QuestionList({ handlePage }) {
     //
     //  Strip out KEY as it is not updated
     //
-    let { qid, qowner, qgroup, qseq, ...nokeyData } = data
+    let { qqid, qowner, qgroup, qseq, ...nokeyData } = data
     //
     //  Process promise
     //
@@ -285,7 +285,7 @@ export default function QuestionList({ handlePage }) {
       AxCaller: debugModule,
       AxTable: AxTable,
       AxAction: 'UPDATE',
-      AxWhere: `qid = ${qid}`,
+      AxWhere: `qqid = ${qqid}`,
       AxRow: nokeyData
     }
     const myPromiseUpdate = rowCrud(rowCrudparams)
@@ -334,8 +334,8 @@ export default function QuestionList({ handlePage }) {
         //
         let itemsFilter = items
         switch (searchType) {
-          case 'qid':
-            itemsFilter = items.filter(x => x.qid === parseInt(searchValue))
+          case 'qqid':
+            itemsFilter = items.filter(x => x.qqid === parseInt(searchValue))
             break
           case 'qowner':
             itemsFilter = items.filter(x =>
@@ -362,7 +362,7 @@ export default function QuestionList({ handlePage }) {
   //  Update Database
   //.............................................................................
   function addOrEdit(row, resetForm) {
-    row.qid === 0 ? insertRowData(row) : updateRowData(row)
+    row.qqid === 0 ? insertRowData(row) : updateRowData(row)
 
     setNotify({
       isOpen: true,
@@ -381,12 +381,12 @@ export default function QuestionList({ handlePage }) {
   //.............................................................................
   //  Delete Row
   //.............................................................................
-  const onDelete = qid => {
+  const onDelete = qqid => {
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false
     })
-    deleteRowData(qid)
+    deleteRowData(qqid)
     setNotify({
       isOpen: true,
       message: 'Deleted Successfully',
@@ -460,8 +460,8 @@ export default function QuestionList({ handlePage }) {
           <TblHead />
           <TableBody>
             {recordsAfterPagingAndSorting().map(row => (
-              <TableRow key={row.qid}>
-                <TableCell>{row.qid}</TableCell>
+              <TableRow key={row.qqid}>
+                <TableCell>{row.qqid}</TableCell>
                 <TableCell>{row.qowner}</TableCell>
                 <TableCell>{row.qgroup}</TableCell>
                 <TableCell>{row.qseq}</TableCell>
@@ -484,7 +484,7 @@ export default function QuestionList({ handlePage }) {
                         title: 'Are you sure to delete this record?',
                         subTitle: "You can't undo this operation",
                         onConfirm: () => {
-                          onDelete(row.qid)
+                          onDelete(row.qqid)
                         }
                       })
                     }}

@@ -18,7 +18,7 @@ import MyButton from '../../components/controls/MyButton'
 //
 import debugSettings from '../../debug/debugSettings'
 import consoleLogTime from '../../debug/consoleLogTime'
-const debugLog = debugSettings(true)
+const debugLog = debugSettings()
 const debugModule = 'Splash'
 //
 // Constants

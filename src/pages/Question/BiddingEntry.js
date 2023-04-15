@@ -18,7 +18,7 @@ const AxTable = 'bidding'
 //  Form Initial Values
 //
 const initialFValues = {
-  bid: 0,
+  bqid: 0,
   br1b1: '',
   br1b2: '',
   br1b3: '',
@@ -49,7 +49,7 @@ const initialFValues = {
   br7b4: ''
 }
 let g_formValues = {
-  bid: 0,
+  bqid: 0,
   br1b1: '',
   br1b2: '',
   br1b3: '',
@@ -83,7 +83,7 @@ let g_formValues = {
 //  Values in DB format
 //
 const dbValues = {
-  bid: 0,
+  bqid: 0,
   brounds: []
 }
 //
@@ -149,47 +149,47 @@ export default function BiddingEntry(props) {
     //
     //  Unpack arrays into form fields
     //
-    g_formValues.bid = bid
+    g_formValues.bqid = bqid
     let roundCnt = 0
     Rounds.forEach(round => {
       roundCnt++
       let bidCnt = 0
-      round.forEach(bid => {
+      round.forEach(bqid => {
         bidCnt++
         //
         //  Convert N to empty string
         //
-        if (bid === 'N') bid = ''
+        if (bqid === 'N') bqid = ''
 
         if (roundCnt === 1) {
-          if (bidCnt === 1) g_formValues.br1b1 = bid
-          if (bidCnt === 2) g_formValues.br1b2 = bid
-          if (bidCnt === 3) g_formValues.br1b3 = bid
-          if (bidCnt === 4) g_formValues.br1b4 = bid
+          if (bidCnt === 1) g_formValues.br1b1 = bqid
+          if (bidCnt === 2) g_formValues.br1b2 = bqid
+          if (bidCnt === 3) g_formValues.br1b3 = bqid
+          if (bidCnt === 4) g_formValues.br1b4 = bqid
         }
         if (roundCnt === 2) {
-          if (bidCnt === 1) g_formValues.br2b1 = bid
-          if (bidCnt === 2) g_formValues.br2b2 = bid
-          if (bidCnt === 3) g_formValues.br2b3 = bid
-          if (bidCnt === 4) g_formValues.br2b4 = bid
+          if (bidCnt === 1) g_formValues.br2b1 = bqid
+          if (bidCnt === 2) g_formValues.br2b2 = bqid
+          if (bidCnt === 3) g_formValues.br2b3 = bqid
+          if (bidCnt === 4) g_formValues.br2b4 = bqid
         }
         if (roundCnt === 3) {
-          if (bidCnt === 1) g_formValues.br3b1 = bid
-          if (bidCnt === 2) g_formValues.br3b2 = bid
-          if (bidCnt === 3) g_formValues.br3b3 = bid
-          if (bidCnt === 4) g_formValues.br3b4 = bid
+          if (bidCnt === 1) g_formValues.br3b1 = bqid
+          if (bidCnt === 2) g_formValues.br3b2 = bqid
+          if (bidCnt === 3) g_formValues.br3b3 = bqid
+          if (bidCnt === 4) g_formValues.br3b4 = bqid
         }
         if (roundCnt === 4) {
-          if (bidCnt === 1) g_formValues.br4b1 = bid
-          if (bidCnt === 2) g_formValues.br4b2 = bid
-          if (bidCnt === 3) g_formValues.br4b3 = bid
-          if (bidCnt === 4) g_formValues.br4b4 = bid
+          if (bidCnt === 1) g_formValues.br4b1 = bqid
+          if (bidCnt === 2) g_formValues.br4b2 = bqid
+          if (bidCnt === 3) g_formValues.br4b3 = bqid
+          if (bidCnt === 4) g_formValues.br4b4 = bqid
         }
         if (roundCnt === 5) {
-          if (bidCnt === 1) g_formValues.br5b1 = bid
-          if (bidCnt === 2) g_formValues.br5b2 = bid
-          if (bidCnt === 3) g_formValues.br5b3 = bid
-          if (bidCnt === 4) g_formValues.br5b4 = bid
+          if (bidCnt === 1) g_formValues.br5b1 = bqid
+          if (bidCnt === 2) g_formValues.br5b2 = bqid
+          if (bidCnt === 3) g_formValues.br5b3 = bqid
+          if (bidCnt === 4) g_formValues.br5b4 = bqid
         }
       })
     })
@@ -207,7 +207,7 @@ export default function BiddingEntry(props) {
     //
     //  Initialise dbValues
     //
-    dbValues.bid = bid
+    dbValues.bqid = bqid
     dbValues.brounds = []
     //
     //  Loop through each form value
@@ -216,7 +216,7 @@ export default function BiddingEntry(props) {
     let roundArr = []
     let hasValues = false
     Object.entries(values).forEach(([key, value]) => {
-      if (key !== 'bid') {
+      if (key !== 'bqid') {
         //
         //  Populate array
         //
@@ -268,7 +268,7 @@ export default function BiddingEntry(props) {
     let lastBid = 0
     let i = 0
     Object.entries(workValues).forEach(([key, value]) => {
-      if (key !== 'bid') {
+      if (key !== 'bqid') {
         i++
         if (value !== '') lastBid = i
       }
@@ -278,7 +278,7 @@ export default function BiddingEntry(props) {
     //
     i = 0
     Object.entries(workValues).forEach(([key, value]) => {
-      if (key !== 'bid') {
+      if (key !== 'bqid') {
         i++
         i < lastBid && value === ''
           ? (workValues[key] = 'PASS')
@@ -298,7 +298,7 @@ export default function BiddingEntry(props) {
     //
     //  Process promise
     //
-    let AxString = `* from ${AxTable} where bid = ${bid}`
+    let AxString = `* from ${AxTable} where bqid = ${bqid}`
     const rowCrudparams = {
       AxMethod: 'post',
       AxCaller: debugModule,
@@ -346,7 +346,7 @@ export default function BiddingEntry(props) {
       AxCaller: debugModule,
       AxTable: AxTable,
       AxAction: 'UPSERT',
-      AxKeyName: ['bid'],
+      AxKeyName: ['bqid'],
       AxRow: dbValues
     }
     const myPromiseInsert = rowCrud(rowCrudparams)
@@ -393,7 +393,7 @@ export default function BiddingEntry(props) {
       AxCaller: debugModule,
       AxTable: AxTable,
       AxAction: 'DELETE',
-      AxWhere: `bid = ${bid}`
+      AxWhere: `bqid = ${bqid}`
     }
     const myPromiseDelete = rowCrud(rowCrudparams)
     //
@@ -403,7 +403,7 @@ export default function BiddingEntry(props) {
       //
       //  Set values to Initial Values
       //
-      initialFValues.bid = bid
+      initialFValues.bqid = bqid
       setValues(initialFValues)
       g_formValues = { ...initialFValues }
       return
@@ -435,7 +435,7 @@ export default function BiddingEntry(props) {
       //
       const foundSPECIALBIDS = SPECIALBIDS.includes(value)
       //
-      //  Not a valid bid
+      //  Not a valid bqid
       //
       if (!foundVALIDBIDS && !foundSPECIALBIDS) errMessage = `Invalid Bid`
     }
@@ -450,11 +450,11 @@ export default function BiddingEntry(props) {
   //
   const valBidValue = workValues => {
     //
-    //  Validate bid
+    //  Validate bqid
     //
     let errors = false
     Object.entries(workValues).forEach(([key, value]) => {
-      if (key !== 'bid') {
+      if (key !== 'bqid') {
         const errMessage = validateField(value)
         g_errorsUpd[key] = errMessage
         if (errMessage !== '') errors = true
@@ -483,7 +483,7 @@ export default function BiddingEntry(props) {
       //
       //  Exxclude Key, Check Normal Bid
       //
-      if (key !== 'bid' && foundVALIDBIDS) {
+      if (key !== 'bqid' && foundVALIDBIDS) {
         //
         //  Check bids are in order
         //
@@ -506,11 +506,11 @@ export default function BiddingEntry(props) {
   const valBids = workValues => {
     let errors
     //
-    //  Validate bid Value
+    //  Validate bqid Value
     //
     errors = valBidValue(workValues)
     //
-    //  Validate bid Order
+    //  Validate bqid Order
     //
     if (!errors) valBidOrder(workValues)
   }
@@ -584,8 +584,8 @@ export default function BiddingEntry(props) {
   //
   //  Deconstruct props
   //
-  const { bid } = props
-  initialFValues.bid = bid
+  const { bqid } = props
+  initialFValues.bqid = bqid
 
   const [serverMessage, setServerMessage] = useState('')
   //
@@ -603,7 +603,7 @@ export default function BiddingEntry(props) {
     <MyForm onSubmit={handleSubmit}>
       <Grid container>
         <Grid item xs={2}>
-          <MyInput name='bid' label='ID' value={bid} disabled={true} />
+          <MyInput name='bqid' label='ID' value={bqid} disabled={true} />
         </Grid>
         <Grid item xs={10}></Grid>
         {/*------------------------------------------------------------------------------ */}

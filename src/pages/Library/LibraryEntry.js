@@ -14,7 +14,7 @@ import { useMyForm, MyForm } from '../../components/controls/useMyForm'
 //  Form Initial Values
 //
 const initialFValues = {
-  lrid: 0,
+  lrlid: 0,
   lrowner: '',
   lrgroup: '',
   lrref: '',
@@ -187,7 +187,7 @@ export default function LibraryEntry(props) {
 
           {actionUpdate ? (
             <Grid item xs={4}>
-              <MyInput name='lrid' label='ID' value={values.lrid} disabled={true} />
+              <MyInput name='lrlid' label='ID' value={values.lrlid} disabled={true} />
             </Grid>
           ) : null}
           <Grid item xs={2}></Grid>

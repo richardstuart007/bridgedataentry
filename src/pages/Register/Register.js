@@ -199,7 +199,7 @@ export default function Register({ handlePage }) {
       const rtnValue = rtnObj.rtnValue
       if (rtnValue) {
         const Usersrow = rtnObj.rtnRows[0]
-        setForm_message(`Data updated in Database with ID(${Usersrow.u_id})`)
+        setForm_message(`Data updated in Database with ID(${Usersrow.u_uid})`)
         sessionStorage.setItem('User_User', JSON.stringify(Usersrow))
         handlePage('PAGEBACK')
       } else {

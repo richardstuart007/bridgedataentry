@@ -14,7 +14,7 @@ import { useMyForm, MyForm } from '../../components/controls/useMyForm'
 //  Form Initial Values
 //
 const initialFValues = {
-  uoid: '',
+  uouid: '',
   uouser: '',
   uoowner: ''
 }
@@ -35,13 +35,13 @@ export default function UsersownerEntry(props) {
     //
     //  Update form values
     //
-    const s_id = recordForEdit.uoid
+    const s_id = recordForEdit.uouid
     const s_user = recordForEdit.uouser
     let s_owner = recordForEdit.uoowner
     if (!s_owner) s_owner = OptionsOwner[0].title
     setValues({
       ...values,
-      uoid: s_id,
+      uouid: s_id,
       uouser: s_user,
       uoowner: s_owner
     })
@@ -70,8 +70,8 @@ export default function UsersownerEntry(props) {
     //
     //  Validate current field
     //
-    if ('uoid' in fieldValues)
-      errorsUpd.uoid = fieldValues.uoid === '' ? 'This field is required.' : ''
+    if ('uouid' in fieldValues)
+      errorsUpd.uouid = fieldValues.uouid === '' ? 'This field is required.' : ''
     if ('uouser' in fieldValues)
       errorsUpd.uouser = fieldValues.uouser === '' ? 'This field is required.' : ''
     //
@@ -114,11 +114,11 @@ export default function UsersownerEntry(props) {
 
           <Grid item xs={12}>
             <MyInput
-              name='uoid'
+              name='uouid'
               label='Id'
-              value={values.uoid}
+              value={values.uouid}
               onChange={handleInputChange}
-              error={errors.uoid}
+              error={errors.uouid}
               disabled={true}
             />
           </Grid>
